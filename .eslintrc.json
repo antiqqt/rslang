@@ -21,7 +21,9 @@
     "browser": true,
     "node": true
   },
-  "plugins": ["eslint-plugin-import-helpers"],
+  "plugins": [
+    "eslint-plugin-import-helpers"
+  ],
   "rules": {
     "no-debugger": "off",
     "no-console": 0,
@@ -41,7 +43,15 @@
           "ignoreCase": true,
           "order": "asc"
         },
-        "groups": ["/^react/", "module", ["parent", "sibling", "index"]],
+        "groups": [
+          "/^react/",
+          "module",
+          [
+            "parent",
+            "sibling",
+            "index"
+          ]
+        ],
         "newlinesBetween": "always"
       }
     ],
@@ -73,7 +83,8 @@
     "react/jsx-sort-props": [
       "error",
       {
-        "ignoreCase": true
+        "ignoreCase": true,
+        "noSortAlphabetically": true
       }
     ],
     "react/prop-types": "off",
