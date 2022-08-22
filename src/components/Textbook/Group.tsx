@@ -1,15 +1,16 @@
 import { useState } from 'react';
 
-import SectionIcon from './SectionIcon';
+import SectionIcon from './GroupIcon';
 
 interface Props {
-  section: number;
-  handleSetSection: (val: number) => void;
+  group: number;
+  handleSetGroup: (val: number) => void;
+  handleSetPage: (val: number) => void;
 }
 
-export default function Section({ section, handleSetSection }: Props) {
-  const availableSections = 6;
+export default function Group({ group, handleSetGroup, handleSetPage }: Props) {
   const [isMenuOpened, SetIsMenuOpened] = useState(false);
+  const availableGroups = 6;
 
   return (
     <div className="relative">
@@ -24,20 +25,20 @@ export default function Section({ section, handleSetSection }: Props) {
         type="button"
       >
         <SectionIcon />
-        Раздел {section}
+        Раздел {group + 1}
       </button>
       {isMenuOpened && (
         <div className="absolute right-0 z-10 flex flex-col items-center w-32 bg-white rounded divide-y divide-gray-100 shadow">
           <ul className="w-full py-1 text-sm text-center text-gray-700 dark:text-gray-200">
-            {new Array(availableSections).fill(null).map((_, index) => (
+            {new Array(availableGroups).fill(null).map((_, index) => (
               <li>
                 <button
                   className="block w-full py-2 px-4 hover:bg-gray-100 cursor-pointer"
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
+                  key={`Group ${availableGroups - index}`}
                   onClick={() => {
-                    handleSetSection(index + 1);
+                    handleSetGroup(index);
                     SetIsMenuOpened(false);
+                    handleSetPage(0);
                   }}
                   type="button"
                 >
