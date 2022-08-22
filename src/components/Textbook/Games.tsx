@@ -21,7 +21,7 @@ export default function Games() {
         Мини-игры
       </button>
       {isMenuOpened && (
-        <div className="absolute right-0 z-10 flex flex-col items-center w-32 bg-white rounded divide-y divide-gray-100 shadow">
+        <div className="absolute right-0 z-10 flex flex-col items-center w-full bg-white rounded divide-y divide-gray-100 shadow">
           <ul className="w-full py-1 text-sm text-center text-gray-700 dark:text-gray-200">
             <li>
               <button

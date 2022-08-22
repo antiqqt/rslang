@@ -3,12 +3,14 @@ interface Props {
   handleSetPage: (val: number) => void;
 }
 
-const MIN_PAGE_INDEX = 0;
-const MAX_PAGE_INDEX = 30;
+enum PageIndex {
+  MIN = 0,
+  MAX = 29,
+}
 
 export default function TextbookPagination({ page, handleSetPage }: Props) {
-  const hasPrev = page > MIN_PAGE_INDEX;
-  const hasNext = page < MAX_PAGE_INDEX;
+  const hasPrev = page > PageIndex.MIN;
+  const hasNext = page < PageIndex.MAX;
 
   return (
     <div className="flex justify-center xs:mt-0">
@@ -36,7 +38,7 @@ export default function TextbookPagination({ page, handleSetPage }: Props) {
         className="flex justify-center py-2 px-3 text-sm font-bold
     text-blue-400 bg-blue-100 border-2 border-blue-400"
       >
-        Страница {page}
+        Страница {page + 1}
       </div>
       <button
         className="btn-pagination border-l-0 rounded-r-md"
