@@ -10,7 +10,7 @@ import Statistic from "./Mock/Statistic";
 import TextBook from "./Mock/TextBook";
 
 const Main = (): JSX.Element => (
-  <main className="flex justify-center mx-10 text-7xl min-h-screen">
+  <main className="flex justify-center px-3 text-7xl min-h-screen bg-slate-400">
     <Routes>
       <Route path="/" caseSensitive={false} element={<Home />} />
       <Route path="/textbook" caseSensitive={false} element={<TextBook />} />

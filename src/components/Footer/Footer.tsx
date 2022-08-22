@@ -10,7 +10,7 @@ function Footer(): JSX.Element {
     {name: 'Миша', githubLink: "https://github.com/mikhailpakaliuk"},
   ])
   return (
-    <footer className="flex justify-between align-middle mx-10 h-12 text-xl">
+    <footer className="flex justify-between align-middle p-3 h-12 text-xl">
       <a className="w-[100px]" href="https://rs.school/">
         <RSLogoSvg />
       </a>
