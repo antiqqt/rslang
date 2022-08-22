@@ -4,9 +4,9 @@ import {
 
 function NavBar(): JSX.Element {
   return (
-    <aside className="mx-10 text-xl">
-      <nav>
-        <ul>
+    <aside className="px-3 text-2xl bg-slate-400">
+      <nav className="min-h-[50%]">
+        <ul className="flex h-[100%] flex-col justify-around px-5">
           <li>
             <Link to="/">Главная</Link>
           </li>

@@ -8,7 +8,7 @@ import Main from "./components/Main/Main";
 import NavBar from "./components/Navigation/NavBar";
 
 const App = (): JSX.Element => (
-  <div className="min-h-screen">
+  <div className="min-h-screen flex flex-wrap  flex-grow">
     <Router>
       <Header />
       <NavBar />

@@ -1,6 +1,6 @@
 const AutorizationSvg = () => (
   <svg
-    className="text-blue-400"
+    className="fill-blue-400"
     viewBox="0 0 24 24"
     aria-hidden="true"
   >
