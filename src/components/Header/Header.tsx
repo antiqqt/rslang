@@ -1,18 +1,21 @@
+import { Link } from 'react-router-dom'
+
 import AutorizationSvg from './AutorizationSvg'
 import BurgerSvg from './BurgerSvg'
 
-function Header(): JSX.Element {
+function Header(props: {active: boolean, setActive: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
+  const {active, setActive} = props;
   return (
     <header className="flex justify-between p-3 text-blue-400 w-[100%] h-16">
-      <button className="w-10" type="button">
+      <button className="w-10" type="button" onClick={() => setActive(!active)}>
         <BurgerSvg/>
       </button>
       <button className="font-bold text-4xl" type="button">RS Lang</button>
-      <button className="w-10" type="button">
+      <Link className="w-10" to="/auth">
         <AutorizationSvg/>
-      </button>
+      </Link>
     </header>
   )
 }
 
-export default Header
+export default Header;

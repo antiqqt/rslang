@@ -11,7 +11,8 @@ function Footer(): JSX.Element {
   ])
   return (
     <footer className="flex justify-between p-3 h-16 text-xl w-[100%] self-end">
-      <a className="w-[100px]" href="https://rs.school/">
+      <a className="w-[100px]" href="https://rs.school/"  target="_blank"
+        rel="noopener noreferrer">
         <RSLogoSvg />
       </a>
       {authors.map(author => <Author author={author}/>)}

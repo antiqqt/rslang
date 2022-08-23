@@ -2,11 +2,34 @@ import {
   Link,
 } from "react-router-dom";
 
-function NavBar(): JSX.Element {
+function NavBar(props: { active: boolean }): JSX.Element {
+  const { active } = props;
   return (
-    <aside className="px-3 text-2xl bg-slate-400">
-      <nav className="min-h-[50%]">
-        <ul className="flex h-[100%] flex-col justify-around px-5">
+    /* eslint-disable jsx-a11y/click-events-have-key-events */
+    /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+    <aside className={`${"px-3 text-2xl bg-slate-400 transition-all"} ${active ? "w-56" : "w-16"}`} onClick={e => e.stopPropagation()}>
+      <nav className="flex">
+        <ul className="flex h-[30vh] flex-col justify-around mx-3 z-10">
+          <li>
+            <Link to="/">Гл</Link>
+          </li>
+          <li>
+            <Link to="/textbook">Уч</Link>
+          </li>
+          <li>
+            <Link to="/dictionary">Сл</Link>
+          </li>
+          <li>
+            <Link to="/games">Иг</Link>
+          </li>
+          <li>
+            <Link to="/statistic">Ст</Link>
+          </li>
+          <li>
+            <Link to="/about">О</Link>
+          </li>
+        </ul>
+        <ul className="flex h-[30vh] flex-col justify-around mx-3">
           <li>
             <Link to="/">Главная</Link>
           </li>
@@ -21,6 +44,9 @@ function NavBar(): JSX.Element {
           </li>
           <li>
             <Link to="/statistic">Статистика</Link>
+          </li>
+          <li>
+            <Link to="/about">О команде</Link>
           </li>
         </ul>
       </nav>
