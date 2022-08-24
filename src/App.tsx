@@ -3,10 +3,10 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 
-import Footer from "./components/Footer/Footer";
-import Header from "./components/Header/Header";
-import Main from "./components/Main/Main";
-import NavBar from "./components/Navigation/NavBar";
+import Footer from "./components/Main-page/Footer/Footer";
+import Header from "./components/Main-page/Header/Header";
+import Main from "./components/Main-page/Main";
+import NavBar from "./components/Main-page/NavBar";
 
 const App = (): JSX.Element => {  
   const [navActive, setNavActive] = useState(false); 

@@ -1,4 +1,4 @@
-import { AuthorType } from "../../types/types"
+import { AuthorType } from "../../../types/types"
 
 function Author(props: {author: AuthorType}): JSX.Element {
   const {name, githubLink} = props.author;
