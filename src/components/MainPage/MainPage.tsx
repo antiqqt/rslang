@@ -20,7 +20,7 @@ export default function MainPage(): JSX.Element {
         <Header openNav={openNav} setOpenNav={setOpenNav} />
         <section className="grow flex">
           <NavBar openNav={openNav} setOpenNav={setOpenNav} />
-          <main className="grow flex justify-center px-3 text-7xl bg-slate-200 transition-all">
+          <main className="grow flex justify-center px-3 text-7xl bg-slate-100 transition-all">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/textbook" element={<Textbook />} />

@@ -10,7 +10,7 @@ interface Props {
 function NavBar({ openNav, setOpenNav }: Props): JSX.Element {
   return (
     <aside
-      className={`${'text-2xl bg-slate-400 transition-all'} ${
+      className={`${'text-2xl bg-slate-300 transition-all'} ${
         openNav ? 'w-48' : 'w-11'
       }`}
     >

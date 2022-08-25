@@ -9,12 +9,9 @@ export default function Games() {
     <div className="relative">
       <button
         className="inline-flex items-center justify-center gap-x-3 max-w-max px-3 py-1 text-white text-base font-medium 
-  rounded-lg border-2 border-transparent
-  bg-blue-400 hover:bg-blue-100 hover:text-blue-500 hover:border-blue-500
-  focus:outline-none"
-        onClick={() =>
-          isMenuOpened ? SetIsMenuOpened(false) : SetIsMenuOpened(true)
-        }
+    rounded-lg border-2 border-transparent bg-blue-400 hover:bg-white hover:text-blue-400 hover:border-blue-400
+    focus:outline-none"
+        onClick={() => SetIsMenuOpened(!isMenuOpened)}
         type="button"
       >
         <GamesIcon />
