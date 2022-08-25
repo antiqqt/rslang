@@ -19,9 +19,7 @@ export default function Group({ group, handleSetGroup, handleSetPage }: Props) {
         rounded-lg border-2 border-transparent
         bg-blue-400 hover:bg-blue-100 hover:text-blue-500 hover:border-blue-500
         focus:outline-none"
-        onClick={() =>
-          isMenuOpened ? SetIsMenuOpened(false) : SetIsMenuOpened(true)
-        }
+        onClick={() => SetIsMenuOpened(!isMenuOpened)}
         type="button"
       >
         <SectionIcon />
