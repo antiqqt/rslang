@@ -11,15 +11,17 @@ function NavBar({ openNav, setOpenNav }: Props): JSX.Element {
   return (
     <aside
       className={`${'text-2xl bg-slate-400 transition-all'} ${
-        openNav ? 'w-56' : 'w-12'
+        openNav ? 'w-48' : 'w-11'
       }`}
     >
-      <nav className="flex">
-        <ul className="flex h-[30vh] flex-col justify-around mx-3 z-10">
-          {Object.values(Routes).map(({ path, shortName }) => (
-            <li key={shortName}>
+      <nav className="flex pt-2">
+        <ul className="flex h-[30vh] flex-col justify-around px-2 z-10">
+          {Object.values(Routes).map(({ path, icon, fullName }) => (
+            <li key={fullName} className="flex items-center justify-center w-7">
               <button type="button" onClick={() => setOpenNav(false)}>
-                <Link to={path}>{shortName}</Link>
+                <Link to={path}>
+                  <img src={`./assets/icons/${icon}`} alt={fullName} />
+                </Link>
               </button>
             </li>
           ))}

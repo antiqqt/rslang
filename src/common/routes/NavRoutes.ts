@@ -1,27 +1,27 @@
 const NavRoutes = {
   main: {
     path: '/',
-    shortName: 'Гл',
+    icon: 'main-page-icon.svg',
     fullName: 'Главная',
   },
   textbook: {
     path: '/textbook',
-    shortName: 'Уч',
+    icon: 'textbook-icon.svg',
     fullName: 'Учебник',
   },
   games: {
     path: '/games',
-    shortName: 'Иг',
+    icon: 'games-icon.svg',
     fullName: 'Игры',
   },
   statistics: {
     path: '/statistics',
-    shortName: 'Ст',
+    icon: 'statistics-icon.svg',
     fullName: 'Статистика',
   },
   about: {
     path: '/about',
-    shortName: 'О',
+    icon: 'about-icon.svg',
     fullName: 'О команде',
   },
 };
