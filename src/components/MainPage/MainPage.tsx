@@ -15,7 +15,7 @@ export default function MainPage(): JSX.Element {
   const [openNav, setOpenNav] = useState(false);
 
   return (
-    <section className="min-h-screen flex flex-wrap flex-col">
+    <section className="flex flex-wrap flex-col min-h-screen overflow-x-hidden">
       <Router>
         <Header openNav={openNav} setOpenNav={setOpenNav} />
         <section className="grow flex">

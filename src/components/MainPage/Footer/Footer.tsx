@@ -8,7 +8,7 @@ const authorsData = [
 
 function Footer(): JSX.Element {
   return (
-    <footer className="flex flex-col items-center justify-between p-2 h-16 text-lg  w-full self-end sm:flex-row md:text-xl">
+    <footer className="flex flex-col items-center justify-between p-2 text-lg w-full sm:flex-row md:text-xl">
       <a
         className="w-24"
         href="https://rs.school/"
@@ -17,18 +17,20 @@ function Footer(): JSX.Element {
       >
         <RSLogoSvg />
       </a>
-      {authorsData.map(({ id, name, githubLink }) => (
-        <a
-          key={id}
-          className="my-2"
-          href={githubLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {name}
-        </a>
-      ))}
-      <span className="my-2 font-semibold">2022</span>
+      <div className="flex gap-x-6">
+        {authorsData.map(({ id, name, githubLink }) => (
+          <a
+            key={id}
+            className="my-2"
+            href={githubLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {name}
+          </a>
+        ))}
+      </div>
+      <span className="font-semibold">2022</span>
     </footer>
   );
 }
