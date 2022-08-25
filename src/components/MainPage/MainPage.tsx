@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
+import Audiochallenge from '../Games/Audiochallenge';
+import Games from '../Games/GamesList';
 import Textbook from '../Textbook/Textbook';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import About from './Mock/About';
 import Auth from './Mock/Auth';
-import Games from './Mock/Games';
 import Home from './Mock/Home';
+import Sprint from './Mock/Sprint';
 import Statistic from './Mock/Statistic';
 import NavBar from './NavBar';
 
@@ -28,6 +30,8 @@ export default function MainPage(): JSX.Element {
               <Route path="/statistics" element={<Statistic />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/about" element={<About />} />
+              <Route path="/audiochallenge" element={<Audiochallenge />} />
+              <Route path="/sprint" element={<Sprint />} />
             </Routes>
           </main>
         </section>
