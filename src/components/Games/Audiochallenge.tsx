@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import WordData from '../../common/types/WordData'
 import AudiochallengeItem from './AudiochallengeItem';
 import { getFalseWords, getTrueWords } from './CreateCollection';
+import GameResult from './GameResult';
+import getQuestionsAudiochallenge from './GetQuestionsAudiochallenge';
 import StartGame from './StartGame';
 
 interface Props {
@@ -10,16 +12,26 @@ interface Props {
 }
 
 function Audiochallenge({ preCheckedGroup }: Props): JSX.Element {
-  const trueWordsCollection: WordData[] = getTrueWords();
-  const falseWordsCollection: WordData[] = getFalseWords();
+  
+  const trueWords: WordData[] = getTrueWords();
+  const falseWords: WordData[] = getFalseWords();
 
   const [group, setGroup] = useState(0);
-  const [trueWords, setTrueWords] = useState(trueWordsCollection);
-  const [falseWords, setFalseWords] = useState(falseWordsCollection);
   const [gameStarted, setGameStarted] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
+
+  const questions = getQuestionsAudiochallenge(trueWords, falseWords);
+  const correctAnswers: WordData[] = useMemo(() => {
+    const result: WordData[] = [];
+    return result
+  }, []);
+  const wrongAnswers: WordData[] = useMemo(() => {
+    const result: WordData[] = [];
+    return result
+  }, []);
 
   return (
-    <article>
+    <article className='flex flex-col'>
       <h2 className="mx-auto text-gray-700 text-4xl p-4 text-center">Аудиовызов</h2>
       {(preCheckedGroup === undefined) && !gameStarted && <StartGame
         group={group}
@@ -28,8 +40,19 @@ function Audiochallenge({ preCheckedGroup }: Props): JSX.Element {
         setIsGameStarted={setGameStarted}
         gameName='audiochallenge'
       />}
-      {(gameStarted || preCheckedGroup) &&
-          <AudiochallengeItem />
+      {(gameStarted || preCheckedGroup) && !gameEnded &&
+        <AudiochallengeItem 
+          questions={questions}
+          wrongAnswers={wrongAnswers}
+          correctAnswers={correctAnswers}
+          setGameEnded={setGameEnded}
+        />
+      }
+      {gameEnded && 
+        <GameResult 
+        wrongAnswers={wrongAnswers}
+        correctAnswers={correctAnswers}
+        />
       }
     </article>
   )
