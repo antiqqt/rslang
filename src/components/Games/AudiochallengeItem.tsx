@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { KeyboardEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { faCoffee } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -30,24 +30,47 @@ function AudioItem({
   const question = questions[currentQuestion];
 
   function clickHandler(e: MouseEvent<HTMLButtonElement>) {
+    const checkedAnswer = e.currentTarget.innerText;
     if (!checkState) {
       setCheckState(true);
-      setCheckedWord(e.currentTarget.innerText);
-      if (e.currentTarget.innerText === question.answer) {
+      setCheckedWord(checkedAnswer);
+      if (checkedAnswer === question.answer) {
         correctAnswers.push(question.wordData);
         setIsCorrectAnswer(true);
       } else {
         wrongAnswers.push(question.wordData);
         setIsCorrectAnswer(false);
       }
-    }
-    if (e.currentTarget.innerText === 'Далее') {
+    } else if (checkedAnswer === 'Далее') {
       if (currentQuestion === questions.length - 1) {
         setGameEnded(true);
       } else {
         setCurrentQuestion(currentQuestion + 1);
         setCheckState(false);
         setCheckedWord('');
+      }
+    }
+  }
+
+  function keyHandler(e: KeyboardEvent) {
+    if (e.code === 'Enter') {
+      if (currentQuestion === questions.length - 1) {
+        setGameEnded(true);
+      } else {
+        setCurrentQuestion(currentQuestion + 1);
+        setCheckState(false);
+        setCheckedWord('');
+      }
+    } else if (!checkState) {
+      const checkedAnswer = question.variants[Number(e.code[e.code.length - 1])]
+      setCheckState(true);
+      setCheckedWord(checkedAnswer);
+      if (checkedAnswer === question.answer) {
+        correctAnswers.push(question.wordData);
+        setIsCorrectAnswer(true);
+      } else {
+        wrongAnswers.push(question.wordData);
+        setIsCorrectAnswer(false);
       }
     }
   }
@@ -71,7 +94,7 @@ function AudioItem({
   }, [isCorrectAnswer, correctAnswers.length, wrongAnswers.length])
 
   return (
-    <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg">
+    <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg" >
       {!checkState && <div className="flex flex-col grow justify-center items-center sm:px-4 py-4">
         <AudioButton
           src={`${environment.baseUrl}${question.audio}`}
