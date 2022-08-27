@@ -7,6 +7,7 @@ export default function getQuestionsAudiochallenge(trueWords: WordData[], falseW
       question: trueWord.audio,
       answer: trueWord.word,
       image: trueWord.image,
+      audio: trueWord.audio,
       variants: [...Array(4).keys()].map(() => falseWords[getRandom0toMax(falseWords.length - 1)].word).concat([trueWord.word]).sort(),
       wordData: trueWord
     })

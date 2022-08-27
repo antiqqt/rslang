@@ -1,11 +1,14 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import environment from "../../common/environments/environment";
 import GamesRoutes from '../../common/routes/GamesRoutes';
 import NavRoutes from '../../common/routes/NavRoutes';
 import WordData from "../../common/types/WordData";
+import AudioButton from "./AudioButton";
 
 interface Props {
   wrongAnswers: WordData[];
@@ -17,7 +20,10 @@ function GameResult({
   correctAnswers
 }: Props): JSX.Element {
 
-  console.log(wrongAnswers, correctAnswers)
+  useEffect(() => {
+    const audioFin = new Audio(`./assets/sounds/fin.mp3`);
+    audioFin.play();
+  }, [])
 
   return (
     <div className="flex flex-col grow p-4 m-4 bg-white shadow-2xl rounded-lg">
@@ -28,7 +34,9 @@ function GameResult({
           <div className="flex flex-col flex-wrap">
             {correctAnswers.map((word) => (
               <div className="flex items-center py-2" >
-                <FontAwesomeIcon icon={faCoffee} className='text-2xl px-2' />
+                <AudioButton
+                  src={`${environment.baseUrl}${word.audio}`}
+                  size='text-xl' />
                 <span className="text-xl px-2 text-green-500 ">{word.word}</span>
               </div>
             )
@@ -41,7 +49,9 @@ function GameResult({
           <div>
             {wrongAnswers.map((word) => (
               <div className="flex items-center py-2" >
-                <FontAwesomeIcon icon={faCoffee} className='text-2xl px-2' />
+                <AudioButton
+                  src={`${environment.baseUrl}${word.audio}`}
+                  size='text-xl' />
                 <span className="text-xl px-2 text-red-500 ">{word.word}</span>
               </div>
             )

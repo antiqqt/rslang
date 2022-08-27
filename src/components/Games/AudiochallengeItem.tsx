@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { faCoffee } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import environment from '../../common/environments/environment';
 import QuestionData from "../../common/types/QuestionData";
 import WordData from "../../common/types/WordData";
+import AudioButton from "./AudioButton";
 
 interface Props {
   questions: QuestionData[];
@@ -24,6 +25,7 @@ function AudioItem({
   const [checkState, setCheckState] = useState(false);
   const [checkedWord, setCheckedWord] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
 
   const question = questions[currentQuestion];
 
@@ -33,8 +35,10 @@ function AudioItem({
       setCheckedWord(e.currentTarget.innerText);
       if (e.currentTarget.innerText === question.answer) {
         correctAnswers.push(question.wordData);
+        setIsCorrectAnswer(true);
       } else {
         wrongAnswers.push(question.wordData);
+        setIsCorrectAnswer(false);
       }
     }
     if (e.currentTarget.innerText === 'Далее') {
@@ -48,10 +52,30 @@ function AudioItem({
     }
   }
 
+  useEffect(() => {
+    const audio = new Audio(`${environment.baseUrl}${question.audio}`);
+    audio.play()
+  }, [question.audio])
+
+  useEffect(() => {
+    const audioCorrect = new Audio(`./assets/sounds/correct.mp3`);
+    const audioWrong = new Audio(`./assets/sounds/wrong.mp3`);
+    if (correctAnswers.length || wrongAnswers.length) {
+      console.log(correctAnswers.length || wrongAnswers.length)
+      if (isCorrectAnswer) {
+        audioCorrect.play();
+      } else {
+        audioWrong.play();
+      }
+    }
+  }, [isCorrectAnswer, correctAnswers.length, wrongAnswers.length])
+
   return (
     <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg">
       {!checkState && <div className="flex flex-col grow justify-center items-center sm:px-4 py-4">
-        <FontAwesomeIcon icon={faCoffee} className='fa-2x' />
+        <AudioButton
+          src={`${environment.baseUrl}${question.audio}`}
+          size='text-9xl' />
       </div>}
       {checkState && <div className="flex flex-col grow justify-center items-center sm:px-4 py-4">
         <img
@@ -60,7 +84,9 @@ function AudioItem({
           src={`${environment.baseUrl}${question.image}`}
         />
         <div className="flex flex-wrap items-center justify-center sm:px-4 py-4">
-          <FontAwesomeIcon icon={faCoffee} className='fa-xs' />
+          <AudioButton
+            src={`${environment.baseUrl}${question.audio}`}
+            size='text-4xl' />
           <span className="text-2xl md:text-4xl sm:px-2">{question.answer}</span>
         </div>
       </div>}
