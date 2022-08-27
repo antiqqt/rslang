@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import WordData from '../../common/types/WordData'
-import AudiochallengeItem from './AudiochallengeItem';
 import { getFalseWords, getTrueWords } from './CreateCollection';
 import StartGame from './StartGame';
 
@@ -9,7 +8,7 @@ interface Props {
   preCheckedGroup?: number;
 }
 
-function Audiochallenge({ preCheckedGroup }: Props): JSX.Element {
+function Sprint({ preCheckedGroup }: Props): JSX.Element {
   const trueWordsCollection: WordData[] = getTrueWords();
   const falseWordsCollection: WordData[] = getFalseWords();
 
@@ -20,23 +19,26 @@ function Audiochallenge({ preCheckedGroup }: Props): JSX.Element {
 
   return (
     <article>
-      <h2 className="mx-auto text-gray-700 text-4xl p-4 text-center">Аудиовызов</h2>
+      <h2 className="mx-auto text-gray-700 text-4xl p-4 text-center">Спринт</h2>
       {(preCheckedGroup === undefined) && !gameStarted && <StartGame
         group={group}
         setGroup={setGroup}
         isStarted={gameStarted}
         setIsGameStarted={setGameStarted}
-        gameName='audiochallenge'
+        gameName='sprint'
       />}
       {(gameStarted || preCheckedGroup) &&
-          <AudiochallengeItem />
+        <span>
+          game started
+          {console.log(group)}
+        </span>
       }
     </article>
   )
 }
 
-Audiochallenge.defaultProps = {
+Sprint.defaultProps = {
   preCheckedGroup: undefined
 }
 
-export default Audiochallenge
+export default Sprint
