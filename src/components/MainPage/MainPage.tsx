@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 import Register from '../Auth/Register';
+import Signin from '../Auth/Signin';
 import Textbook from '../Textbook/Textbook';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
@@ -26,8 +27,9 @@ export default function MainPage(): JSX.Element {
               <Route path="/textbook" element={<Textbook />} />
               <Route path="/games" element={<Games />} />
               <Route path="/statistics" element={<Statistic />} />
-              <Route path="/auth" element={<Register />} />
               <Route path="/about" element={<About />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/signin" element={<Signin />} />
             </Routes>
           </main>
         </section>

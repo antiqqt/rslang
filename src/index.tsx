@@ -3,11 +3,14 @@ import { render } from 'react-dom';
 
 import './index.css';
 import App from './App';
+import { AuthProvider } from './context/AuthProvider';
 import reportWebVitals from './reportWebVitals';
 
 render(
   <StrictMode>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </StrictMode>,
   document.getElementById('root')
 );
