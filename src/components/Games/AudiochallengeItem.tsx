@@ -52,27 +52,28 @@ function AudioItem({
     }
   }
 
-  function keyHandler(e: KeyboardEvent) {
-    if (e.code === 'Enter') {
-      if (currentQuestion === questions.length - 1) {
-        setGameEnded(true);
-      } else {
-        setCurrentQuestion(currentQuestion + 1);
-        setCheckState(false);
-        setCheckedWord('');
-      }
-    } else if (!checkState) {
-      const checkedAnswer = question.variants[Number(e.code[e.code.length - 1])]
-      setCheckState(true);
-      setCheckedWord(checkedAnswer);
-      if (checkedAnswer === question.answer) {
-        correctAnswers.push(question.wordData);
-        setIsCorrectAnswer(true);
-      } else {
-        wrongAnswers.push(question.wordData);
-        setIsCorrectAnswer(false);
-      }
-    }
+  function keyHandler(e: Event) {
+    console.log((e))
+    // if (e.code === 'Enter') {
+    //   if (currentQuestion === questions.length - 1) {
+    //     setGameEnded(true);
+    //   } else {
+    //     setCurrentQuestion(currentQuestion + 1);
+    //     setCheckState(false);
+    //     setCheckedWord('');
+    //   }
+    // } else if (!checkState) {
+    //   const checkedAnswer = question.variants[Number(e.code[e.code.length - 1])]
+    //   setCheckState(true);
+    //   setCheckedWord(checkedAnswer);
+    //   if (checkedAnswer === question.answer) {
+    //     correctAnswers.push(question.wordData);
+    //     setIsCorrectAnswer(true);
+    //   } else {
+    //     wrongAnswers.push(question.wordData);
+    //     setIsCorrectAnswer(false);
+    //   }
+    // }
   }
 
   useEffect(() => {
@@ -84,7 +85,6 @@ function AudioItem({
     const audioCorrect = new Audio(`./assets/sounds/correct.mp3`);
     const audioWrong = new Audio(`./assets/sounds/wrong.mp3`);
     if (correctAnswers.length || wrongAnswers.length) {
-      console.log(correctAnswers.length || wrongAnswers.length)
       if (isCorrectAnswer) {
         audioCorrect.play();
       } else {
@@ -93,8 +93,15 @@ function AudioItem({
     }
   }, [isCorrectAnswer, correctAnswers.length, wrongAnswers.length])
 
+  useEffect(() => {
+    document.onkeydown(() => keyHandler);
+    return () => {
+      document.removeEventListener('keydown', keyHandler);
+    };
+  }, [])
+
   return (
-    <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg" >
+    <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg">
       {!checkState && <div className="flex flex-col grow justify-center items-center sm:px-4 py-4">
         <AudioButton
           src={`${environment.baseUrl}${question.audio}`}
