@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { faCoffee } from "@fortawesome/free-solid-svg-icons"
+import { faCoffee, faVolumeHigh, faXmark } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import environment from "../../common/environments/environment"
@@ -20,7 +20,7 @@ function AudioButton({
   return (
     <div>
       <button type="button" className="flex items-center justify-center" onClick={() => audio.play()}>
-        <FontAwesomeIcon icon={faCoffee} className={size} />
+        <FontAwesomeIcon icon={faVolumeHigh} className={size} />
       </button>
     </div>
   )
