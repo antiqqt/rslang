@@ -57,4 +57,8 @@ const loginUser = async (data: LoginData) => {
   return (await res.json()) as AuthData;
 };
 
-export { loginUser, createUser };
+const signoutUser = () => {
+  localStorage.clear();
+};
+
+export { loginUser, createUser, signoutUser };

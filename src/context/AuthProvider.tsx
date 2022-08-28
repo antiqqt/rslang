@@ -2,15 +2,15 @@ import { createContext, ReactNode, useState } from 'react';
 
 import { AuthData } from '../api/auth';
 
-const AuthContext = createContext<AuthCtx>({});
+const AuthContext = createContext<AuthCtx>({ auth: null, setAuth: null });
 
 interface AuthCtx {
-  auth?: Partial<AuthData>;
-  setAuth?: (val: AuthData) => void;
+  auth: AuthData | null;
+  setAuth: ((val: AuthData | null) => void) | null;
 }
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [auth, setAuth] = useState({});
+  const [auth, setAuth] = useState<AuthData | null>(null);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

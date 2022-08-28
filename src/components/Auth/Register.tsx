@@ -5,6 +5,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { createUser } from '../../api/auth';
+import AppRoutes from '../../common/routes/AppRoutest';
 
 const NAME_REGEX = /^[a-zA-Zа-яА-я0-9]{1,24}$/;
 const EMAIL_REGEX = /\S+@\S+\.\S+/;
@@ -166,7 +167,7 @@ export default function Register() {
       </form>
       <div className="flex flex-col">
         <p>Есть существующий аккаунт?</p>
-        <Link to="/signin" className="underline text-blue-300">
+        <Link to={AppRoutes.signin} className="underline text-blue-300">
           Авторизоваться
         </Link>
       </div>

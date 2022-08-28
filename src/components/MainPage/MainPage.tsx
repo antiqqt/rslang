@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
+import AppRoutes from '../../common/routes/AppRoutest';
+import Profile from '../Auth/Profile';
 import Register from '../Auth/Register';
+import RequireAuth from '../Auth/RequireAuth';
+import RequireNoAuth from '../Auth/RequireNoAuth';
 import Signin from '../Auth/Signin';
 import Textbook from '../Textbook/Textbook';
 import Footer from './Footer/Footer';
@@ -23,13 +27,21 @@ export default function MainPage(): JSX.Element {
           <NavBar openNav={openNav} setOpenNav={setOpenNav} />
           <main className="grow flex justify-center text-7xl bg-slate-100 transition-all">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/textbook" element={<Textbook />} />
-              <Route path="/games" element={<Games />} />
-              <Route path="/statistics" element={<Statistic />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/signin" element={<Signin />} />
+              {/* Public routes */}
+              <Route path={AppRoutes.home} element={<Home />} />
+              <Route path={AppRoutes.textbook} element={<Textbook />} />
+              <Route path={AppRoutes.games} element={<Games />} />
+              <Route path={AppRoutes.about} element={<About />} />
+
+              {/* Protected routes */}
+              <Route element={<RequireAuth />}>
+                <Route path={AppRoutes.statistics} element={<Statistic />} />
+                <Route path={AppRoutes.profile} element={<Profile />} />
+              </Route>
+              <Route element={<RequireNoAuth />}>
+                <Route path={AppRoutes.signin} element={<Signin />} />
+                <Route path={AppRoutes.register} element={<Register />} />
+              </Route>
             </Routes>
           </main>
         </section>

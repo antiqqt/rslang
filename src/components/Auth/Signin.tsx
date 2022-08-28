@@ -1,11 +1,20 @@
-import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { Link, Location, useLocation, useNavigate } from 'react-router-dom';
 
 import { loginUser } from '../../api/auth';
 import useAuth from '../../common/hooks/useAuth';
+import AppRoutes from '../../common/routes/AppRoutest';
 
 export default function Signin() {
-  const { auth, setAuth } = useAuth();
+  const { setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation() as unknown as {
+    state: {
+      from: Location;
+    };
+  };
+  const from = location.state?.from?.pathname || AppRoutes.profile;
 
   const emailRef = useRef<HTMLInputElement>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -31,6 +40,7 @@ export default function Signin() {
       if (setAuth) setAuth(res);
       setEmail('');
       setPwd('');
+      navigate(from, { replace: true });
     } catch (err) {
       if (err instanceof Error) {
         setErrorMsg(`${err.message}.`);
@@ -49,6 +59,7 @@ export default function Signin() {
             className={`rounded bg-blue-200 px-1 ml-2 mb-2 border-2 outline-none focus:outline-slate-600 
             border-slate-400`}
             type="email"
+            name="email"
             ref={emailRef}
             autoComplete="off"
             required
@@ -78,7 +89,7 @@ export default function Signin() {
       </form>
       <div className="flex flex-col">
         <p>Ещё не зарегистрированы?</p>
-        <Link to="/register" className="underline text-blue-300">
+        <Link to={AppRoutes.register} className="underline text-blue-300">
           Зарегистрироваться
         </Link>
       </div>

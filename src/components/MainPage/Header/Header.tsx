@@ -4,13 +4,11 @@ import {
   faArrowRightFromBracket,
   faBars,
   faUser,
-  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import useAuth from '../../../common/hooks/useAuth';
-import AutorizationSvg from './AutorizationSvg';
-import BurgerSvg from './BurgerSvg';
+import AppRoutes from '../../../common/routes/AppRoutest';
 
 interface Props {
   openNav: boolean;
@@ -38,25 +36,16 @@ function Header({ openNav, setOpenNav }: Props): JSX.Element {
         <Link to="/">RS Lang</Link>
       </button>
       <div className="flex items-center gap-x-3">
-        {auth?.name && (
+        {auth && (
           <div className="flex flex-col items-center gap-y-1">
             <p className="text-base text-slate-600 font-semibold">
               {auth.name}
             </p>
-            <button
-              type="button"
-              className="bg-blue-300 w-8 h-6 flex items-center justify-center rounded"
-            >
-              <FontAwesomeIcon
-                icon={faArrowRightFromBracket}
-                className="text-slate-600"
-              />
-            </button>
           </div>
         )}
         <Link
           className="w-12 h-12 bg-blue-300 inline-flex justify-center items-center rounded-full"
-          to="/signin"
+          to={AppRoutes.profile}
         >
           <FontAwesomeIcon icon={faUser} className="text-slate-600 w-8 h-8" />
         </Link>
