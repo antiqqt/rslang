@@ -76,12 +76,12 @@ function AudioItem({
 
   return (
     <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg">
-      {!checkState && <div className="flex flex-col grow justify-center items-center sm:px-4 py-4">
+      {!checkState && <div className="flex flex-col w-[220px] md:w-[450px] grow justify-center items-center sm:px-4 py-4">
         <AudioButton
           src={`${environment.baseUrl}${question.audio}`}
           size='text-9xl' />
       </div>}
-      {checkState && <div className="flex flex-col grow justify-center items-center sm:px-4 py-4">
+      {checkState && <div className="flex flex-col md:w-[450px] grow justify-center items-center sm:px-4 py-4">
         <img
           alt={`${question.answer} illustration`}
           className="block rounded-lg max-h-[200px]"
@@ -101,6 +101,7 @@ function AudioItem({
               type="button"
               onClick={(e) => clickHandler(e.currentTarget.id)}
               id={word}
+              key={word}
               className={`
                   ${'p-1 m-1 transition-all'}
                   ${!checkState && "hover:scale-125 cursor-pointer"}

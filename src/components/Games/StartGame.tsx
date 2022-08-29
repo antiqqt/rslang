@@ -27,7 +27,7 @@ function StartGame({
       <div className='text-lg sm:text-3xl p-4 text-justify'>{GamesData[gameName].description}</div>
       <ul className='text-base sm:text-2xl list-disc px-10 sm:px-20'>
         {GamesData[gameName].rules.map((rule) => (
-          <li className="py-2">
+          <li className="py-2" key={rule}>
             {rule}
           </li>
         ))}
