@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getWords } from '../../common/api/words';
+import getWords from '../../common/api/words';
 import WordData from '../../common/types/WordData';
 import WordList from '../WordList/WordList';
 import Controls from './Controls';
