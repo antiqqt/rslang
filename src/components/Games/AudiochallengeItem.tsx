@@ -1,7 +1,4 @@
-import { KeyboardEvent, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-
-import { faCoffee } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import environment from '../../common/environments/environment';
 import QuestionData from "../../common/types/QuestionData";
@@ -41,11 +38,9 @@ function AudioItem({
       if (checkedAnswer === question.answer) {
         audioCorrect.play();
         correctAnswers.push(question.wordData);
-        console.log(audioCorrect, correctAnswers, wrongAnswers)
       } else {   
         audioWrong.play();     
         wrongAnswers.push(question.wordData);
-        console.log(audioWrong, correctAnswers, wrongAnswers)
       }
     } else if (checkState && checkedAnswer === nextButtonInner) {
       if (currentQuestion === questions.length - 1) {

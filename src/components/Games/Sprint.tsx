@@ -9,13 +9,14 @@ interface Props {
 }
 
 function Sprint({ preCheckedGroup }: Props): JSX.Element {
-  const trueWordsCollection: WordData[] = getTrueWords();
-  const falseWordsCollection: WordData[] = getFalseWords();
 
   const [group, setGroup] = useState(0);
-  const [trueWords, setTrueWords] = useState(trueWordsCollection);
-  const [falseWords, setFalseWords] = useState(falseWordsCollection);
   const [gameStarted, setGameStarted] = useState(false);
+
+  const trueWords: WordData[] = getTrueWords(20, group);
+  const falseWords: WordData[] = getFalseWords(80, group, trueWords);
+
+  console.log(trueWords, falseWords)
 
   return (
     <article>

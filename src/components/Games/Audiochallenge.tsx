@@ -12,15 +12,19 @@ interface Props {
 }
 
 function Audiochallenge({ preCheckedGroup }: Props): JSX.Element {
-  
-  const trueWords: WordData[] = getTrueWords();
-  const falseWords: WordData[] = getFalseWords();
+
+  const countTrueWordsForGame = 20;
+  const countFalseWordsForGame = 80;
 
   const [group, setGroup] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
+  
+  const trueWords: WordData[] = useMemo(() => getTrueWords(countTrueWordsForGame, group), [group]);
+  const falseWords: WordData[] = useMemo(() => getFalseWords(countFalseWordsForGame, group, trueWords), [group, trueWords]);
 
   const questions = getQuestionsAudiochallenge(trueWords, falseWords);
+
   const correctAnswers: WordData[] = useMemo(() => {
     const result: WordData[] = [];
     return result
