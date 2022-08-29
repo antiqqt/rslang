@@ -36,10 +36,7 @@ export default function Signin() {
 
     try {
       const authData = await loginUser({ email, password: pwd });
-
       if (setAuth) setAuth(authData);
-      setEmail('');
-      setPwd('');
       navigate(from, { replace: true });
     } catch (err) {
       if (err instanceof Error) {
