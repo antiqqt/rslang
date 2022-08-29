@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import useAuth from '../../common/hooks/useAuth';
-import AppRoutes from '../../common/routes/AppRoutest';
+import appRoutes from '../../common/routes/app-routes';
 
 export default function RequireAuth() {
   const { auth } = useAuth();
@@ -12,7 +12,7 @@ export default function RequireAuth() {
       {auth ? (
         <Outlet />
       ) : (
-        <Navigate to={AppRoutes.signin} state={{ from: location }} replace />
+        <Navigate to={appRoutes.Signin} state={{ from: location }} replace />
       )}
     </>
   );

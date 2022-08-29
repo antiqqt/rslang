@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
-import AppRoutes from '../../common/routes/AppRoutest';
+import appRoutes from '../../common/routes/app-routes';
 import Profile from '../Auth/Profile';
 import Register from '../Auth/Register';
 import RequireAuth from '../Auth/RequireAuth';
@@ -28,19 +28,19 @@ export default function MainPage(): JSX.Element {
           <main className="grow flex justify-center text-7xl bg-slate-100 transition-all">
             <Routes>
               {/* Public routes */}
-              <Route path={AppRoutes.home} element={<Home />} />
-              <Route path={AppRoutes.textbook} element={<Textbook />} />
-              <Route path={AppRoutes.games} element={<Games />} />
-              <Route path={AppRoutes.about} element={<About />} />
+              <Route path={appRoutes.Home} element={<Home />} />
+              <Route path={appRoutes.Textbook} element={<Textbook />} />
+              <Route path={appRoutes.Games} element={<Games />} />
+              <Route path={appRoutes.About} element={<About />} />
 
               {/* Protected routes */}
               <Route element={<RequireAuth />}>
-                <Route path={AppRoutes.statistics} element={<Statistic />} />
-                <Route path={AppRoutes.profile} element={<Profile />} />
+                <Route path={appRoutes.Statistics} element={<Statistic />} />
+                <Route path={appRoutes.Profile} element={<Profile />} />
               </Route>
               <Route element={<RequireNoAuth />}>
-                <Route path={AppRoutes.signin} element={<Signin />} />
-                <Route path={AppRoutes.register} element={<Register />} />
+                <Route path={appRoutes.Signin} element={<Signin />} />
+                <Route path={appRoutes.Register} element={<Register />} />
               </Route>
             </Routes>
           </main>

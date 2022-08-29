@@ -3,16 +3,16 @@ import { FormEvent } from 'react';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { signoutUser } from '../../api/auth';
 import useAuth from '../../common/hooks/useAuth';
+import useSignout from '../../common/hooks/useSignout';
 
 export default function Profile() {
-  const { auth, setAuth } = useAuth();
+  const { auth } = useAuth();
+  const signout = useSignout();
 
   const handleSignout = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (setAuth) setAuth(null);
-    signoutUser();
+    if (signout) signout();
   };
 
   return (

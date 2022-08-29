@@ -1,14 +1,9 @@
 import { Link } from 'react-router-dom';
 
-import {
-  faArrowRightFromBracket,
-  faBars,
-  faUser,
-} from '@fortawesome/free-solid-svg-icons';
+import { faBars, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import useAuth from '../../../common/hooks/useAuth';
-import AppRoutes from '../../../common/routes/AppRoutest';
+import appRoutes from '../../../common/routes/app-routes';
 
 interface Props {
   openNav: boolean;
@@ -16,8 +11,6 @@ interface Props {
 }
 
 function Header({ openNav, setOpenNav }: Props): JSX.Element {
-  const { auth } = useAuth();
-
   return (
     <header className="flex justify-between items-center px-3 text-blue-400 w-[100%] h-16">
       <button
@@ -36,16 +29,9 @@ function Header({ openNav, setOpenNav }: Props): JSX.Element {
         <Link to="/">RS Lang</Link>
       </button>
       <div className="flex items-center gap-x-3">
-        {auth && (
-          <div className="flex flex-col items-center gap-y-1">
-            <p className="text-base text-slate-600 font-semibold">
-              {auth.name}
-            </p>
-          </div>
-        )}
         <Link
           className="w-12 h-12 bg-blue-300 inline-flex justify-center items-center rounded-full"
-          to={AppRoutes.profile}
+          to={appRoutes.Profile}
         >
           <FontAwesomeIcon icon={faUser} className="text-slate-600 w-8 h-8" />
         </Link>

@@ -1,9 +1,9 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Link, Location, useLocation, useNavigate } from 'react-router-dom';
 
-import { loginUser } from '../../api/auth';
+import { loginUser } from '../../common/api/auth';
 import useAuth from '../../common/hooks/useAuth';
-import AppRoutes from '../../common/routes/AppRoutest';
+import appRoutes from '../../common/routes/app-routes';
 
 export default function Signin() {
   const { setAuth } = useAuth();
@@ -14,7 +14,7 @@ export default function Signin() {
       from: Location;
     };
   };
-  const from = location.state?.from?.pathname || AppRoutes.profile;
+  const from = location.state?.from?.pathname || appRoutes.Profile;
 
   const emailRef = useRef<HTMLInputElement>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -35,9 +35,9 @@ export default function Signin() {
     e.preventDefault();
 
     try {
-      const res = await loginUser({ email, password: pwd });
+      const authData = await loginUser({ email, password: pwd });
 
-      if (setAuth) setAuth(res);
+      if (setAuth) setAuth(authData);
       setEmail('');
       setPwd('');
       navigate(from, { replace: true });
@@ -89,7 +89,7 @@ export default function Signin() {
       </form>
       <div className="flex flex-col">
         <p>Ещё не зарегистрированы?</p>
-        <Link to={AppRoutes.register} className="underline text-blue-300">
+        <Link to={appRoutes.Register} className="underline text-blue-300">
           Зарегистрироваться
         </Link>
       </div>

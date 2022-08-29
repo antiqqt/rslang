@@ -1,5 +1,5 @@
-import ApiPaths from '../common/enums/api-paths';
-import environment from '../common/environments/environment';
+import environment from '../environments/environment';
+import apiPaths from './api-paths';
 
 interface UserData {
   name: string;
@@ -27,7 +27,7 @@ export interface AuthData {
 }
 
 const createUser = async (data: UserData) => {
-  const res = await fetch(`${environment.baseUrl}${ApiPaths.Users}`, {
+  const res = await fetch(`${environment.baseUrl}${apiPaths.Users}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -43,7 +43,7 @@ const createUser = async (data: UserData) => {
 };
 
 const loginUser = async (data: LoginData) => {
-  const res = await fetch(`${environment.baseUrl}${ApiPaths.SignIn}`, {
+  const res = await fetch(`${environment.baseUrl}${apiPaths.Signin}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -57,8 +57,4 @@ const loginUser = async (data: LoginData) => {
   return (await res.json()) as AuthData;
 };
 
-const signoutUser = () => {
-  localStorage.clear();
-};
-
-export { loginUser, createUser, signoutUser };
+export { loginUser, createUser };
