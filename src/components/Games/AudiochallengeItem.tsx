@@ -1,4 +1,4 @@
-import { KeyboardEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { KeyboardEvent, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { faCoffee } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -25,23 +25,29 @@ function AudioItem({
   const [checkState, setCheckState] = useState(false);
   const [checkedWord, setCheckedWord] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
+  const doNotKnowAnswer = 'Не знаю';
+  const nextButtonInner = 'Далее'
+  
+  const audioCorrect = useMemo(() => new Audio(`./assets/sounds/correct.mp3`), []);
+  const audioWrong = useMemo(() => new Audio(`./assets/sounds/wrong.mp3`), []);
 
   const question = questions[currentQuestion];
+  const audio = useMemo(() => new Audio(`${environment.baseUrl}${question.audio}`), [question.audio]);
 
-  function clickHandler(e: MouseEvent<HTMLButtonElement>) {
-    const checkedAnswer = e.currentTarget.innerText;
+  const clickHandler = useCallback((checkedAnswer: string) => {
     if (!checkState) {
       setCheckState(true);
       setCheckedWord(checkedAnswer);
       if (checkedAnswer === question.answer) {
+        audioCorrect.play();
         correctAnswers.push(question.wordData);
-        setIsCorrectAnswer(true);
-      } else {
+        console.log(audioCorrect, correctAnswers, wrongAnswers)
+      } else {   
+        audioWrong.play();     
         wrongAnswers.push(question.wordData);
-        setIsCorrectAnswer(false);
+        console.log(audioWrong, correctAnswers, wrongAnswers)
       }
-    } else if (checkedAnswer === 'Далее') {
+    } else if (checkState && checkedAnswer === nextButtonInner) {
       if (currentQuestion === questions.length - 1) {
         setGameEnded(true);
       } else {
@@ -50,55 +56,28 @@ function AudioItem({
         setCheckedWord('');
       }
     }
-  }
+  }, [checkState, correctAnswers, currentQuestion, question.answer, question.wordData, questions.length, setGameEnded, wrongAnswers, audioWrong, audioCorrect])  
 
-  function keyHandler(e: Event) {
-    console.log((e))
-    // if (e.code === 'Enter') {
-    //   if (currentQuestion === questions.length - 1) {
-    //     setGameEnded(true);
-    //   } else {
-    //     setCurrentQuestion(currentQuestion + 1);
-    //     setCheckState(false);
-    //     setCheckedWord('');
-    //   }
-    // } else if (!checkState) {
-    //   const checkedAnswer = question.variants[Number(e.code[e.code.length - 1])]
-    //   setCheckState(true);
-    //   setCheckedWord(checkedAnswer);
-    //   if (checkedAnswer === question.answer) {
-    //     correctAnswers.push(question.wordData);
-    //     setIsCorrectAnswer(true);
-    //   } else {
-    //     wrongAnswers.push(question.wordData);
-    //     setIsCorrectAnswer(false);
-    //   }
-    // }
-  }
-
-  useEffect(() => {
-    const audio = new Audio(`${environment.baseUrl}${question.audio}`);
-    audio.play()
-  }, [question.audio])
-
-  useEffect(() => {
-    const audioCorrect = new Audio(`./assets/sounds/correct.mp3`);
-    const audioWrong = new Audio(`./assets/sounds/wrong.mp3`);
-    if (correctAnswers.length || wrongAnswers.length) {
-      if (isCorrectAnswer) {
-        audioCorrect.play();
-      } else {
-        audioWrong.play();
-      }
+  const keyHandler = useCallback((key: string) => {
+    if (key === 'Enter') {
+      clickHandler(nextButtonInner)
+    } else if (key === ' ') {
+      audio.play()
+    } else if ([...question.variants.keys()].includes(Number(key) - 1)) {
+      clickHandler(question.variants[Number(key) - 1])
     }
-  }, [isCorrectAnswer, correctAnswers.length, wrongAnswers.length])
+  }, [clickHandler, audio, question.variants]);
+
+  useEffect(() => {    
+    audio.play()
+  }, [audio])
 
   useEffect(() => {
-    document.onkeydown(() => keyHandler);
-    return () => {
-      document.removeEventListener('keydown', keyHandler);
+    document.onkeydown = (e) => {
+      e.preventDefault();
+      keyHandler(e.key);
     };
-  }, [])
+  }, [keyHandler])
 
   return (
     <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg">
@@ -122,10 +101,11 @@ function AudioItem({
       </div>}
       <div className="flex flex-col items-center justify-between">
         <div className="flex flex-col items-center text-xl md:text-2xl sm:px-2">
-          {question.variants.map(word => (
+          {question.variants.map((word) => (
             <button
               type="button"
-              onClick={clickHandler}
+              onClick={(e) => clickHandler(e.currentTarget.id)}
+              id={word}
               className={`
                   ${'p-1 m-1 transition-all'}
                   ${!checkState && "hover:scale-125 cursor-pointer"}
@@ -142,8 +122,8 @@ function AudioItem({
           rounded-lg border-2 border-transparent bg-blue-400 hover:bg-white hover:text-blue-400 hover:border-blue-400
           focus:outline-none"
           type="button"
-          onClick={clickHandler}>
-          {checkState ? 'Далее' : 'Не знаю'}
+          onClick={(e) => clickHandler(e.currentTarget.innerText)}>
+          {checkState ? nextButtonInner : doNotKnowAnswer}
         </button>
       </div>
     </div>
