@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +12,7 @@ const EMAIL_REGEX = /\S+@\S+\.\S+/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,24}$/;
 
 export default function Register() {
+  const navigate = useNavigate();
   const nameRef = useRef<HTMLInputElement>(null);
 
   const [errorMsg, setErrorMsg] = useState('');
@@ -60,6 +61,7 @@ export default function Register() {
 
     try {
       await createUser({ name, email, password: pwd });
+      navigate(appRoutes.Signin, { replace: true });
     } catch (err) {
       if (err instanceof Error) {
         setErrorMsg(`${err.message}.`);
