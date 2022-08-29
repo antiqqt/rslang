@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import Routes from '../../common/routes/NavRoutes';
+import Routes from '../../common/routes/nav-routes';
 
 interface Props {
   openNav: boolean;

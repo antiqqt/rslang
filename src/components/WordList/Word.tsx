@@ -30,7 +30,7 @@ export default function Word({
       <img
         alt={`${word} illustration`}
         className="block w-auto h-auto rounded-t-lg lg:max-w-xs lg:rounded-none lg:rounded-l-lg"
-        src={`${environment.baseUrl}${image}`}
+        src={`${environment.baseUrl}/${image}`}
       />
       <section className="flex flex-col px-4 pt-2 pb-3 md:justify-around md:flex-1">
         <div className="flex gap-x-6 items-center">

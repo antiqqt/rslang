@@ -1,21 +1,17 @@
 import { useEffect, useState } from 'react';
 
+import { getWords } from '../../common/api/words';
+import WordData from '../../common/types/WordData';
 import WordList from '../WordList/WordList';
 import Controls from './Controls';
 
 export default function Textbook() {
   const [group, setGroup] = useState(0);
   const [page, setPage] = useState(0);
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState<WordData[]>([]);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/words?group=${group}&page=${page}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Fetch request failed');
-        }
-        return res.json();
-      })
+    getWords(group, page)
       .then((data) => setWords(data))
       .catch((error) => console.error(error));
   }, [group, page]);
