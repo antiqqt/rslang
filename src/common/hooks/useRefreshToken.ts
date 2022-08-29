@@ -29,7 +29,7 @@ const useRefreshToken = () => {
       };
     });
 
-    return res.data.refreshToken;
+    return res.data.token;
   };
 
   return refresh;

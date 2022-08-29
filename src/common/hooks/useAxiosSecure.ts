@@ -36,10 +36,10 @@ const useAxiosSecure = () => {
           prevRequest.sent = true;
 
           if (!refresh) return Promise.reject(err);
-          const newRefreshToken = await refresh();
+          const newToken = await refresh();
 
           const prevReqHeaders = prevRequest.headers as AxiosRequestHeaders;
-          prevReqHeaders.Authorization = `Bearer ${newRefreshToken}`;
+          prevReqHeaders.Authorization = `Bearer ${newToken}`;
 
           return axiosSecure(prevRequest);
         }
