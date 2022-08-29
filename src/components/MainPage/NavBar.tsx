@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Routes from '../../common/routes/nav-routes';
 
 interface Props {
@@ -20,7 +22,7 @@ function NavBar({ openNav, setOpenNav }: Props): JSX.Element {
             <li key={fullName} className="flex items-center justify-center w-7">
               <button type="button" onClick={() => setOpenNav(false)}>
                 <Link to={path}>
-                  <img src={`./assets/icons/${icon}`} alt={fullName} />
+                  <FontAwesomeIcon icon={icon} className="text-slate-700" />
                 </Link>
               </button>
             </li>
