@@ -1,4 +1,4 @@
-import GamesData from '../../common/routes/GamesRoutes';
+import GamesData from '../../common/routes/games-routes';
 import Controls from './Controls';
 
 interface Props {

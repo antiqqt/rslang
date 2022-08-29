@@ -1,9 +1,6 @@
-import { useState } from "react";
-
-import { faCoffee, faVolumeHigh, faXmark } from "@fortawesome/free-solid-svg-icons"
+import { faVolumeHigh } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-
-import environment from "../../common/environments/environment"
+import {Howl} from 'howler';
 
 interface Props {
   src: string;
@@ -15,11 +12,13 @@ function AudioButton({
   size
 }: Props): JSX.Element {
 
-  const audio = new Audio(src);
+  const audio = new Howl({
+    src: [src]
+  });
 
   return (
     <div>
-      <button type="button" className="flex items-center justify-center" onClick={() => audio.play()}>
+      <button type="button" className="flex items-center justify-center" onClick={() => {audio.play()}}>
         <FontAwesomeIcon icon={faVolumeHigh} className={size} />
       </button>
     </div>

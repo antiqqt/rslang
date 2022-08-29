@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import Routes from '../../common/routes/GamesRoutes';
+import Routes from '../../common/routes/games-routes';
 
 function GamesList(): JSX.Element {
   return (

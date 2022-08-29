@@ -1,12 +1,8 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import environment from "../../common/environments/environment";
-import GamesRoutes from '../../common/routes/GamesRoutes';
-import NavRoutes from '../../common/routes/NavRoutes';
+import appRoutes from '../../common/routes/app-routes';
 import WordData from "../../common/types/WordData";
 import AudioButton from "./AudioButton";
 
@@ -33,7 +29,7 @@ function GameResult({
           <div className="mx-auto text-green-500 text-xl p-4 text-center">Знаю: {correctAnswers.length}</div>
           <div className="flex flex-col flex-wrap">
             {correctAnswers.map((word) => (
-              <div className="flex items-center py-2" >
+              <div className="flex items-center py-2" key={word.word}>
                 <AudioButton
                   src={`${environment.baseUrl}${word.audio}`}
                   size='text-xl' />
@@ -48,7 +44,7 @@ function GameResult({
           <div className="mx-auto text-red-500 w-full text-xl p-4 text-center">Ошибок: {wrongAnswers.length}</div>
           <div>
             {wrongAnswers.map((word) => (
-              <div className="flex items-center py-2" >
+              <div className="flex items-center py-2" key={word.word}>
                 <AudioButton
                   src={`${environment.baseUrl}${word.audio}`}
                   size='text-xl' />
@@ -70,7 +66,7 @@ function GameResult({
           rounded-lg border-2 border-transparent bg-blue-400 hover:bg-white hover:text-blue-400 hover:border-blue-400
           focus:outline-none"
           type="button">
-          <Link to={NavRoutes.games.path}>К списку игр</Link>
+          <Link to={appRoutes.Games}>К списку игр</Link>
         </button>
       </div>
     </div >

@@ -14,7 +14,7 @@ interface Props {
 function Audiochallenge({ preCheckedGroup }: Props): JSX.Element {
 
   const countTrueWordsForGame = 20;
-  const countFalseWordsForGame = 80;
+  const countFalseWordsForGame = 120;
 
   const [group, setGroup] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);

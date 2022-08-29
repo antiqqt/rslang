@@ -14,7 +14,7 @@ function Sprint({ preCheckedGroup }: Props): JSX.Element {
   const [gameStarted, setGameStarted] = useState(false);
 
   const trueWords: WordData[] = getTrueWords(20, group);
-  const falseWords: WordData[] = getFalseWords(80, group, trueWords);
+  const falseWords: WordData[] = getFalseWords(120, group, trueWords);
 
   console.log(trueWords, falseWords)
 

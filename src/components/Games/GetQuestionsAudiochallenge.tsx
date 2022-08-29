@@ -1,6 +1,5 @@
 import QuestionData from "../../common/types/QuestionData";
 import WordData from "../../common/types/WordData";
-import { getRandom0toMax } from "../../common/utilities/Utilities";
 
 export default function getQuestionsAudiochallenge(trueWords: WordData[], falseWords: WordData[]): QuestionData[] {
 
@@ -11,7 +10,7 @@ export default function getQuestionsAudiochallenge(trueWords: WordData[], falseW
       answer: trueWord.word,
       image: trueWord.image,
       audio: trueWord.audio,
-      variants: [...Array(countOfFalseWordsInQuestion).keys()].map(() => falseWords[getRandom0toMax(falseWords.length - 1)].word).concat([trueWord.word]).sort(),
+      variants: [...Array(countOfFalseWordsInQuestion).keys()].map((index) => falseWords[trueWords.indexOf(trueWord) + 20 * index].word).concat([trueWord.word]).sort(),
       wordData: trueWord     
     })
   )

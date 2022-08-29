@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 
-import AutorizationSvg from './AutorizationSvg';
-import BurgerSvg from './BurgerSvg';
+import { faBars, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import appRoutes from '../../../common/routes/app-routes';
 
 interface Props {
   openNav: boolean;
@@ -10,20 +12,30 @@ interface Props {
 
 function Header({ openNav, setOpenNav }: Props): JSX.Element {
   return (
-    <header className="flex justify-between p-3 text-blue-400 w-[100%] h-16">
+    <header className="flex justify-between items-center px-3 text-blue-400 w-[100%] h-16">
       <button
-        className="w-10"
+        className="w-10 inline-flex items-center"
         type="button"
         onClick={() => setOpenNav(!openNav)}
       >
-        <BurgerSvg />
+        <FontAwesomeIcon
+          icon={faBars}
+          className={`text-blue-300 w-8 h-8 transition-transform ${
+            openNav ? 'rotate-90' : 'rotate-0'
+          }`}
+        />
       </button>
-      <button className="font-bold text-4xl" type="button">
+      <button className="flex items-center font-bold text-4xl" type="button">
         <Link to="/">RS Lang</Link>
       </button>
-      <Link className="w-10" to="/auth">
-        <AutorizationSvg />
-      </Link>
+      <div className="flex items-center gap-x-3">
+        <Link
+          className="w-12 h-12 bg-blue-300 inline-flex justify-center items-center rounded-full"
+          to={appRoutes.Profile}
+        >
+          <FontAwesomeIcon icon={faUser} className="text-slate-600 w-8 h-8" />
+        </Link>
+      </div>
     </header>
   );
 }

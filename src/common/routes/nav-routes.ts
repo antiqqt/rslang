@@ -1,4 +1,4 @@
-const NavRoutes = {
+const navRoutes = {
   main: {
     path: '/',
     icon: 'main-page-icon.svg',
@@ -26,4 +26,4 @@ const NavRoutes = {
   },
 };
 
-export default NavRoutes;
+export default navRoutes;

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import {Howl} from 'howler';
+
 import environment from '../../common/environments/environment';
 import QuestionData from "../../common/types/QuestionData";
 import WordData from "../../common/types/WordData";
@@ -24,22 +26,28 @@ function AudioItem({
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const doNotKnowAnswer = 'Не знаю';
   const nextButtonInner = 'Далее'
-  
-  const audioCorrect = useMemo(() => new Audio(`./assets/sounds/correct.mp3`), []);
-  const audioWrong = useMemo(() => new Audio(`./assets/sounds/wrong.mp3`), []);
+
+  const audioCorrect = useMemo(() => new Howl({
+    src: [`./assets/sounds/correct.mp3`]
+  }), []);
+  const audioWrong = useMemo(() => new Howl({
+    src: [`./assets/sounds/wrong.mp3`]
+  }), []);
 
   const question = questions[currentQuestion];
-  const audio = useMemo(() => new Audio(`${environment.baseUrl}${question.audio}`), [question.audio]);
+  const audio = useMemo(() => new Howl({
+    src: [`${environment.baseUrl}/${question.audio}`]
+  }), [question.audio]);
 
   const clickHandler = useCallback((checkedAnswer: string) => {
     if (!checkState) {
       setCheckState(true);
       setCheckedWord(checkedAnswer);
       if (checkedAnswer === question.answer) {
-        audioCorrect.play();
+        audioCorrect.play();        
         correctAnswers.push(question.wordData);
-      } else {   
-        audioWrong.play();     
+      } else {
+        audioWrong.play();
         wrongAnswers.push(question.wordData);
       }
     } else if (checkState && checkedAnswer === nextButtonInner) {
@@ -57,13 +65,14 @@ function AudioItem({
     if (key === 'Enter') {
       clickHandler(nextButtonInner)
     } else if (key === ' ') {
-      audio.play()
+      audio.pause();
+      audio.play();
     } else if ([...question.variants.keys()].includes(Number(key) - 1)) {
       clickHandler(question.variants[Number(key) - 1])
     }
   }, [clickHandler, audio, question.variants]);
 
-  useEffect(() => {    
+  useEffect(() => {
     audio.play()
   }, [audio])
 
@@ -78,18 +87,18 @@ function AudioItem({
     <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg">
       {!checkState && <div className="flex flex-col w-[220px] md:w-[450px] grow justify-center items-center sm:px-4 py-4">
         <AudioButton
-          src={`${environment.baseUrl}${question.audio}`}
+          src={`${environment.baseUrl}/${question.audio}`}
           size='text-9xl' />
       </div>}
       {checkState && <div className="flex flex-col md:w-[450px] grow justify-center items-center sm:px-4 py-4">
         <img
           alt={`${question.answer} illustration`}
           className="block rounded-lg max-h-[200px]"
-          src={`${environment.baseUrl}${question.image}`}
+          src={`${environment.baseUrl}/${question.image}`}
         />
         <div className="flex flex-wrap items-center justify-center sm:px-4 py-4">
           <AudioButton
-            src={`${environment.baseUrl}${question.audio}`}
+            src={`${environment.baseUrl}/${question.audio}`}
             size='text-4xl' />
           <span className="text-2xl md:text-4xl sm:px-2">{question.answer}</span>
         </div>
@@ -99,8 +108,7 @@ function AudioItem({
           {question.variants.map((word) => (
             <button
               type="button"
-              onClick={(e) => clickHandler(e.currentTarget.id)}
-              id={word}
+              onClick={() => clickHandler(word)}
               key={word}
               className={`
                   ${'p-1 m-1 transition-all'}
