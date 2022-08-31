@@ -17,7 +17,7 @@ export default function Textbook() {
   }, [group, page]);
 
   return (
-    <main className="flex flex-col gap-y-6 h-full px-3 py-8 font-medium text-2xl text-white">
+    <main className="flex flex-col gap-y-5 h-full px-3 py-8 font-medium text-2xl text-white">
       <h2 className="mx-auto text-gray-700 text-4xl">Учебник</h2>
       <Controls
         group={group}

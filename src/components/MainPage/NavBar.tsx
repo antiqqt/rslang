@@ -47,7 +47,7 @@ function NavBar({ isNavOpen, setIsNavOpen }: Props): JSX.Element {
             </li>
           ))}
         </ul>
-        <ul className="flex h-[30vh] flex-col justify-around mx-3">
+        <ul className="flex h-[30vh] flex-col justify-around mx-3 text-slate-600">
           {Object.values(Routes).map(({ path, fullName }) => (
             <li key={fullName}>
               <button type="button" onClick={() => setIsNavOpen(false)}>

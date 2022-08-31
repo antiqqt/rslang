@@ -16,8 +16,8 @@ export default function TextbookPagination({ page, handleSetPage }: Props) {
     <div className="flex justify-center xs:mt-0">
       <button
         className="inline-flex items-center justify-center px-3 text-sm font-medium 
-        text-white bg-blue-400 border-2 border-blue-400 hover:bg-white hover:text-blue-400
-        disabled:text-transparent disabled:hover:bg-blue-400 border-r-0 rounded-l-md"
+        text-slate-700 bg-slate-300 border-2 border-slate-300 hover:border-slate-400
+        disabled:text-transparent disabled:hover:border-slate-300 border-r-0 rounded-l-md"
         disabled={!hasPrev}
         onClick={() => handleSetPage(page - 1)}
         type="button"
@@ -37,15 +37,15 @@ export default function TextbookPagination({ page, handleSetPage }: Props) {
         </svg>
       </button>
       <div
-        className="flex justify-center py-[0.35rem] px-3 text-sm font-bold
-        text-white bg-blue-400 border-2 border-blue-400"
+        className="flex justify-center py-1 px-2 text-base
+        text-slate-700 bg-slate-300 border-2 border-slate-300"
       >
         Страница {page + 1}
       </div>
       <button
         className="inline-flex items-center justify-center px-3 text-sm font-medium 
-        text-white bg-blue-400 border-2 border-blue-400 hover:bg-white hover:text-blue-400
-        disabled:text-transparent disabled:hover:bg-blue-100 border-l-0 rounded-r-md"
+        text-slate-700 bg-slate-300 border-2 border-slate-300 hover:border-slate-400
+        disabled:text-transparent disabled:hover:border-slate-300 border-l-0 rounded-r-md"
         disabled={!hasNext}
         onClick={() => handleSetPage(page + 1)}
         type="button"
