@@ -3,10 +3,11 @@ import { useState } from 'react';
 import {
   faBookmark,
   faGraduationCap,
-  faPause,
-  faPlay,
+  faVolumeHigh,
+  faVolumeXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Howl } from 'howler';
 import parse from 'html-react-parser';
 
 import environment from '../../common/environments/environment';
@@ -17,6 +18,32 @@ import GroupElementData from '../Textbook/GroupElementData';
 interface Props {
   data: WordData;
 }
+
+const audioHandler = (
+  src: string,
+  isPlaying: boolean,
+  sound: Howl | null,
+  setPlaying: React.Dispatch<React.SetStateAction<boolean>>,
+  setSound: React.Dispatch<React.SetStateAction<Howl | null>>
+) => {
+  if (isPlaying && sound) {
+    setPlaying(false);
+    sound.stop();
+    setSound(null);
+  }
+  if (!isPlaying) {
+    const newSound = new Howl({
+      src,
+      onend: () => {
+        setPlaying(false);
+        setSound(null);
+      },
+    });
+    setPlaying(true);
+    setSound(newSound);
+    newSound.play();
+  }
+};
 
 export default function Word({
   data: {
@@ -29,10 +56,21 @@ export default function Word({
     textMeaning,
     textExampleTranslate,
     textMeaningTranslate,
+    audio,
+    audioExample,
+    audioMeaning,
   },
 }: Props) {
   const { auth } = useAuth();
-  const [isPlaying, setIsPlaying] = useState(false);
+
+  const [audioSound, setAudioSound] = useState<Howl | null>(null);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+
+  const [exampleSound, setExampleSound] = useState<Howl | null>(null);
+  const [examplePlaying, setExamplePlaying] = useState(false);
+
+  const [meaningSound, setMeaningSound] = useState<Howl | null>(null);
+  const [meaningPlaying, setMeaningPlaying] = useState(false);
 
   return (
     <article className="flex flex-col max-w-[15.5rem] w-full text-slate-400 bg-slate-200 border-2 border-slate-300 rounded-lg sm:max-w-none md:w-3/5 lg:w-full lg:flex-row lg:max-w-5xl">
@@ -44,36 +82,90 @@ export default function Word({
         />
       </div>
       <section className="flex flex-col px-4 pt-2 pb-3 gap-y-1 md:justify-around md:flex-1">
-        <p className="text-3xl leading-none text-slate-600 capitalize">
-          {word}
-        </p>
-        <div className="flex flex-col items-baseline pt-1 gap-x-2 text-slate-400 text-xl sm:flex-row">
-          <p className="capitalize">{wordTranslate}</p>-<p>{transcription}</p>
+        <div className="flex gap-x-4 items-center">
+          <p className="text-3xl leading-none text-slate-600 capitalize">
+            {word}
+          </p>
+          <button
+            onClick={() =>
+              audioHandler(
+                `${environment.baseUrl}/${audio}`,
+                audioPlaying,
+                audioSound,
+                setAudioPlaying,
+                setAudioSound
+              )
+            }
+            type="button"
+            className="inline-flex items-center justify-center w-6 h-6 mt-2
+          rounded-full border-2 border-transparent bg-slate-300 hover:border-slate-400"
+          >
+            <FontAwesomeIcon
+              icon={audioPlaying ? faVolumeXmark : faVolumeHigh}
+              className="w-4 h-4"
+            />
+          </button>
         </div>
-        <p className="pt-3 text-base text-slate-600 text-justify">
-          {parse(textExample)}
-        </p>
+        <div className="flex flex-col items-baseline pt-1 gap-x-2 text-slate-400 text-xl sm:flex-row">
+          <p className="pt-1 gap-x-2 text-slate-400 text-xl capitalize">
+            {wordTranslate}
+          </p>
+          -<p>{transcription}</p>
+        </div>
+        <div className="flex justify-between items-center pt-3 lg:justify-start lg:gap-4">
+          <p className="w-5/6 text-base text-slate-600 text-justify lg:w-auto lg:text-left ">
+            {parse(textExample)}
+          </p>
+          <button
+            type="button"
+            onClick={() =>
+              audioHandler(
+                `${environment.baseUrl}/${audioExample}`,
+                examplePlaying,
+                exampleSound,
+                setExamplePlaying,
+                setExampleSound
+              )
+            }
+            className="inline-flex items-center justify-center w-6 h-6
+          rounded-full border-2 border-transparent bg-slate-300 hover:border-slate-400"
+          >
+            <FontAwesomeIcon
+              icon={examplePlaying ? faVolumeXmark : faVolumeHigh}
+              className="w-4"
+            />
+          </button>
+        </div>
         <p className="text-base text-justify">{`${parse(
           textExampleTranslate
         )}.`}</p>
-        <p className="pt-3 text-base text-slate-600 text-justify">
-          {parse(textMeaning)}
-        </p>
+        <div className="flex items-center justify-between pt-3 lg:justify-start lg:gap-4">
+          <p className="w-5/6 text-base text-slate-600 text-justify lg:w-auto lg:text-left">
+            {parse(textMeaning)}
+          </p>
+          <button
+            onClick={() =>
+              audioHandler(
+                `${environment.baseUrl}/${audioMeaning}`,
+                meaningPlaying,
+                meaningSound,
+                setMeaningPlaying,
+                setMeaningSound
+              )
+            }
+            type="button"
+            className="inline-flex items-center justify-center w-6 h-6
+          rounded-full border-2 border-transparent bg-slate-300 hover:border-slate-400"
+          >
+            <FontAwesomeIcon
+              icon={meaningPlaying ? faVolumeXmark : faVolumeHigh}
+              className="w-4"
+            />
+          </button>
+        </div>
         <p className="text-base text-justify">{`${parse(
           textMeaningTranslate
         )}.`}</p>
-        <button
-          type="button"
-          onClick={() => setIsPlaying((prev) => !prev)}
-          className="inline-flex items-center justify-center w-10 h-10 mx-auto mt-2
-          rounded-full border-2 border-transparent bg-slate-300 hover:border-slate-400"
-        >
-          <FontAwesomeIcon
-            icon={isPlaying ? faPause : faPlay}
-            style={{ color: GroupElementData[group].color }}
-            className={isPlaying ? 'pl-0' : 'pl-1'}
-          />
-        </button>
         {auth && (
           <div className="flex flex-col justify-center items-center gap-y-2 pt-3 sm:flex-row sm:gap-x-3">
             <button
