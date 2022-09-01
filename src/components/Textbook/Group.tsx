@@ -1,6 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import SectionIcon from './GroupIcon';
+import { faFolder } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import useAuth from '../../common/hooks/useAuth';
+import GroupElementData from './GroupElementData';
 
 interface Props {
   group: number;
@@ -9,37 +13,59 @@ interface Props {
 }
 
 export default function Group({ group, handleSetGroup, handleSetPage }: Props) {
-  const [isMenuOpened, SetIsMenuOpened] = useState(false);
-  const availableGroups = 6;
+  const [isMenuOpen, SetIsMenuOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const { auth } = useAuth();
+
+  const availableGroups = auth
+    ? GroupElementData
+    : GroupElementData.filter((x) => x.name !== 'Сложные слова');
+
+  useEffect(() => {
+    const detectClickOutside = (e: MouseEvent) => {
+      if (!e.target || !(e.target instanceof Node)) return;
+      if (isMenuOpen && ref.current && !ref.current.contains(e.target)) {
+        SetIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('click', detectClickOutside, { once: true });
+
+    return () => {
+      document.removeEventListener('click', detectClickOutside);
+    };
+  }, [isMenuOpen, SetIsMenuOpen]);
 
   return (
-    <div className="relative">
+    <div ref={ref} className="relative">
       <button
-        className="inline-flex items-center justify-center gap-x-3 max-w-max px-3 py-1 text-white text-base font-medium 
+        className="inline-flex items-center justify-center gap-x-3 max-w-max px-3 py-1 text-slate-700 text-base font-medium 
         rounded-lg border-2 border-transparent
-        bg-blue-400 hover:bg-white hover:text-blue-400 hover:border-blue-400
-        focus:outline-none"
-        onClick={() => SetIsMenuOpened(!isMenuOpened)}
+        bg-slate-300  hover:border-slate-400"
+        onClick={() => SetIsMenuOpen((prev) => !prev)}
         type="button"
       >
-        <SectionIcon />
-        Раздел {group + 1}
+        <FontAwesomeIcon
+          icon={faFolder}
+          style={{ color: availableGroups[group].color }}
+        />
+        {availableGroups[group].name}
       </button>
-      {isMenuOpened && (
-        <div className="absolute right-0 z-10 flex flex-col items-center w-full bg-white rounded divide-y divide-gray-100 shadow">
-          <ul className="w-full py-1 text-sm text-center text-gray-700 dark:text-gray-200">
-            {new Array(availableGroups).fill(null).map((_, index) => (
-              <li key={Math.random()}>
+      {isMenuOpen && (
+        <div className="absolute right-0 z-10 flex flex-col items-center w-full bg-white rounded">
+          <ul className="w-full py-1 text-sm text-center text-gray-700">
+            {availableGroups.map((data, index) => (
+              <li key={data.name}>
                 <button
-                  className="block w-full py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                  className="flex justify-center items-center w-full py-2 px-4 rounded hover:bg-gray-100 cursor-pointer"
                   onClick={() => {
                     handleSetGroup(index);
-                    SetIsMenuOpened(false);
+                    SetIsMenuOpen(false);
                     handleSetPage(0);
                   }}
                   type="button"
                 >
-                  Раздел {index + 1}
+                  {data.name}
                 </button>
               </li>
             ))}

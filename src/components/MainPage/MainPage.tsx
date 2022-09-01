@@ -20,14 +20,14 @@ import Statistic from './Mock/Statistic';
 import NavBar from './NavBar';
 
 export default function MainPage(): JSX.Element {
-  const [openNav, setOpenNav] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <section className="flex flex-wrap flex-col min-h-screen overflow-x-hidden">
+    <section className="flex flex-col min-h-screen overflow-x-hidden">
       <Router>
-        <Header openNav={openNav} setOpenNav={setOpenNav} />
+        <Header isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
         <section className="grow flex">
-          <NavBar openNav={openNav} setOpenNav={setOpenNav} />
+          <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
           <main className="grow flex justify-center text-7xl bg-slate-100 transition-all">
             <Routes>
               {/* Public routes */}

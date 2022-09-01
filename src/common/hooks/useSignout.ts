@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import environment from '../environments/environment';
+import environment from '../environment/environment';
 import appRoutes from '../routes/app-routes';
 import useAuth from './useAuth';
 

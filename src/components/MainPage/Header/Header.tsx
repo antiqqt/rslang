@@ -6,22 +6,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import appRoutes from '../../../common/routes/app-routes';
 
 interface Props {
-  openNav: boolean;
-  setOpenNav: (val: boolean) => void;
+  isNavOpen: boolean;
+  setIsNavOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Header({ openNav, setOpenNav }: Props): JSX.Element {
+function Header({ isNavOpen, setIsNavOpen }: Props): JSX.Element {
   return (
     <header className="flex justify-between items-center px-3 text-blue-400 w-[100%] h-16">
       <button
         className="w-10 inline-flex items-center"
         type="button"
-        onClick={() => setOpenNav(!openNav)}
+        onClick={() => setIsNavOpen((prev) => !prev)}
       >
         <FontAwesomeIcon
           icon={faBars}
           className={`text-blue-300 w-8 h-8 transition-transform ${
-            openNav ? 'rotate-90' : 'rotate-0'
+            isNavOpen ? 'rotate-90' : 'rotate-0'
           }`}
         />
       </button>

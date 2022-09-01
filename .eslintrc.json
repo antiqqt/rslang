@@ -21,10 +21,9 @@
     "browser": true,
     "node": true
   },
-  "plugins": [
-    "eslint-plugin-import-helpers"
-  ],
+  "plugins": ["eslint-plugin-import-helpers"],
   "rules": {
+    "no-underscore-dangle": "off",
     "no-debugger": "off",
     "no-console": 0,
     "class-methods-use-this": "off",
@@ -43,15 +42,7 @@
           "ignoreCase": true,
           "order": "asc"
         },
-        "groups": [
-          "/^react/",
-          "module",
-          [
-            "parent",
-            "sibling",
-            "index"
-          ]
-        ],
+        "groups": ["/^react/", "module", ["parent", "sibling", "index"]],
         "newlinesBetween": "always"
       }
     ],

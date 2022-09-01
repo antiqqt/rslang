@@ -1,27 +1,35 @@
+import {
+  faBookBookmark,
+  faChartSimple,
+  faGamepad,
+  faHouse,
+  faNoteSticky,
+} from '@fortawesome/free-solid-svg-icons';
+
 const navRoutes = {
   main: {
     path: '/',
-    icon: 'main-page-icon.svg',
+    icon: faHouse,
     fullName: 'Главная',
   },
   textbook: {
     path: '/textbook',
-    icon: 'textbook-icon.svg',
+    icon: faBookBookmark,
     fullName: 'Учебник',
   },
   games: {
     path: '/games',
-    icon: 'games-icon.svg',
+    icon: faGamepad,
     fullName: 'Игры',
   },
   statistics: {
     path: '/statistics',
-    icon: 'statistics-icon.svg',
+    icon: faChartSimple,
     fullName: 'Статистика',
   },
   about: {
     path: '/about',
-    icon: 'about-icon.svg',
+    icon: faNoteSticky,
     fullName: 'О команде',
   },
 };

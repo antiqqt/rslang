@@ -1,4 +1,4 @@
-import environment from '../environments/environment';
+import environment from '../environment/environment';
 import apiPaths from './api-paths';
 
 interface UserData {
@@ -52,6 +52,7 @@ const loginUser = async (data: LoginData) => {
     body: JSON.stringify(data),
   });
   if (res.status === 403) throw new Error('Неправильный пароль или e-mail');
+  if (res.status === 404) throw new Error('Пользователь не найден');
   if (!res.ok) throw new Error('Ошибка сервера');
 
   return (await res.json()) as AuthData;

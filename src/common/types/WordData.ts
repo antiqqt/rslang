@@ -1,5 +1,10 @@
 export default interface WordData {
-  id: string;
+  _id?: string;
+  id?: string;
+  userWord?: {
+    difficulty: WordDifficulty;
+    optional: Record<string, string>;
+  };
   group: number;
   page: number;
   word: string;
@@ -14,3 +19,5 @@ export default interface WordData {
   textMeaningTranslate: string;
   wordTranslate: string;
 }
+
+export type WordDifficulty = 'hard' | 'learned';

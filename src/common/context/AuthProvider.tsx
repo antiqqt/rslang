@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 
 import { AuthData } from '../api/auth';
-import environment from '../environments/environment';
+import environment from '../environment/environment';
 
 interface AuthCtx {
   auth: AuthData | null;

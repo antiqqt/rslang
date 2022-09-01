@@ -32,7 +32,7 @@ const useAxiosSecure = () => {
       async (err: AxiosError) => {
         const prevRequest = err.config as ExtendedRequestConfig;
 
-        if (err.response?.status === 403 && !prevRequest.sent) {
+        if (err.response?.status === 401 && !prevRequest.sent) {
           prevRequest.sent = true;
 
           if (!refresh) return Promise.reject(err);

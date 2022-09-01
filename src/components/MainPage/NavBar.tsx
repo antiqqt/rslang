@@ -1,35 +1,56 @@
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Routes from '../../common/routes/nav-routes';
 
 interface Props {
-  openNav: boolean;
-  setOpenNav: (val: boolean) => void;
+  isNavOpen: boolean;
+  setIsNavOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function NavBar({ openNav, setOpenNav }: Props): JSX.Element {
+function NavBar({ isNavOpen, setIsNavOpen }: Props): JSX.Element {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const detectClickOutside = (e: MouseEvent) => {
+      if (!e.target || !(e.target instanceof Node)) return;
+      if (isNavOpen && ref.current && !ref.current.contains(e.target)) {
+        setIsNavOpen(false);
+      }
+    };
+
+    document.addEventListener('click', detectClickOutside, { once: true });
+
+    return () => {
+      document.removeEventListener('click', detectClickOutside);
+    };
+  }, [isNavOpen, setIsNavOpen]);
+
   return (
     <aside
+      ref={ref}
       className={`${'text-2xl bg-slate-300 transition-all'} ${
-        openNav ? 'w-48' : 'w-11'
+        isNavOpen ? 'w-48' : 'w-11'
       }`}
     >
       <nav className="flex pt-2">
         <ul className="flex h-[30vh] flex-col justify-around px-2 z-10">
           {Object.values(Routes).map(({ path, icon, fullName }) => (
             <li key={fullName} className="flex items-center justify-center w-7">
-              <button type="button" onClick={() => setOpenNav(false)}>
+              <button type="button" onClick={() => setIsNavOpen(false)}>
                 <Link to={path}>
-                  <img src={`./assets/icons/${icon}`} alt={fullName} />
+                  <FontAwesomeIcon icon={icon} className="text-slate-700" />
                 </Link>
               </button>
             </li>
           ))}
         </ul>
-        <ul className="flex h-[30vh] flex-col justify-around mx-3">
+        <ul className="flex h-[30vh] flex-col justify-around mx-3 text-slate-600">
           {Object.values(Routes).map(({ path, fullName }) => (
             <li key={fullName}>
-              <button type="button" onClick={() => setOpenNav(false)}>
+              <button type="button" onClick={() => setIsNavOpen(false)}>
                 <Link to={path}>{fullName}</Link>
               </button>
             </li>
