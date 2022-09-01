@@ -185,7 +185,7 @@ export default function Word({
                     if (!_id) return;
                     handleWord(_id, axiosSecure, auth, 'update', 'hard');
                     setDifficulty('hard');
-                    setUserWord(word);
+                    setUserWord(_id);
                   }}
                   icon={faSkull}
                   text="В сложные"
@@ -198,7 +198,7 @@ export default function Word({
                       if (!_id) return;
                       handleWord(_id, axiosSecure, auth, 'update', 'learned');
                       setDifficulty('learned');
-                      setUserWord(word);
+                      setUserWord(_id);
                     }}
                     icon={faGraduationCap}
                     text="В изученные"
@@ -211,7 +211,7 @@ export default function Word({
                       if (!_id) return;
                       handleWord(_id, axiosSecure, auth, 'delete', 'hard');
                       setDifficulty('hard');
-                      setUserWord(word);
+                      setUserWord(_id);
                     }}
                     icon={faSkull}
                     text="Убрать из сложных"

@@ -93,7 +93,7 @@ export default function Textbook() {
           Вы полностью изучили эту страницу.
         </p>
       )}
-      <section className="grow flex flex-col items-center gap-y-6 pb-8 md:px-4 lg:px-6">
+      <section className="flex flex-col items-center gap-y-6 pb-8 md:px-4 lg:px-6">
         {words.map((data) => (
           <Word
             currentGroup={group}
@@ -102,6 +102,13 @@ export default function Textbook() {
             key={data.id ? data.id : data._id}
           />
         ))}
+        {words.length === 0 &&
+          group === textbookConstants.HARD_WORDS_GROUP_NUM && (
+            <p className="flex justify-center mx-auto px-2 py-1 text-slate-600 text-base text-center bg-slate-200 border-2 border-slate-300 rounded-lg">
+              Пока что тут пусто :&#40; <br />
+              Попробуйте добавить слова из других разделов.
+            </p>
+          )}
       </section>
     </article>
   );
