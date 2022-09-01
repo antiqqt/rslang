@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import environment from '../environments/environment';
+import environment from '../environment/environment';
 
 export default axios.create({
   baseURL: environment.baseUrl,

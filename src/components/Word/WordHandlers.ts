@@ -3,7 +3,7 @@ import { Howl } from 'howler';
 
 import apiPaths from '../../common/api/api-paths';
 import { AuthData } from '../../common/api/auth';
-import environment from '../../common/environments/environment';
+import environment from '../../common/environment/environment';
 import { WordDifficulty } from '../../common/types/WordData';
 
 const handleAudio = (

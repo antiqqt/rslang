@@ -1,4 +1,4 @@
-import environment from '../environments/environment';
+import environment from '../environment/environment';
 import WordData from '../types/WordData';
 import apiPaths from './api-paths';
 

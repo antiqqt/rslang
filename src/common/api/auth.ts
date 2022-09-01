@@ -1,4 +1,4 @@
-import environment from '../environments/environment';
+import environment from '../environment/environment';
 import apiPaths from './api-paths';
 
 interface UserData {

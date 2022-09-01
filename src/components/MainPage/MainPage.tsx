@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 import appRoutes from '../../common/routes/app-routes';
@@ -20,7 +20,7 @@ export default function MainPage(): JSX.Element {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <section className="flex flex-wrap flex-col min-h-screen overflow-x-hidden">
+    <section className="flex flex-col min-h-screen overflow-x-hidden">
       <Router>
         <Header isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
         <section className="grow flex">

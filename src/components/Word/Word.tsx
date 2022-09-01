@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import {
-  faBookmark,
   faGraduationCap,
+  faSkull,
   faVolumeHigh,
   faVolumeXmark,
 } from '@fortawesome/free-solid-svg-icons';
@@ -10,7 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Howl } from 'howler';
 import parse from 'html-react-parser';
 
-import environment from '../../common/environments/environment';
+import textbookConstants from '../../common/constants/tb-constants';
+import environment from '../../common/environment/environment';
 import useAuth from '../../common/hooks/useAuth';
 import useAxiosSecure from '../../common/hooks/useAxiosSecure';
 import WordData from '../../common/types/WordData';
@@ -20,9 +21,13 @@ import { handleAudio, handleWord } from './WordHandlers';
 
 interface Props {
   data: WordData;
+  setUserWord: React.Dispatch<React.SetStateAction<string>>;
+  currentGroup: number;
 }
 
 export default function Word({
+  currentGroup,
+  setUserWord,
   data: {
     userWord,
     _id,
@@ -55,7 +60,7 @@ export default function Word({
   const [meaningPlaying, setMeaningPlaying] = useState(false);
 
   return (
-    <article className="flex flex-col max-w-[15.5rem] w-full text-slate-400 bg-slate-200 border-2 border-slate-300 rounded-lg sm:max-w-none md:w-3/5 lg:w-full lg:flex-row lg:max-w-5xl">
+    <article className="flex flex-col max-w-[15.5rem] w-full text-slate-400 bg-slate-200 border-2 border-slate-300 rounded-lg sm:max-w-none sm:w-3/5 lg:w-full lg:flex-row lg:max-w-5xl">
       <div className="w-full overflow-hidden border-b-2 border-slate-300 rounded-t-lg lg:max-w-xs lg:rounded-none lg:rounded-l-lg lg:border-b-0 lg:border-r-2">
         <img
           alt={`${word} illustration`}
@@ -158,8 +163,9 @@ export default function Word({
                       if (!_id) return;
                       handleWord(_id, axiosSecure, auth, 'create', 'hard');
                       setDifficulty('hard');
+                      setUserWord(word);
                     }}
-                    icon={faBookmark}
+                    icon={faSkull}
                     text="В сложные"
                   />
                   <WordBtn
@@ -179,37 +185,55 @@ export default function Word({
                     if (!_id) return;
                     handleWord(_id, axiosSecure, auth, 'update', 'hard');
                     setDifficulty('hard');
+                    setUserWord(word);
                   }}
-                  icon={faBookmark}
+                  icon={faSkull}
                   text="В сложные"
                 />
               )}
-              {difficulty === 'hard' && (
-                <WordBtn
-                  handleAction={() => {
-                    if (!_id) return;
-                    handleWord(_id, axiosSecure, auth, 'update', 'learned');
-                    setDifficulty('learned');
-                  }}
-                  icon={faGraduationCap}
-                  text="В изученные"
-                />
-              )}
+              {difficulty === 'hard' &&
+                currentGroup !== textbookConstants.HARD_WORDS_GROUP_NUM && (
+                  <WordBtn
+                    handleAction={() => {
+                      if (!_id) return;
+                      handleWord(_id, axiosSecure, auth, 'update', 'learned');
+                      setDifficulty('learned');
+                      setUserWord(word);
+                    }}
+                    icon={faGraduationCap}
+                    text="В изученные"
+                  />
+                )}
+              {difficulty === 'hard' &&
+                currentGroup === textbookConstants.HARD_WORDS_GROUP_NUM && (
+                  <WordBtn
+                    handleAction={() => {
+                      if (!_id) return;
+                      handleWord(_id, axiosSecure, auth, 'delete', 'hard');
+                      setDifficulty('hard');
+                      setUserWord(word);
+                    }}
+                    icon={faSkull}
+                    text="Убрать из сложных"
+                  />
+                )}
             </div>
-            <div className="flex justify-center items-center pt-3">
-              {difficulty === 'hard' && (
-                <FontAwesomeIcon
-                  icon={faBookmark}
-                  style={{ color: GroupElementData[group].color }}
-                />
-              )}
-              {difficulty === 'learned' && (
-                <FontAwesomeIcon
-                  icon={faGraduationCap}
-                  style={{ color: GroupElementData[group].color }}
-                />
-              )}
-            </div>
+            {difficulty && (
+              <div className="flex justify-center items-center pt-3">
+                {difficulty === 'hard' && (
+                  <FontAwesomeIcon
+                    icon={faSkull}
+                    style={{ color: GroupElementData[group].color }}
+                  />
+                )}
+                {difficulty === 'learned' && (
+                  <FontAwesomeIcon
+                    icon={faGraduationCap}
+                    style={{ color: GroupElementData[group].color }}
+                  />
+                )}
+              </div>
+            )}
           </>
         )}
       </section>
