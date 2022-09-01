@@ -1,10 +1,14 @@
-export default interface WordData {
-  _id?: string;
-  id?: string;
-  userWord?: {
-    difficulty: WordDifficulty;
-    optional: Record<string, string>;
-  };
+export type AggregatedWords = [
+  {
+    paginatedResults: AggregatedWordData[];
+  },
+  {
+    totalCount: { count: number };
+  }
+];
+
+export default interface AggregatedWordData {
+  id: string;
   group: number;
   page: number;
   word: string;
@@ -19,5 +23,3 @@ export default interface WordData {
   textMeaningTranslate: string;
   wordTranslate: string;
 }
-
-export type WordDifficulty = 'hard' | 'learned';

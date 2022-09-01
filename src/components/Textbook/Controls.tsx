@@ -10,6 +10,8 @@ interface Props {
   handleSetGroup: (val: number) => void;
 }
 
+const HARD_WORDS_GROUP = 6;
+
 export default function TextbookControls({
   page,
   handleSetPage,
@@ -27,7 +29,9 @@ export default function TextbookControls({
         handleSetPage={handleSetPage}
       />
       <Games />
-      <Pagination handleSetPage={handleSetPage} page={page} />
+      {group !== HARD_WORDS_GROUP && (
+        <Pagination handleSetPage={handleSetPage} page={page} />
+      )}
     </section>
   );
 }

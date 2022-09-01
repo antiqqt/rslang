@@ -12,41 +12,20 @@ import parse from 'html-react-parser';
 
 import environment from '../../common/environments/environment';
 import useAuth from '../../common/hooks/useAuth';
+import useAxiosSecure from '../../common/hooks/useAxiosSecure';
 import WordData from '../../common/types/WordData';
 import GroupElementData from '../Textbook/GroupElementData';
+import WordBtn from './WordBtn';
+import { handleAudio, handleWord } from './WordHandlers';
 
 interface Props {
   data: WordData;
 }
 
-const audioHandler = (
-  src: string,
-  isPlaying: boolean,
-  sound: Howl | null,
-  setPlaying: React.Dispatch<React.SetStateAction<boolean>>,
-  setSound: React.Dispatch<React.SetStateAction<Howl | null>>
-) => {
-  if (isPlaying && sound) {
-    setPlaying(false);
-    sound.stop();
-    setSound(null);
-  }
-  if (!isPlaying) {
-    const newSound = new Howl({
-      src,
-      onend: () => {
-        setPlaying(false);
-        setSound(null);
-      },
-    });
-    setPlaying(true);
-    setSound(newSound);
-    newSound.play();
-  }
-};
-
 export default function Word({
   data: {
+    userWord,
+    _id,
     word,
     group,
     image,
@@ -62,6 +41,9 @@ export default function Word({
   },
 }: Props) {
   const { auth } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
+  const [difficulty, setDifficulty] = useState(userWord?.difficulty);
 
   const [audioSound, setAudioSound] = useState<Howl | null>(null);
   const [audioPlaying, setAudioPlaying] = useState(false);
@@ -88,7 +70,7 @@ export default function Word({
           </p>
           <button
             onClick={() =>
-              audioHandler(
+              handleAudio(
                 `${environment.baseUrl}/${audio}`,
                 audioPlaying,
                 audioSound,
@@ -119,7 +101,7 @@ export default function Word({
           <button
             type="button"
             onClick={() =>
-              audioHandler(
+              handleAudio(
                 `${environment.baseUrl}/${audioExample}`,
                 examplePlaying,
                 exampleSound,
@@ -145,7 +127,7 @@ export default function Word({
           </p>
           <button
             onClick={() =>
-              audioHandler(
+              handleAudio(
                 `${environment.baseUrl}/${audioMeaning}`,
                 meaningPlaying,
                 meaningSound,
@@ -167,32 +149,68 @@ export default function Word({
           textMeaningTranslate
         )}.`}</p>
         {auth && (
-          <div className="flex flex-col justify-center items-center gap-y-2 pt-3 sm:flex-row sm:gap-x-3">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center gap-x-2 max-w-max px-3 py-1 text-slate-700 
-            text-base font-medium rounded-lg border-2 border-transparent bg-slate-300 hover:border-slate-400"
-            >
-              <FontAwesomeIcon
-                icon={faBookmark}
-                style={{ color: GroupElementData[group].color }}
-                className="w-5 h-5"
-              />
-              В сложные
-            </button>
-            <button
-              type="button"
-              className="inline-flex items-center justify-center gap-x-2 max-w-max px-3 py-1 text-slate-700 
-            text-base font-medium rounded-lg border-2 border-transparent bg-slate-300 hover:border-slate-400"
-            >
-              <FontAwesomeIcon
-                icon={faGraduationCap}
-                style={{ color: GroupElementData[group].color }}
-                className="w-6 h-6"
-              />
-              В изученные
-            </button>
-          </div>
+          <>
+            <div className="flex flex-col justify-center items-center gap-y-2 pt-3 sm:flex-row sm:gap-x-3">
+              {!difficulty && (
+                <>
+                  <WordBtn
+                    handleAction={() => {
+                      if (!_id) return;
+                      handleWord(_id, axiosSecure, auth, 'create', 'hard');
+                      setDifficulty('hard');
+                    }}
+                    icon={faBookmark}
+                    text="В сложные"
+                  />
+                  <WordBtn
+                    handleAction={() => {
+                      if (!_id) return;
+                      handleWord(_id, axiosSecure, auth, 'create', 'learned');
+                      setDifficulty('learned');
+                    }}
+                    icon={faGraduationCap}
+                    text="В изученные"
+                  />
+                </>
+              )}
+              {difficulty === 'learned' && (
+                <WordBtn
+                  handleAction={() => {
+                    if (!_id) return;
+                    handleWord(_id, axiosSecure, auth, 'update', 'hard');
+                    setDifficulty('hard');
+                  }}
+                  icon={faBookmark}
+                  text="В сложные"
+                />
+              )}
+              {difficulty === 'hard' && (
+                <WordBtn
+                  handleAction={() => {
+                    if (!_id) return;
+                    handleWord(_id, axiosSecure, auth, 'update', 'learned');
+                    setDifficulty('learned');
+                  }}
+                  icon={faGraduationCap}
+                  text="В изученные"
+                />
+              )}
+            </div>
+            <div className="flex justify-center items-center pt-3">
+              {difficulty === 'hard' && (
+                <FontAwesomeIcon
+                  icon={faBookmark}
+                  style={{ color: GroupElementData[group].color }}
+                />
+              )}
+              {difficulty === 'learned' && (
+                <FontAwesomeIcon
+                  icon={faGraduationCap}
+                  style={{ color: GroupElementData[group].color }}
+                />
+              )}
+            </div>
+          </>
         )}
       </section>
     </article>

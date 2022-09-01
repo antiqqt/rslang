@@ -19,7 +19,7 @@ export default function Group({ group, handleSetGroup, handleSetPage }: Props) {
 
   const availableGroups = auth
     ? GroupElementData
-    : GroupElementData.filter((x) => x.name === 'Сложные слова');
+    : GroupElementData.filter((x) => x.name !== 'Сложные слова');
 
   useEffect(() => {
     const detectClickOutside = (e: MouseEvent) => {
