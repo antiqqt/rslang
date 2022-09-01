@@ -2,16 +2,19 @@ import { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 import appRoutes from '../../common/routes/app-routes';
+import gamesRoutes from '../../common/routes/games-routes';
 import Profile from '../Auth/Profile';
 import Register from '../Auth/Register';
 import RequireAuth from '../Auth/RequireAuth';
 import RequireNoAuth from '../Auth/RequireNoAuth';
 import Signin from '../Auth/Signin';
+import Audiochallenge from '../Games/Audiochallenge';
+import GamesList from '../Games/GamesList';
+import Sprint from '../Games/Sprint';
 import Textbook from '../Textbook/Textbook';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import About from './Mock/About';
-import Games from './Mock/Games';
 import Home from './Mock/Home';
 import Statistic from './Mock/Statistic';
 import NavBar from './NavBar';
@@ -30,8 +33,10 @@ export default function MainPage(): JSX.Element {
               {/* Public routes */}
               <Route path={appRoutes.Home} element={<Home />} />
               <Route path={appRoutes.Textbook} element={<Textbook />} />
-              <Route path={appRoutes.Games} element={<Games />} />
+              <Route path={appRoutes.Games} element={<GamesList />} />
               <Route path={appRoutes.About} element={<About />} />
+              <Route path={gamesRoutes.audiochallenge.path} element={<Audiochallenge />} />
+              <Route path={gamesRoutes.sprint.path} element={<Sprint />} />
 
               {/* Protected routes */}
               <Route element={<RequireAuth />}>
