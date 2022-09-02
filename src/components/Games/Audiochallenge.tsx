@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
+import TextBookToGameData from '../../common/types/TextBookToGameData';
 import WordData from '../../common/types/WordData'
 import AudiochallengeItem from './AudiochallengeItem';
 import { getFalseWords, getTrueWords } from './CreateCollection';
@@ -12,12 +14,16 @@ interface Props {
 }
 
 function Audiochallenge({ preCheckedGroup }: Props): JSX.Element {
+  
+  const location= useLocation()
+  const textBookData = location.state as TextBookToGameData;
+  console.log(textBookData);
 
   const countTrueWordsForGame = 20;
   const countFalseWordsForGame = 120;
 
-  const [page, setPage] = useState(0);
-  const [group, setGroup] = useState(0);
+  const [page, setPage] = useState(textBookData ? textBookData.page : 0);
+  const [group, setGroup] = useState(textBookData ? textBookData.group : 0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   

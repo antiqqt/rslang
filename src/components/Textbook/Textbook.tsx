@@ -86,6 +86,7 @@ export default function Textbook() {
         handleSetPage={setPage}
         page={page}
         pageLearned={pageLearned}
+        words={words}
       />
       {pageLearned && group !== textbookConstants.HARD_WORDS_GROUP_NUM && (
         <p className="flex justify-center mx-auto px-2 py-1 text-slate-600 text-base text-center bg-emerald-300 rounded-lg">

@@ -1,9 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export default function Games() {
+import Routes from '../../common/routes/games-routes';
+import WordData from '../../common/types/WordData';
+
+interface Props {
+  page: number;
+
+  group: number;
+
+  words: WordData[];
+}
+
+export default function Games({
+  page,
+  group,
+  words,
+}: Props) {
   const [isMenuOpen, SetIsMenuOpen] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -37,24 +53,18 @@ export default function Games() {
       {isMenuOpen && (
         <div className="absolute right-0 z-10 flex flex-col items-center w-full bg-white rounded">
           <ul className="w-full py-1 text-sm text-center text-gray-700 dark:text-gray-200">
-            <li>
-              <button
-                className="block w-full py-2 px-4 hover:bg-gray-100 rounded cursor-pointer"
-                onClick={() => SetIsMenuOpen(false)}
-                type="button"
-              >
-                Аудиовызов
-              </button>
-            </li>
-            <li>
-              <button
-                className="block w-full py-2 px-4 hover:bg-gray-100 cursor-pointer"
-                onClick={() => SetIsMenuOpen(false)}
-                type="button"
-              >
-                Спринт
-              </button>
-            </li>
+            {Object.values(Routes).map(({ path, fullName }) => (
+              <Link to={path} key={fullName} state={{ group, page, words }}>
+                <li>
+                  <button
+                    className="block w-full py-2 px-4 hover:bg-gray-100 rounded cursor-pointer"
+                    type="button"
+                  >
+                    {fullName}
+                  </button>
+                </li>
+              </Link>
+            ))}
           </ul>
         </div>
       )}

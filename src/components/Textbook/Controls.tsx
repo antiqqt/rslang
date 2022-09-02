@@ -1,3 +1,4 @@
+import WordData from '../../common/types/WordData';
 import Games from './Games';
 import Group from './Group';
 import Pagination from './Pagination';
@@ -10,6 +11,8 @@ interface Props {
   handleSetGroup: (val: number) => void;
 
   pageLearned: boolean;
+
+  words: WordData[];
 }
 
 const HARD_WORDS_GROUP = 6;
@@ -20,6 +23,7 @@ export default function TextbookControls({
   group,
   handleSetGroup,
   pageLearned,
+  words,
 }: Props) {
   return (
     <section
@@ -31,7 +35,10 @@ export default function TextbookControls({
         handleSetGroup={handleSetGroup}
         handleSetPage={handleSetPage}
       />
-      {!pageLearned && <Games />}
+      {!pageLearned && <Games
+        group={group}
+        page={page}
+        words={words} />}
       {group !== HARD_WORDS_GROUP && (
         <Pagination
           handleSetPage={handleSetPage}
