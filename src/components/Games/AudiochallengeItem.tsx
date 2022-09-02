@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import {Howl} from 'howler';
+import { Howl } from 'howler';
 
 import environment from '../../common/environment/environment';
 import QuestionData from "../../common/types/QuestionData";
@@ -11,6 +11,7 @@ interface Props {
   questions: QuestionData[];
   wrongAnswers: WordData[];
   correctAnswers: WordData[];
+  answerSeries: boolean[];
   setGameEnded: (val: boolean) => void;
 }
 
@@ -18,6 +19,7 @@ function AudioItem({
   questions,
   wrongAnswers,
   correctAnswers,
+  answerSeries,
   setGameEnded
 }: Props): JSX.Element {
 
@@ -44,22 +46,24 @@ function AudioItem({
       setCheckState(true);
       setCheckedWord(checkedAnswer);
       if (checkedAnswer === question.answer) {
-        audioCorrect.play();        
+        audioCorrect.play();
         correctAnswers.push(question.wordData);
+        answerSeries.push(true)
       } else {
         audioWrong.play();
         wrongAnswers.push(question.wordData);
+        answerSeries.push(false)
       }
     } else if (checkState && checkedAnswer === nextButtonInner) {
       if (currentQuestion === questions.length - 1) {
         setGameEnded(true);
       } else {
-        setCurrentQuestion(currentQuestion + 1);
         setCheckState(false);
+        setCurrentQuestion(currentQuestion + 1);
         setCheckedWord('');
       }
     }
-  }, [checkState, correctAnswers, currentQuestion, question.answer, question.wordData, questions.length, setGameEnded, wrongAnswers, audioWrong, audioCorrect])  
+  }, [answerSeries, checkState, correctAnswers, currentQuestion, question.answer, question.wordData, questions.length, setGameEnded, wrongAnswers, audioWrong, audioCorrect])
 
   const keyHandler = useCallback((key: string) => {
     if (key === 'Enter') {
