@@ -10,6 +10,7 @@ interface Props {
 
 function Sprint({ preCheckedGroup }: Props): JSX.Element {
 
+  const [page, setPage] = useState(0);
   const [group, setGroup] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
 
@@ -23,6 +24,7 @@ function Sprint({ preCheckedGroup }: Props): JSX.Element {
       <h2 className="mx-auto text-gray-700 text-4xl p-4 text-center">Спринт</h2>
       {(preCheckedGroup === undefined) && !gameStarted && <StartGame
         group={group}
+        setPage={setPage}
         setGroup={setGroup}
         isStarted={gameStarted}
         setIsGameStarted={setGameStarted}

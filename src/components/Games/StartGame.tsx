@@ -3,6 +3,7 @@ import Controls from './Controls';
 
 interface Props {
   group: number;
+  setPage: (val: number) => void;
   setGroup: (val: number) => void;
   isStarted: boolean;
   setIsGameStarted: (val: boolean) => void
@@ -11,6 +12,7 @@ interface Props {
 
 function StartGame({
   group,
+  setPage,
   setGroup,
   isStarted,
   setIsGameStarted,
@@ -20,6 +22,7 @@ function StartGame({
     <div>
       <Controls
         group={group}
+        handleSetPage={setPage}
         handleSetGroup={setGroup}
         isStarted={isStarted}
         setIsGameStarted={setIsGameStarted}
