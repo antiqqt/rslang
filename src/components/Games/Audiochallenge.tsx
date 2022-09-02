@@ -4,66 +4,61 @@ import { useLocation } from 'react-router-dom';
 import TextBookToGameData from '../../common/types/TextBookToGameData';
 import WordData from '../../common/types/WordData'
 import AudiochallengeItem from './AudiochallengeItem';
-import { getFalseWords, getTrueWords } from './CreateCollection';
+import { getFalseWords, useTrueWords } from './CreateCollection';
 import GameResult from './GameResult';
 import getQuestionsAudiochallenge from './GetQuestionsAudiochallenge';
 import StartGame from './StartGame';
 
-interface Props {
-  preCheckedGroup?: number;
-}
-
-function Audiochallenge({ preCheckedGroup }: Props): JSX.Element {
+function Audiochallenge(): JSX.Element {
   
   const location= useLocation()
   const textBookData = location.state as TextBookToGameData;
-  console.log(textBookData);
 
-  const countTrueWordsForGame = 20;
-  const countFalseWordsForGame = 120;
-
+  const userWords = useMemo(() => textBookData ? textBookData.words : [], [textBookData])
+  const locationLaunch = useMemo(() => textBookData ? 'book' : 'menu', [textBookData])
   const [page, setPage] = useState(textBookData ? textBookData.page : 0);
   const [group, setGroup] = useState(textBookData ? textBookData.group : 0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
+
+  const countOfFalseWords = 4;
+  const countOfTrueWords = 20;
   
-  const trueWords: WordData[] = useMemo(() => getTrueWords(countTrueWordsForGame, group), [group]);
-  const falseWords: WordData[] = useMemo(() => getFalseWords(countFalseWordsForGame, group, trueWords), [group, trueWords]);
+  const trueWords: WordData[] = useTrueWords(group, page, userWords, locationLaunch, countOfTrueWords);
+  const falseWords: string[][] = useMemo(() => getFalseWords(trueWords, countOfFalseWords), [trueWords]);
 
   const questions = getQuestionsAudiochallenge(trueWords, falseWords);
 
-  const correctAnswers: WordData[] = useMemo(() => {
-    const result: WordData[] = [];
-    return result
-  }, []);
-  const wrongAnswers: WordData[] = useMemo(() => {
-    const result: WordData[] = [];
-    return result
-  }, []);
+  const answerSeries: boolean[] = useMemo(() => [], []);
+  const correctAnswers: WordData[] = useMemo(() => [], []);
+  const wrongAnswers: WordData[] = useMemo(() => [], []);
 
   return (
     <article className='flex flex-col'>
       <h2 className="mx-auto text-gray-700 text-4xl p-4 text-center">Аудиовызов</h2>
-      {(preCheckedGroup === undefined) && !gameStarted && <StartGame
+      {!gameStarted && <StartGame
         group={group}
+        locationLaunch={locationLaunch}
         setPage={setPage}
         setGroup={setGroup}
         isStarted={gameStarted}
         setIsGameStarted={setGameStarted}
         gameName='audiochallenge'
       />}
-      {(gameStarted || preCheckedGroup) && !gameEnded &&
-        <AudiochallengeItem 
+      {gameStarted && !gameEnded &&
+        <AudiochallengeItem
           questions={questions}
           wrongAnswers={wrongAnswers}
           correctAnswers={correctAnswers}
+          answerSeries={answerSeries}
           setGameEnded={setGameEnded}
         />
       }
-      {gameEnded && 
-        <GameResult 
+      {gameEnded &&
+        <GameResult
         wrongAnswers={wrongAnswers}
         correctAnswers={correctAnswers}
+        answerSeries={answerSeries}
         />
       }
     </article>
