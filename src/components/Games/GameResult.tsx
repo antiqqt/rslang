@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import environment from "../../common/environments/environment";
+import environment from "../../common/environment/environment";
 import appRoutes from '../../common/routes/app-routes';
 import WordData from "../../common/types/WordData";
 import AudioButton from "./AudioButton";

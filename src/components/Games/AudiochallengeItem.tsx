@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {Howl} from 'howler';
 
-import environment from '../../common/environments/environment';
+import environment from '../../common/environment/environment';
 import QuestionData from "../../common/types/QuestionData";
 import WordData from "../../common/types/WordData";
 import AudioButton from "./AudioButton";
