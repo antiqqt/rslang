@@ -9,11 +9,13 @@ import AudioButton from "./AudioButton";
 interface Props {
   wrongAnswers: WordData[];
   correctAnswers: WordData[]
+  answerSeries: boolean[]
 }
 
 function GameResult({
   wrongAnswers,
-  correctAnswers
+  correctAnswers,
+  answerSeries
 }: Props): JSX.Element {
 
   useEffect(() => {
@@ -46,7 +48,7 @@ function GameResult({
             {wrongAnswers.map((word) => (
               <div className="flex items-center py-2" key={word.word}>
                 <AudioButton
-                  src={`${environment.baseUrl}${word.audio}`}
+                  src={`${environment.baseUrl}/${word.audio}`}
                   size='text-xl' />
                 <span className="text-xl px-2 text-red-500 ">{word.word}</span>
               </div>
