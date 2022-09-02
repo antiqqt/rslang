@@ -8,6 +8,7 @@ interface Props {
   isStarted: boolean;
   setIsGameStarted: (val: boolean) => void
   gameName: keyof typeof GamesData;
+  locationLaunch: 'menu' | 'book'
 }
 
 function StartGame({
@@ -16,7 +17,8 @@ function StartGame({
   setGroup,
   isStarted,
   setIsGameStarted,
-  gameName
+  gameName,
+  locationLaunch
 }: Props) {
   return (
     <div>
@@ -26,6 +28,7 @@ function StartGame({
         handleSetGroup={setGroup}
         isStarted={isStarted}
         setIsGameStarted={setIsGameStarted}
+        locationLaunch={locationLaunch}
       />
       <div className='text-lg sm:text-3xl p-4 text-justify'>{GamesData[gameName].description}</div>
       <ul className='text-base sm:text-2xl list-disc px-10 sm:px-20'>
