@@ -1,51 +1,67 @@
+import { useEffect, useState } from 'react';
+
+import apiPaths from "../../common/api/api-paths";
+import getWords from "../../common/api/words";
+import textbookConstants from "../../common/constants/tb-constants";
+import environment from "../../common/environment/environment";
+import useAuth from "../../common/hooks/useAuth";
+import useAxiosSecure from "../../common/hooks/useAxiosSecure";
+import { AggregatedWords } from "../../common/types/AggregatedWordData";
 import WordData from "../../common/types/WordData";
-import { getRandom0toMax } from "../../common/utilities/Utilities";
+import  { getRandom0toMax, shuffle } from "../../common/utilities/Utilities";
 
-export function getTrueWords(count: number, group: number) {
+export function useTrueWords(group: number, pageFromTextBook: number, wordsFromTextBook: WordData[], locationLaunch: 'menu' | 'book', count: number) {
+  const { auth, setAuth } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const { MAX_PAGE_INDEX } = textbookConstants;
 
-  const maxPageIndex = 29;
-  const maxWordIndex = 19;
-  const trueWords: WordData[] = [];
-    
-  for (let i = 0; i < count; i += 1) {
-    const page = getRandom0toMax(maxPageIndex);
-    const trueWordIndex = getRandom0toMax(maxWordIndex);
-    fetch(`http://localhost:8000/words?group=${group}&page=${page}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Fetch request failed');
+  const [trueWords, setTrueWords] = useState<WordData[]>([]);
+
+  useEffect(() => {
+    if (locationLaunch === 'menu') {
+      const page = getRandom0toMax(MAX_PAGE_INDEX)
+      if (!auth || !setAuth) {
+        getWords(group, page)
+          .then((data) => setTrueWords(data))
+          .catch((error) => console.error(error));
+      } else {
+        const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+
+        axiosSecure
+          .get<AggregatedWords>(url)
+          .then((res) => setTrueWords(res.data[0].paginatedResults))
+          .catch((err) => console.error(err));
+      }
+    } else if (locationLaunch === 'book') {
+      const page = pageFromTextBook;
+      if (!auth || !setAuth) {
+        setTrueWords(wordsFromTextBook)
+      } else {
+        const dryWordsArray = wordsFromTextBook.filter((word) => word.userWord?.difficulty !== 'learned')
+        setTrueWords(dryWordsArray)
+        if (dryWordsArray.length < count) {
+          const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.NOT_LERNED_WORDS_QUERY}&wordsPerPage=600`;
+  
+          axiosSecure
+            .get<AggregatedWords>(url)
+            .then((res) => setTrueWords(prev => prev.concat(
+              res.data[0].paginatedResults
+              .filter((word) => (word.page < page && word.group === group))
+              .reverse()
+              ).slice(0, count)))
+            .catch((err) => console.error(err));
         }
-        return res.json();
-      })
-      .then((data) => trueWords.push(data[trueWordIndex] as never))
-      .catch((error) => console.error(error));
-  }
-
+      }
+    }
+  }, [auth, axiosSecure, group, setAuth, MAX_PAGE_INDEX, locationLaunch, pageFromTextBook, wordsFromTextBook, count])
   return trueWords;
 }
 
-export function getFalseWords(count: number, group: number, trueWordsCollection: WordData[]) {
-
-  const maxPageIndex = 29;
-  const maxWordIndex = 19;
-  const trueWordsIdCollection = trueWordsCollection.map((word) => word.id)
-  const falseWords: WordData[] = [];
-  
-  for (let i = 0; i < count; i += 1)  {
-    const page = getRandom0toMax(maxPageIndex);
-    const trueWordIndex = getRandom0toMax(maxWordIndex);
-    fetch(`http://localhost:8000/words?group=${group}&page=${page}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Fetch request failed');
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if(!trueWordsIdCollection.includes(data.id)) falseWords.push(data[trueWordIndex] as never)
-      })
-      .catch((error) => console.error(error));
-  }
-
+export function getFalseWords(trueWords: WordData[], count: number) {
+  const falseWords: string[][] = trueWords.map((_word, index) => {
+    const copyArray = trueWords.slice();
+    copyArray.splice(index, 1);
+    return shuffle(copyArray.map(word => word.word)).slice(0, count)
+  })
   return falseWords;
 }

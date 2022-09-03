@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 interface Props {
   isStarted: boolean;
   setIsGameStarted: (val: boolean) => void
@@ -7,16 +9,20 @@ function StartButton({
   isStarted,
   setIsGameStarted,
 }: Props): JSX.Element {
+
+  const ref = useRef<HTMLDivElement>(null);
+
   return (
-    <button className="inline-flex items-center justify-center gap-x-3 max-w-max px-3 py-1 text-white text-base font-medium 
-        rounded-lg border-2 border-transparent
-        bg-blue-400 hover:bg-white hover:text-blue-400 hover:border-blue-400
-        focus:outline-none"
-      type="button"
-      onClick={() => setIsGameStarted(!isStarted)}
-    >
-      Начать
-    </button>
+    <div ref={ref} className="relative">
+      <button className="inline-flex items-center justify-center gap-x-3 max-w-max px-3 py-1 text-slate-700 text-base font-medium 
+    rounded-lg border-2 border-transparent
+    bg-slate-300  hover:border-slate-400"
+        type="button"
+        onClick={() => setIsGameStarted(!isStarted)}
+      >
+        Начать
+      </button>
+    </div>
   )
 }
 

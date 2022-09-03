@@ -1,6 +1,6 @@
 import { faVolumeHigh } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {Howl} from 'howler';
+import { Howl } from 'howler';
 
 interface Props {
   src: string;
@@ -17,11 +17,9 @@ function AudioButton({
   });
 
   return (
-    <div>
-      <button type="button" className="flex items-center justify-center" onClick={() => {audio.play()}}>
-        <FontAwesomeIcon icon={faVolumeHigh} className={size} />
-      </button>
-    </div>
+    <button type="button" className="flex items-center justify-center" onClick={() => { audio.play() }}>
+      <FontAwesomeIcon icon={faVolumeHigh} className={size} />
+    </button>
   )
 }
 
