@@ -15,11 +15,7 @@ interface Props {
   words: WordData[];
 }
 
-export default function Games({
-  page,
-  group,
-  words,
-}: Props) {
+export default function Games({ page, group, words }: Props) {
   const [isMenuOpen, SetIsMenuOpen] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);

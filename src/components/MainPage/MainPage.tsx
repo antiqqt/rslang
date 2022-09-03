@@ -11,12 +11,12 @@ import Signin from '../Auth/Signin';
 import Audiochallenge from '../Games/Audiochallenge';
 import GamesList from '../Games/GamesList';
 import Sprint from '../Games/Sprint';
+import Statistics from '../Statistics/Statistics';
 import Textbook from '../Textbook/Textbook';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import About from './Mock/About';
 import Home from './Mock/Home';
-import Statistic from './Mock/Statistic';
 import NavBar from './NavBar';
 
 export default function MainPage(): JSX.Element {
@@ -35,12 +35,15 @@ export default function MainPage(): JSX.Element {
               <Route path={appRoutes.Textbook} element={<Textbook />} />
               <Route path={appRoutes.Games} element={<GamesList />} />
               <Route path={appRoutes.About} element={<About />} />
-              <Route path={gamesRoutes.audiochallenge.path} element={<Audiochallenge />} />
+              <Route
+                path={gamesRoutes.audiochallenge.path}
+                element={<Audiochallenge />}
+              />
               <Route path={gamesRoutes.sprint.path} element={<Sprint />} />
 
               {/* Protected routes */}
               <Route element={<RequireAuth />}>
-                <Route path={appRoutes.Statistics} element={<Statistic />} />
+                <Route path={appRoutes.Statistics} element={<Statistics />} />
                 <Route path={appRoutes.Profile} element={<Profile />} />
               </Route>
               <Route element={<RequireNoAuth />}>

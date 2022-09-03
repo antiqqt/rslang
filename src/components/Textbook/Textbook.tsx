@@ -79,7 +79,7 @@ export default function Textbook() {
 
   return (
     <article className="grow flex flex-col gap-y-5 w-full px-3 pt-8 font-medium text-2xl text-white">
-      <h2 className="mx-auto text-gray-700 text-4xl">Учебник</h2>
+      <h2 className="mx-auto text-slate-700 text-4xl">Учебник</h2>
       <Controls
         group={group}
         handleSetGroup={setGroup}

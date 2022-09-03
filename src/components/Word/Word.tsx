@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import {
-  faGraduationCap,
+  faBookmark,
   faSkull,
   faVolumeHigh,
   faVolumeXmark,
@@ -174,7 +174,7 @@ export default function Word({
                       handleWord(_id, axiosSecure, auth, 'create', 'learned');
                       setDifficulty('learned');
                     }}
-                    icon={faGraduationCap}
+                    icon={faBookmark}
                     text="В изученные"
                   />
                 </>
@@ -200,7 +200,7 @@ export default function Word({
                       setDifficulty('learned');
                       setUserWord(_id);
                     }}
-                    icon={faGraduationCap}
+                    icon={faBookmark}
                     text="В изученные"
                   />
                 )}
@@ -228,7 +228,7 @@ export default function Word({
                 )}
                 {difficulty === 'learned' && (
                   <FontAwesomeIcon
-                    icon={faGraduationCap}
+                    icon={faBookmark}
                     style={{ color: GroupElementData[group].color }}
                   />
                 )}
