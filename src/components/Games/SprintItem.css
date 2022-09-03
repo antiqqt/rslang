@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+}
+
+.SprintItem {
+  width: 400px;
+}
+
+.post{
+  display: flex;
+  padding: 15px;
+  border: 2px solid turquoise;
+  justify-content: space-between;
+  align-items: center;
+}
