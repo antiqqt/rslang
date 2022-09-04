@@ -14,6 +14,7 @@ import textbookConstants from '../../common/constants/tb-constants';
 import environment from '../../common/environment/environment';
 import useAuth from '../../common/hooks/useAuth';
 import useAxiosSecure from '../../common/hooks/useAxiosSecure';
+import useSafeRequest from '../../common/hooks/useSafeRequest';
 import WordData from '../../common/types/WordData';
 import GroupElementData from '../Textbook/GroupElementData';
 import WordBtn from './WordBtn';
@@ -46,7 +47,7 @@ export default function Word({
   },
 }: Props) {
   const { auth } = useAuth();
-  const axiosSecure = useAxiosSecure();
+  const safeRequest = useSafeRequest();
 
   const [difficulty, setDifficulty] = useState(userWord?.difficulty);
 
@@ -161,7 +162,14 @@ export default function Word({
                   <WordBtn
                     handleAction={() => {
                       if (!_id) return;
-                      handleWord(_id, userWord, axiosSecure, auth, 'create', 'hard');
+                      handleWord(
+                        _id,
+                        userWord,
+                        safeRequest,
+                        auth,
+                        'create',
+                        'hard'
+                      );
                       setDifficulty('hard');
                       setUserWord(word);
                     }}
@@ -171,7 +179,14 @@ export default function Word({
                   <WordBtn
                     handleAction={() => {
                       if (!_id) return;
-                      handleWord(_id, userWord, axiosSecure, auth, 'create', 'learned');
+                      handleWord(
+                        _id,
+                        userWord,
+                        safeRequest,
+                        auth,
+                        'create',
+                        'learned'
+                      );
                       setDifficulty('learned');
                     }}
                     icon={faGraduationCap}
@@ -183,7 +198,14 @@ export default function Word({
                 <WordBtn
                   handleAction={() => {
                     if (!_id) return;
-                    handleWord(_id, userWord, axiosSecure, auth, 'update', 'hard');
+                    handleWord(
+                      _id,
+                      userWord,
+                      safeRequest,
+                      auth,
+                      'update',
+                      'hard'
+                    );
                     setDifficulty('hard');
                     setUserWord(_id);
                   }}
@@ -196,7 +218,14 @@ export default function Word({
                   <WordBtn
                     handleAction={() => {
                       if (!_id) return;
-                      handleWord(_id, userWord, axiosSecure, auth, 'update', 'learned');
+                      handleWord(
+                        _id,
+                        userWord,
+                        safeRequest,
+                        auth,
+                        'update',
+                        'learned'
+                      );
                       setDifficulty('learned');
                       setUserWord(_id);
                     }}
@@ -209,7 +238,14 @@ export default function Word({
                   <WordBtn
                     handleAction={() => {
                       if (!_id) return;
-                      handleWord(_id, userWord, axiosSecure, auth, 'delete', 'hard');
+                      handleWord(
+                        _id,
+                        userWord,
+                        safeRequest,
+                        auth,
+                        'delete',
+                        'hard'
+                      );
                       setDifficulty('hard');
                       setUserWord(_id);
                     }}
