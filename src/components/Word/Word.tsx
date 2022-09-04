@@ -161,7 +161,7 @@ export default function Word({
                   <WordBtn
                     handleAction={() => {
                       if (!_id) return;
-                      handleWord(_id, axiosSecure, auth, 'create', 'hard');
+                      handleWord(_id, userWord, axiosSecure, auth, 'create', 'hard');
                       setDifficulty('hard');
                       setUserWord(word);
                     }}
@@ -171,7 +171,7 @@ export default function Word({
                   <WordBtn
                     handleAction={() => {
                       if (!_id) return;
-                      handleWord(_id, axiosSecure, auth, 'create', 'learned');
+                      handleWord(_id, userWord, axiosSecure, auth, 'create', 'learned');
                       setDifficulty('learned');
                     }}
                     icon={faBookmark}
@@ -183,7 +183,7 @@ export default function Word({
                 <WordBtn
                   handleAction={() => {
                     if (!_id) return;
-                    handleWord(_id, axiosSecure, auth, 'update', 'hard');
+                    handleWord(_id, userWord, axiosSecure, auth, 'update', 'hard');
                     setDifficulty('hard');
                     setUserWord(_id);
                   }}
@@ -196,7 +196,7 @@ export default function Word({
                   <WordBtn
                     handleAction={() => {
                       if (!_id) return;
-                      handleWord(_id, axiosSecure, auth, 'update', 'learned');
+                      handleWord(_id, userWord, axiosSecure, auth, 'update', 'learned');
                       setDifficulty('learned');
                       setUserWord(_id);
                     }}
@@ -209,7 +209,7 @@ export default function Word({
                   <WordBtn
                     handleAction={() => {
                       if (!_id) return;
-                      handleWord(_id, axiosSecure, auth, 'delete', 'hard');
+                      handleWord(_id, userWord, axiosSecure, auth, 'delete', 'hard');
                       setDifficulty('hard');
                       setUserWord(_id);
                     }}
