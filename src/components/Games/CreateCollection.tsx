@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import apiPaths from "../../common/api/api-paths";
 import getWords from "../../common/api/words";
@@ -8,12 +9,13 @@ import useAuth from "../../common/hooks/useAuth";
 import useAxiosSecure from "../../common/hooks/useAxiosSecure";
 import { AggregatedWords } from "../../common/types/AggregatedWordData";
 import WordData from "../../common/types/WordData";
-import  { getRandom0toMax, shuffle } from "../../common/utilities/Utilities";
+import { getRandom0toMax, shuffle } from "../../common/utilities/Utilities";
 
 export function useTrueWords(group: number, pageFromTextBook: number, wordsFromTextBook: WordData[], locationLaunch: 'menu' | 'book', count: number) {
   const { auth, setAuth } = useAuth();
   const axiosSecure = useAxiosSecure();
   const { MAX_PAGE_INDEX } = textbookConstants;
+  const navigate = useNavigate();
 
   const [trueWords, setTrueWords] = useState<WordData[]>([]);
 
@@ -41,19 +43,22 @@ export function useTrueWords(group: number, pageFromTextBook: number, wordsFromT
         setTrueWords(dryWordsArray)
         if (dryWordsArray.length < count) {
           const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.NOT_LERNED_WORDS_QUERY}&wordsPerPage=600`;
-  
+
           axiosSecure
             .get<AggregatedWords>(url)
             .then((res) => setTrueWords(prev => prev.concat(
               res.data[0].paginatedResults
-              .filter((word) => (word.page < page && word.group === group))
-              .reverse()
-              ).slice(0, count)))
-            .catch((err) => console.error(err));
+                .filter((word) => (word.page < page && word.group === group))
+                .reverse()
+            ).slice(0, count)))
+            .catch(() => {
+              setAuth(null);
+              navigate(apiPaths.Signin, { replace: true });
+            });
         }
       }
     }
-  }, [auth, axiosSecure, group, setAuth, MAX_PAGE_INDEX, locationLaunch, pageFromTextBook, wordsFromTextBook, count])
+  }, [auth, axiosSecure, group, setAuth, MAX_PAGE_INDEX, locationLaunch, pageFromTextBook, wordsFromTextBook, count, navigate])
   return trueWords;
 }
 
