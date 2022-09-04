@@ -7,6 +7,7 @@ import textbookConstants from '../../common/constants/tb-constants';
 import environment from '../../common/environment/environment';
 import useAuth from '../../common/hooks/useAuth';
 import useAxiosSecure from '../../common/hooks/useAxiosSecure';
+import useSafeRequest from '../../common/hooks/useSafeRequest';
 import { AggregatedWords } from '../../common/types/AggregatedWordData';
 import WordData from '../../common/types/WordData';
 import Word from '../Word/Word';
@@ -30,7 +31,7 @@ export default function Textbook() {
   const [userWord, setUserWord] = useState('');
 
   const { auth, setAuth } = useAuth();
-  const axiosSecure = useAxiosSecure();
+  const safeRequest = useSafeRequest();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,8 +57,12 @@ export default function Textbook() {
         ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
         : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=1000`;
 
-    axiosSecure
-      .get<AggregatedWords>(url)
+    safeRequest
+      .get<AggregatedWords>(url, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      })
       .then((res) => {
         const newWords = res.data[0].paginatedResults;
         const isUserWord = (data: WordData) => 'userWord' in data;
@@ -72,10 +77,10 @@ export default function Textbook() {
         setWords(newWords);
       })
       .catch(() => {
-        setAuth(null);
-        navigate(apiPaths.Signin, { replace: true });
+        // setAuth(null);
+        // navigate(apiPaths.Signin, { replace: true });
       });
-  }, [group, page, axiosSecure, auth, navigate, setAuth, userWord]);
+  }, [group, page, safeRequest, auth, navigate, setAuth, userWord]);
 
   return (
     <article className="grow flex flex-col gap-y-5 w-full px-3 pt-8 font-medium text-2xl text-white">

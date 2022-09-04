@@ -4,12 +4,15 @@ import { render } from 'react-dom';
 import './index.css';
 import App from './App';
 import { AuthProvider } from './common/context/AuthProvider';
+import { SafeRequestProvider } from './common/context/SafeRequestProvider';
 import reportWebVitals from './reportWebVitals';
 
 render(
   <StrictMode>
     <AuthProvider>
-      <App />
+      <SafeRequestProvider>
+        <App />
+      </SafeRequestProvider>
     </AuthProvider>
   </StrictMode>,
   document.getElementById('root')
