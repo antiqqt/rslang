@@ -26,7 +26,7 @@ function GameResult({
     audioFin.play();
   }, [])
 
-  // useLearnedWords(wrongAnswers, correctAnswers, answerSeries, 'audiochallenge')
+  useLearnedWords(wrongAnswers, correctAnswers, answerSeries, 'audiochallenge')
 
   return (
     <div className="flex flex-col grow p-4 m-4 bg-white shadow-2xl rounded-lg">
