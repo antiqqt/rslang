@@ -11,6 +11,7 @@ import StartGame from './StartGame';
 
 function Sprint(): JSX.Element {
 
+  const gameName = 'sprint';
   const location = useLocation();
   const textBookData = location.state as TextBookToGameData;
 
@@ -50,7 +51,7 @@ function Sprint(): JSX.Element {
         setGroup={setGroup}
         isStarted={gameStarted}
         setIsGameStarted={setGameStarted}
-        gameName='sprint'
+        gameName={gameName}
       />}
       {gameStarted && !gameEnded &&
         <SprintItem
@@ -67,6 +68,7 @@ function Sprint(): JSX.Element {
           correctAnswers={correctAnswers}
           answerSeries={answerSeries}
           setRefresh={setRefresh}
+          gameName={gameName}
         />
       }
     </article>

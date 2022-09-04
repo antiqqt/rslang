@@ -11,6 +11,7 @@ import StartGame from './StartGame';
 
 function Audiochallenge(): JSX.Element {
 
+  const gameName='audiochallenge'
   const location = useLocation()
   const textBookData = location.state as TextBookToGameData;
 
@@ -53,7 +54,7 @@ function Audiochallenge(): JSX.Element {
         setGroup={setGroup}
         isStarted={gameStarted}
         setIsGameStarted={setGameStarted}
-        gameName='audiochallenge'
+        gameName={gameName}
       />}
       {gameStarted && !gameEnded &&
         <AudiochallengeItem
@@ -70,6 +71,7 @@ function Audiochallenge(): JSX.Element {
           correctAnswers={correctAnswers}
           answerSeries={answerSeries}
           setRefresh={setRefresh}
+          gameName={gameName}
         />
       }
     </article>

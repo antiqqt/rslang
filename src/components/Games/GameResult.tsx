@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import environment from "../../common/environment/environment";
 import useLearnedWords from "../../common/hooks/useLearnedWords";
 import appRoutes from '../../common/routes/app-routes';
+import GamesData from '../../common/routes/games-routes';
 import WordData from "../../common/types/WordData";
 import AudioButton from "./AudioButton";
 
@@ -11,14 +12,16 @@ interface Props {
   wrongAnswers: WordData[];
   correctAnswers: WordData[];
   answerSeries: boolean[];
-  setRefresh: (val: boolean) => void
+  setRefresh: (val: boolean) => void;  
+  gameName: keyof typeof GamesData;
 }
 
 function GameResult({
   wrongAnswers,
   correctAnswers,
   answerSeries,
-  setRefresh
+  setRefresh,
+  gameName
 }: Props): JSX.Element {
 
   useEffect(() => {
@@ -26,7 +29,7 @@ function GameResult({
     audioFin.play();
   }, [])
 
-  useLearnedWords(wrongAnswers, correctAnswers, answerSeries, 'audiochallenge')
+  useLearnedWords(wrongAnswers, correctAnswers, answerSeries, gameName)
 
   return (
     <div className="flex flex-col grow p-4 m-4 bg-white shadow-2xl rounded-lg">
