@@ -11,20 +11,22 @@ interface Props {
   wrongAnswers: WordData[];
   correctAnswers: WordData[];
   answerSeries: boolean[];
+  setRefresh: (val: boolean) => void
 }
 
 function GameResult({
   wrongAnswers,
   correctAnswers,
-  answerSeries
+  answerSeries,
+  setRefresh
 }: Props): JSX.Element {
 
   useEffect(() => {
     const audioFin = new Audio(`./assets/sounds/fin.mp3`);
     audioFin.play();
   }, [])
-  
-  useLearnedWords(wrongAnswers, correctAnswers, answerSeries, 'audiochallenge')
+
+  // useLearnedWords(wrongAnswers, correctAnswers, answerSeries, 'audiochallenge')
 
   return (
     <div className="flex flex-col grow p-4 m-4 bg-white shadow-2xl rounded-lg">
@@ -64,7 +66,8 @@ function GameResult({
         <button className="inline-flex items-center justify-center gap-x-3 max-w-max p-3 m-1 md:m-3 py-1 text-white text-base font-medium 
           rounded-lg border-2 border-transparent bg-blue-400 hover:bg-white hover:text-blue-400 hover:border-blue-400
           focus:outline-none"
-          type="button">
+          type="button"
+          onClick={() => setRefresh(true)}>
           Играть еще
         </button>
         <button className="inline-flex items-center justify-center gap-x-3 max-w-max p-3 m-1 md:m-3 py-1 text-white text-base font-medium 
