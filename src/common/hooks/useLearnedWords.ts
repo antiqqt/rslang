@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import apiPaths from "../api/api-paths";
@@ -117,71 +116,101 @@ export default function useLearnedWords(
   const { Users, Statistics, Words } = apiPaths;
   const navigate = useNavigate();
 
+  const freshWords = ((wrongAnswers.filter((word) => !word.userWord))
+    .concat(correctAnswers.filter((word) => !word.userWord)))
+    .map((word) => word._id);
   const upgradedWords = wrongAnswers.map((word) => downWord(word, gameName))
     .concat(correctAnswers.map((word) => raiseWord(word, gameName)));
 
   const gameStatisticData = getStatisticData(wrongAnswers, correctAnswers, upgradedWords, answerSeries, gameName);
 
   if (!auth || !setAuth) return;
-
+  console.log('here', wrongAnswers, correctAnswers, upgradedWords, freshWords)
   // put statistics
-  let statistics = {
-    id: auth.userId,
-    learnedWords: '0',
-    optional: {
-      log: '',
-    },
-  };
+  // let statistics = {
+  //   id: auth.userId,
+  //   learnedWords: '0',
+  //   optional: {
+  //     log: '',
+  //   },
+  // };
 
-  function sendStatistics(statisticsToPut: StatisticResponse, statisticData: StatisticData) {
+  // function sendStatistics(statisticsToPut: StatisticResponse, statisticData: StatisticData) {
 
-    if (!auth || !setAuth) return;
-    if (statisticsToPut.optional)
-    axiosSecure.put(
-      `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`,
-      {
-        "learnedWords": statisticsToPut.learnedWords,
-        "optional": { log: `${statisticsToPut.optional.log}, ${JSON.stringify(statisticData)}` }
-      })
-      .catch(() => {
-        setAuth(null);
-        navigate(apiPaths.Signin, { replace: true });
-      });
-  }
+  //   if (!auth || !setAuth) return;
+  //   if (statisticsToPut.optional)
+  //     axiosSecure.put(
+  //       `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`,
+  //       {
+  //         "learnedWords": statisticsToPut.learnedWords,
+  //         "optional": { log: `${statisticsToPut.optional.log}, ${JSON.stringify(statisticData)}` }
+  //       })
+  //       .catch(() => {
+  //         setAuth(null);
+  //         navigate(apiPaths.Signin, { replace: true });
+  //       });
+  // }
 
-  axiosSecure.get(
-    `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`)
-    .then((res) => {
-      if (res.data.optional) {
-        statistics = res.data;
-      }
-      sendStatistics(statistics, gameStatisticData)
-    }).catch((err) => {
-      setAuth(null);
-      navigate(apiPaths.Signin, { replace: true });
-    });
+  // axiosSecure.get(
+  //   `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`)
+  //   .then((res) => {
+  //     if (res.data.optional) {
+  //       statistics = res.data;
+  //     }
+  //     sendStatistics(statistics, gameStatisticData)
+  //   }).catch(() => {
+  //     setAuth(null);
+  //     navigate(apiPaths.Signin, { replace: true });
+  //   });
 
   // update words
-  upgradedWords.forEach((word) => {
-    axiosSecure.put(
-      `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id || word.id}`,
+  // upgradedWords.forEach((word) => {
+  // console.log(word)
+
+  const word = upgradedWords[0]
+
+  if (freshWords.includes(word._id)) {
+    axiosSecure.post(
+      `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
       {
         difficulty: word.userWord?.difficulty,
         optional: word.userWord?.optional,
       }
-    )
+    ).then((resp) => console.log('sucPOST', resp))
+      .catch((err1) => console.log(err1))
+  } else {
+    axiosSecure.put(
+      `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
+      {
+        difficulty: word.userWord?.difficulty,
+        optional: word.userWord?.optional,
+      }
+    ).then((resp) => console.log('sucPUT', resp))
       .catch((err) => {
         console.log(err)
-        if (err.request.status === 404) {
-          axiosSecure.post(
-            `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id || word.id}`,
-            {
-              difficulty: word.userWord?.difficulty,
-              optional: word.userWord?.optional,
-            }
-          ).then((resp) => console.log('suc', resp))
-        }
-      });
-  })
+      })
+  }
+
+  // axiosSecure.put(
+  //   `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
+  //   {
+  //     difficulty: word.userWord?.difficulty,
+  //     optional: word.userWord?.optional,
+  //   }
+  // )
+  //   .catch((err) => {
+  //     console.log(err)
+  // if (err.request.status === 404) {
+  //   axiosSecure.post(
+  //     `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id || word.id}`,
+  //     {
+  //       difficulty: word.userWord?.difficulty,
+  //       optional: word.userWord?.optional,
+  //     }
+  //   ).then((resp) => console.log('suc', resp))
+  //   .catch((err1) => console.log(err1))
+  // }
+  // });
+  // })
 
 }
