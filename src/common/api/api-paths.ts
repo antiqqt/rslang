@@ -3,6 +3,7 @@ const apiPaths = {
   Users: '/users',
   Signin: '/signin',
   Tokens: '/tokens',
+  Statistics: '/statistics',
   AggregatedWords: '/aggregatedWords',
 } as const;
 

@@ -3,7 +3,10 @@ export default interface WordData {
   id?: string;
   userWord?: {
     difficulty: WordDifficulty;
-    optional: Record<string, string>;
+    optional: {
+      progress: number;
+      record: RecordType;
+    };
   };
   group: number;
   page: number;
@@ -20,4 +23,8 @@ export default interface WordData {
   wordTranslate: string;
 }
 
-export type WordDifficulty = 'hard' | 'learned';
+export type WordDifficulty = 'hard' | 'easy' | 'learned';
+export type RecordType = {
+  audiochallenge: number[];
+  sprint: number[]
+}

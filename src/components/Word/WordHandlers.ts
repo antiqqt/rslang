@@ -4,7 +4,7 @@ import { Howl } from 'howler';
 import apiPaths from '../../common/api/api-paths';
 import { AuthData } from '../../common/api/auth';
 import environment from '../../common/environment/environment';
-import { WordDifficulty } from '../../common/types/WordData';
+import WordData, { WordDifficulty } from '../../common/types/WordData';
 
 const handleAudio = (
   src: string,
@@ -34,6 +34,7 @@ const handleAudio = (
 
 const handleWord = async (
   wordId: string,
+  userWord: WordData["userWord"],
   axios: AxiosInstance,
   auth: AuthData | null,
   operation: 'create' | 'update' | 'delete',
@@ -47,7 +48,13 @@ const handleWord = async (
       `${environment.baseUrl}${Users}/${auth.userId}${Words}/${wordId}`,
       {
         difficulty: wordType,
-        optional: {},
+        optional: {
+          progress: 0,
+          record: {
+            audiochallenge: [0, 0],
+            sprint: [0, 0]
+          }
+        },
       }
     );
     return;
@@ -58,7 +65,7 @@ const handleWord = async (
       `${environment.baseUrl}${Users}/${auth.userId}${Words}/${wordId}`,
       {
         difficulty: wordType,
-        optional: {},
+        optional: userWord?.optional,
       }
     );
     return;

@@ -2,14 +2,15 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import environment from "../../common/environment/environment";
+import useLearnedWords from "../../common/hooks/useLearnedWords";
 import appRoutes from '../../common/routes/app-routes';
 import WordData from "../../common/types/WordData";
 import AudioButton from "./AudioButton";
 
 interface Props {
   wrongAnswers: WordData[];
-  correctAnswers: WordData[]
-  answerSeries: boolean[]
+  correctAnswers: WordData[];
+  answerSeries: boolean[];
 }
 
 function GameResult({
@@ -22,6 +23,8 @@ function GameResult({
     const audioFin = new Audio(`./assets/sounds/fin.mp3`);
     audioFin.play();
   }, [])
+  
+  useLearnedWords(wrongAnswers, correctAnswers, answerSeries, 'audiochallenge')
 
   return (
     <div className="flex flex-col grow p-4 m-4 bg-white shadow-2xl rounded-lg">
@@ -33,7 +36,7 @@ function GameResult({
             {correctAnswers.map((word) => (
               <div className="flex items-center py-2" key={word.word}>
                 <AudioButton
-                  src={`${environment.baseUrl}${word.audio}`}
+                  src={`${environment.baseUrl}/${word.audio}`}
                   size='text-xl' />
                 <span className="text-xl px-2 text-green-500 ">{word.word}</span>
               </div>
