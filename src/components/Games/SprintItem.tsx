@@ -10,6 +10,7 @@ interface Props {
   wrongAnswers: WordData[];
   correctAnswers: WordData[];
   answerSeries: boolean[];
+  gameEnded: boolean; 
   setGameEnded: (val: boolean) => void;
 }
 
@@ -18,7 +19,8 @@ function SprintItem({
   wrongAnswers,
   correctAnswers,
   answerSeries,
-  setGameEnded
+  setGameEnded,
+  gameEnded,
 }: Props): JSX.Element {
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -37,19 +39,15 @@ function SprintItem({
   const question = questions[currentQuestion];
 
   useEffect(() => {
-    if (seconds > 0) {
+    if (seconds > -1 && !gameEnded) {
       setTimeout(() => setSeconds(seconds - 1), 1000);
-    } else {
+    } else if (!gameEnded) {
       setGameEnded(true)
     }
     return () => {
-      if (seconds > 0) {
-        setTimeout(() => setSeconds(seconds - 1), 1000);
-      } else {
-        setGameEnded(true)
-      }
+        setSeconds(seconds - 1)
     }
-  }, [seconds, setGameEnded]);
+  }, [seconds, setGameEnded, gameEnded, setSeconds]);
 
   const clickHandler = useCallback((checkedAnswer: string) => {
     if (checkedAnswer === String(question.answer)) {
@@ -84,15 +82,19 @@ function SprintItem({
     }
   }, [clickHandler]);
 
-  useEffect(() => {
+  useEffect(() => {    
     document.onkeydown = (e) => {
-      e.preventDefault();
-      keyHandler(e.key);
+      if(['ArrowRight', 'ArrowLeft'].includes(e.key)) {
+        e.preventDefault();
+        keyHandler(e.key);
+      }
     };
     return () => {
       document.onkeydown = (e) => {
-        e.preventDefault();
-        keyHandler(e.key);
+        if(['ArrowRight', 'ArrowLeft'].includes(e.key)) {
+          e.preventDefault();
+          keyHandler(e.key);
+        }
       };
     }
   }, [keyHandler])

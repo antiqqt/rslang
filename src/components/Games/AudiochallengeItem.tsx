@@ -82,8 +82,14 @@ function AudioItem({
 
   useEffect(() => {
     document.onkeydown = (e) => {
-      e.preventDefault();
-      keyHandler(e.key);
+      if(['Enter', ' ', '1', '2', '3', '4', '5'].includes(e.key)) {
+        e.preventDefault();
+        keyHandler(e.key);
+      }
+      return () => {
+        e.preventDefault();
+        keyHandler(e.key);
+      }
     };
   }, [keyHandler])
 
