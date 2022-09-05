@@ -46,7 +46,10 @@ function Sprint(): JSX.Element {
           .then((data) => setTrueWords(data))
           .catch((error) => console.error(error));
       } else {
-        const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+        const url =
+        group !== textbookConstants.HARD_WORDS_GROUP_NUM
+          ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+          : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=20`;
         safeRequest
           .get<AggregatedWords>(url, {
             headers: {
@@ -88,11 +91,14 @@ function Sprint(): JSX.Element {
       if (!auth || !setAuth) {
         setTrueWords(userWords)
       } else {
-        const dryWordsArray = userWords.filter((word) => word.userWord?.difficulty !== 'learned')
+        const dryWordsArray = userWords.filter((word) => word.userWord?.difficulty !== 'learned').slice(0, 20)
         setTrueWords(dryWordsArray)
         if (dryWordsArray.length < countOfTrueWords) {
-          const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.NOT_LERNED_WORDS_QUERY}&wordsPerPage=600`;
 
+          const url =
+            group !== textbookConstants.HARD_WORDS_GROUP_NUM
+              ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+              : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=600`;
           safeRequest
             .get<AggregatedWords>(url, {
               headers: {
