@@ -1,3 +1,5 @@
+import { useLocation } from 'react-router-dom';
+
 import RSLogoSvg from './RSLogoSvg';
 
 const authorsData = [
@@ -6,9 +8,11 @@ const authorsData = [
   { name: 'Миша', githubLink: 'https://github.com/mikhailpakaliuk', id: 2 },
 ];
 
-function Footer(): JSX.Element {
+function Footer(): JSX.Element {  
+  const location = useLocation();
+  const isInGame = ['/audiochallenge', '/sprint', '/games'].includes(location.pathname);
   return (
-    <footer className="flex flex-col items-center justify-between p-2 text-lg w-full sm:flex-row md:text-xl">
+    <footer className={`flex flex-col items-center justify-between p-2 text-lg w-full sm:flex-row md:text-xl ${ isInGame && 'hidden'}`}>
       <a
         className="w-24"
         href="https://rs.school/"
