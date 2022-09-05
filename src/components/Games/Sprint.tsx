@@ -53,7 +53,11 @@ function Sprint(): JSX.Element {
             },
           })
           .then((res) => setTrueWords(res.data[0].paginatedResults))
-          .catch((err) => console.error(err));
+          .catch(() => {
+            setAuth(null);
+            localStorage.removeItem(environment.localStorageKey);
+            navigate(apiPaths.Signin, { replace: true });
+          });
       }
     } else if (locationLaunch === 'menu') {
       setPage(getRandom0toMax(MAX_PAGE_INDEX))
@@ -71,7 +75,11 @@ function Sprint(): JSX.Element {
             },
           })
           .then((res) => setTrueWords(res.data[0].paginatedResults))
-          .catch((err) => console.error(err));
+          .catch(() => {
+            setAuth(null);
+            localStorage.removeItem(environment.localStorageKey);
+            navigate(apiPaths.Signin, { replace: true });
+          });
       }
     } else if (locationLaunch === 'book') {
       if (!auth || !setAuth) {
@@ -95,6 +103,7 @@ function Sprint(): JSX.Element {
             ).slice(0, countOfTrueWords)))
             .catch(() => {
               setAuth(null);
+              localStorage.removeItem(environment.localStorageKey);
               navigate(apiPaths.Signin, { replace: true });
             });
         }

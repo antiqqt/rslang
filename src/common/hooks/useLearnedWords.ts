@@ -164,16 +164,7 @@ export default function useLearnedWords(
             Authorization: `Bearer ${auth.token}`,
           },
         })
-        .catch((err) => {
-          setAuth(null);
-          localStorage.removeItem(environment.localStorageKey);
-          navigate(apiPaths.Signin, { replace: true });
-        });
-    }
-
-    const defaultStatistics = {
-      learnedWords: '0',
-      optional: defaultStatisticsOptional
+        .catch((err) => console.error(err));
     }
 
     safeRequest.get(
@@ -183,11 +174,7 @@ export default function useLearnedWords(
       },
     })
       .then((res) => sendStatistics(res.data, gameStatisticData)
-      ).catch((err) => {
-          setAuth(null);
-          localStorage.removeItem(environment.localStorageKey);
-          navigate(apiPaths.Signin, { replace: true });
-      });
+      ).catch((err) => console.error(err));
 
     // update words
     upgradedWords.forEach((word) => {
@@ -204,7 +191,7 @@ export default function useLearnedWords(
           },
         }
         ).then((resp) => console.log('sucPOST', resp))
-          .catch((err1) => console.log(err1))
+          .catch(console.error(err))
       } else {
         safeRequest.put(
           `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
@@ -217,9 +204,7 @@ export default function useLearnedWords(
           },
         }
         ).then((resp) => console.log('sucPUT', resp))
-          .catch((err) => {
-            console.log(err)
-          })
+          .catch((err) => console.error(err))
       }
     })
 
