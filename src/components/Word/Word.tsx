@@ -13,7 +13,6 @@ import parse from 'html-react-parser';
 import textbookConstants from '../../common/constants/tb-constants';
 import environment from '../../common/environment/environment';
 import useAuth from '../../common/hooks/useAuth';
-import useAxiosSecure from '../../common/hooks/useAxiosSecure';
 import useSafeRequest from '../../common/hooks/useSafeRequest';
 import WordData from '../../common/types/WordData';
 import GroupElementData from '../Textbook/GroupElementData';

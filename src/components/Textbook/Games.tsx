@@ -50,7 +50,12 @@ export default function Games({ page, group, words }: Props) {
         <div className="absolute right-0 z-10 flex flex-col items-center w-full bg-white rounded">
           <ul className="w-full py-1 text-sm text-center text-gray-700 dark:text-gray-200">
             {Object.values(Routes).map(({ path, fullName }) => (
-              <Link to={path} key={fullName} state={{ group, page, words }}>
+              <Link
+                to={path}
+                key={fullName}
+                state={{ group, page, words }}
+                replace
+              >
                 <li>
                   <button
                     className="block w-full py-2 px-4 hover:bg-gray-100 rounded cursor-pointer"
