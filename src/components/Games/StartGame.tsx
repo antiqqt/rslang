@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import GamesData from '../../common/routes/games-routes';
 import Controls from './Controls';
 
@@ -20,6 +22,16 @@ function StartGame({
   gameName,
   locationLaunch
 }: Props) {
+
+  useEffect(() => {
+    document.onkeydown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        setIsGameStarted(true);
+      }
+    };
+  }, [setIsGameStarted])
+
   return (
     <div>
       <Controls

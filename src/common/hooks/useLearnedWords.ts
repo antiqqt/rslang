@@ -156,7 +156,6 @@ export default function useLearnedWords(
       gameName
     );
 
-    console.log('here', wrongAnswers, correctAnswers, upgradedWords, freshWords)
     // put statistics
     function sendStatistics(
       statisticsResp: StatisticResponse,
@@ -189,7 +188,6 @@ export default function useLearnedWords(
       }
 
       if (!auth || !setAuth) return;
-      console.log(copyResp)
       safeRequest.put(
         `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`, {
         learnedWords: '0',

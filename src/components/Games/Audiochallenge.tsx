@@ -22,10 +22,11 @@ function Audiochallenge(): JSX.Element {
   const gameName = 'audiochallenge'
   const location = useLocation()
   const textBookData = location.state as TextBookToGameData;
+  const { MAX_PAGE_INDEX } = textbookConstants;
 
   const userWords = useMemo(() => textBookData ? textBookData.words : [], [textBookData])
   const locationLaunch = useMemo(() => textBookData ? 'book' : 'menu', [textBookData])
-  const [page, setPage] = useState(textBookData ? textBookData.page : 0);
+  const [page, setPage] = useState(textBookData ? textBookData.page : getRandom0toMax(MAX_PAGE_INDEX));
   const [group, setGroup] = useState(textBookData ? textBookData.group : 0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
@@ -40,7 +41,6 @@ function Audiochallenge(): JSX.Element {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { MAX_PAGE_INDEX } = textbookConstants;
     if (refresh) {
       if (!auth || !setAuth) {
         getWords(group, page)
@@ -62,7 +62,6 @@ function Audiochallenge(): JSX.Element {
           });
       }
     } else if (locationLaunch === 'menu') {
-      setPage(getRandom0toMax(MAX_PAGE_INDEX))
       if (!auth || !setAuth) {
         getWords(group, page)
           .then((data) => setTrueWords(data))
