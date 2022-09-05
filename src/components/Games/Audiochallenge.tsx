@@ -22,10 +22,11 @@ function Audiochallenge(): JSX.Element {
   const gameName = 'audiochallenge'
   const location = useLocation()
   const textBookData = location.state as TextBookToGameData;
+  const { MAX_PAGE_INDEX } = textbookConstants;
 
   const userWords = useMemo(() => textBookData ? textBookData.words : [], [textBookData])
   const locationLaunch = useMemo(() => textBookData ? 'book' : 'menu', [textBookData])
-  const [page, setPage] = useState(textBookData ? textBookData.page : 0);
+  const [page, setPage] = useState(textBookData ? textBookData.page : getRandom0toMax(MAX_PAGE_INDEX));
   const [group, setGroup] = useState(textBookData ? textBookData.group : 0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
@@ -40,14 +41,17 @@ function Audiochallenge(): JSX.Element {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { MAX_PAGE_INDEX } = textbookConstants;
     if (refresh) {
       if (!auth || !setAuth) {
         getWords(group, page)
           .then((data) => setTrueWords(data))
           .catch((error) => console.error(error));
       } else {
-        const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+        const url =
+        group !== textbookConstants.HARD_WORDS_GROUP_NUM
+          ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+          : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=20`;
+
         safeRequest
           .get<AggregatedWords>(url, {
             headers: {
@@ -62,14 +66,15 @@ function Audiochallenge(): JSX.Element {
           });
       }
     } else if (locationLaunch === 'menu') {
-      setPage(getRandom0toMax(MAX_PAGE_INDEX))
       if (!auth || !setAuth) {
         getWords(group, page)
           .then((data) => setTrueWords(data))
           .catch((error) => console.error(error));
       } else {
-        const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
-
+        const url =
+          group !== textbookConstants.HARD_WORDS_GROUP_NUM
+            ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+            : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=20`;
         safeRequest
           .get<AggregatedWords>(url, {
             headers: {
@@ -87,10 +92,13 @@ function Audiochallenge(): JSX.Element {
       if (!auth || !setAuth) {
         setTrueWords(userWords)
       } else {
-        const dryWordsArray = userWords.filter((word) => word.userWord?.difficulty !== 'learned')
+        const dryWordsArray = userWords.filter((word) => word.userWord?.difficulty !== 'learned').slice(0, 20)
         setTrueWords(dryWordsArray)
         if (dryWordsArray.length < countOfTrueWords) {
-          const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.NOT_LERNED_WORDS_QUERY}&wordsPerPage=600`;
+          const url =
+            group !== textbookConstants.HARD_WORDS_GROUP_NUM
+              ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+              : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=600`;
 
           safeRequest
             .get<AggregatedWords>(url, {
@@ -116,6 +124,7 @@ function Audiochallenge(): JSX.Element {
 
   const falseWords = useMemo(() => getFalseWords(trueWords, countOfFalseWords), [trueWords]);
   const questions = getQuestionsAudiochallenge(trueWords, falseWords);
+  
   const answerSeries: boolean[] = useMemo(() => refresh ? [] : [], [refresh]);
   const correctAnswers: WordData[] = useMemo(() => refresh ? [] : [], [refresh]);
   const wrongAnswers: WordData[] = useMemo(() => refresh ? [] : [], [refresh]);
