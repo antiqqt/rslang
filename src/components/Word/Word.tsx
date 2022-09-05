@@ -49,6 +49,7 @@ export default function Word({
   const safeRequest = useSafeRequest();
 
   const [difficulty, setDifficulty] = useState(userWord?.difficulty);
+  console.log(userWord?.optional.progress);
 
   const [audioSound, setAudioSound] = useState<Howl | null>(null);
   const [audioPlaying, setAudioPlaying] = useState(false);
@@ -269,7 +270,7 @@ export default function Word({
                 />
               </div>
             )}
-            {userWord && userWord.optional && (
+            {userWord && userWord.optional && difficulty === 'hard' && (
               <section className="flex gap-x-2 mx-auto pt-3">
                 <p className="text-sm">Прогресс изучения:</p>
                 <div className="flex w-10 h-5 border-2 border-slate-300">
@@ -277,6 +278,22 @@ export default function Word({
                     <div
                       key={Math.random()}
                       className="w-2 border border-slate-300"
+                      style={{
+                        backgroundColor: `#${GroupElementData[group].color}`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+            {userWord && userWord.optional && difficulty === 'easy' && (
+              <section className="flex gap-x-2 mx-auto pt-3">
+                <p className="text-sm">Прогресс изучения:</p>
+                <div className="flex w-12 h-5 border-2 border-slate-300">
+                  {new Array(userWord.optional.progress).fill(null).map(() => (
+                    <div
+                      key={Math.random()}
+                      className="w-4 border border-slate-300"
                       style={{
                         backgroundColor: `#${GroupElementData[group].color}`,
                       }}
