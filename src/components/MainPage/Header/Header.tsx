@@ -12,7 +12,7 @@ interface Props {
 
 function Header({ isNavOpen, setIsNavOpen }: Props): JSX.Element {
   return (
-    <header className="flex justify-between items-center px-3 text-blue-400 w-[100%] h-16">
+    <header className="flex justify-between items-center px-3 text-slate-700 w-[100%] h-16">
       <button
         className="w-10 inline-flex items-center"
         type="button"
@@ -20,7 +20,7 @@ function Header({ isNavOpen, setIsNavOpen }: Props): JSX.Element {
       >
         <FontAwesomeIcon
           icon={faBars}
-          className={`text-blue-300 w-8 h-8 transition-transform ${
+          className={`text-slate-700 w-8 h-8 transition-transform ${
             isNavOpen ? 'rotate-90' : 'rotate-0'
           }`}
         />
@@ -30,7 +30,7 @@ function Header({ isNavOpen, setIsNavOpen }: Props): JSX.Element {
       </button>
       <div className="flex items-center gap-x-3">
         <Link
-          className="w-12 h-12 bg-blue-300 inline-flex justify-center items-center rounded-full"
+          className="w-12 h-12 bg-slate-200 inline-flex justify-center items-center rounded-full hover:shadow-xl hover:scale-105"
           to={appRoutes.Profile}
         >
           <FontAwesomeIcon icon={faUser} className="text-slate-600 w-8 h-8" />

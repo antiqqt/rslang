@@ -130,8 +130,8 @@ function Audiochallenge(): JSX.Element {
   )
 
   return (
-    <article className='flex flex-col'>
-      <h2 className="mx-auto text-gray-700 text-4xl p-4 text-center">Аудиовызов</h2>
+    <article className='flex flex-col p-6'>
+      <h2 className="mx-auto text-slate-700 text-4xl font-medium py-2">Аудиовызов</h2>
       {!gameStarted && <StartGame
         group={group}
         locationLaunch={locationLaunch}

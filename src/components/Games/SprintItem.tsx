@@ -98,20 +98,20 @@ function SprintItem({
   }, [keyHandler])
 
   return (
-    <div className="flex flex-wrap flex-col items-center sm:min-w-[400px] min-w-[240px] bg-blue-100 rounded-xl p-4 shadow-lg">
+    <div className="flex flex-wrap flex-col items-center sm:min-w-[400px] min-w-[240px] bg-slate-300 rounded-xl p-4 shadow-lg text-slate-700">
       <div className="text-3xl left-28 text-green-700">
         +{oper}
       </div>
       <div className="flex flex-col items-center text-3xl m-5">
         Счет: {score}
       </div>
-      <div className="flex justify-center items-center grow p-2 m-2 bg-white rounded-full text-4xl border-black border-2">
+      <div className="flex justify-center items-center grow p-2 m-2 bg-white rounded-full text-4xl border-slate-700 border-2">
         {seconds > 9 ? seconds : `0${seconds}`}
       </div>
       <div className="flex flex-row justify-center my-5">
-        <div className={`w-6 h-6 m-2 ${sucBar > 0 ? 'bg-green-600' : 'bg-white'} rounded-full border-black border`} />
-        <div className={`w-6 h-6 m-2 ${sucBar > 1 ? 'bg-green-600' : 'bg-white'} rounded-full border-black border`} />
-        <div className={`w-6 h-6 m-2 ${sucBar > 2 ? 'bg-green-600' : 'bg-white'} rounded-full border-black border`} />
+        <div className={`w-6 h-6 m-2 ${sucBar > 0 ? 'bg-green-600' : 'bg-white'} rounded-full border-slate-700 border`} />
+        <div className={`w-6 h-6 m-2 ${sucBar > 1 ? 'bg-green-600' : 'bg-white'} rounded-full border-slate-700 border`} />
+        <div className={`w-6 h-6 m-2 ${sucBar > 2 ? 'bg-green-600' : 'bg-white'} rounded-full border-slate-700 border`} />
       </div>
       <div className="flex flex-col items-center text-4xl sm:px-2">
         {question.word}

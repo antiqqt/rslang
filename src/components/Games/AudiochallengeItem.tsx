@@ -88,13 +88,13 @@ function AudioItem({
   }, [keyHandler])
 
   return (
-    <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg">
-      {!checkState && <div className="flex flex-col w-[220px] md:w-[450px] grow justify-center items-center sm:px-4 py-4">
+    <div className="flex flex-wrap flex-col w-56 md:w-96 bg-slate-300 rounded-xl p-4 shadow-lg text-bg-slate-700 my-4">
+      {!checkState && <div className="flex flex-col grow justify-center items-center h-56 sm:px-4 py-4 transition-all">
         <AudioButton
           src={`${environment.baseUrl}/${question.audio}`}
           size='text-9xl' />
       </div>}
-      {checkState && <div className="flex flex-col md:w-[450px] grow justify-center items-center sm:px-4 py-4">
+      {checkState && <div className="flex flex-col grow justify-center items-center py-4">
         <img
           alt={`${question.answer} illustration`}
           className="block rounded-lg max-h-[200px]"
@@ -104,7 +104,7 @@ function AudioItem({
           <AudioButton
             src={`${environment.baseUrl}/${question.audio}`}
             size='text-4xl' />
-          <span className="text-2xl md:text-4xl sm:px-2">{question.answer}</span>
+          <span className="text-2xl md:text-4xl px-2">{question.answer}</span>
         </div>
       </div>}
       <div className="flex flex-col items-center justify-between">
@@ -127,7 +127,7 @@ function AudioItem({
           )}
         </div>
         <button className="inline-flex items-center justify-center gap-x-3 max-w-max p-3 m-3 py-1 text-white text-base font-medium 
-          rounded-lg border-2 border-transparent bg-blue-400 hover:bg-white hover:text-blue-400 hover:border-blue-400
+          rounded-lg border-2 border-transparent bg-red-400 hover:bg-white hover:text-red-400 hover:border-red-400
           focus:outline-none"
           type="button"
           onClick={(e) => clickHandler(e.currentTarget.innerText)}>

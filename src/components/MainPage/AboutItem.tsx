@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface Post {
   id: number;
   name: string;
@@ -10,19 +8,13 @@ interface Post {
 
 interface Props {
   post: Post;
+  img: string;
 }
 
-function AboutItem({ post }: Props) {
+function AboutItem({ post, img }: Props) {
   return (
     <section className="flex font-sans mb-10 rounded-xl overflow-hidden bg-slate-200 shadow-xl shadow-gray-300">
-      <div className="flex-none w-48 relative">
-        <img
-          src="public/assets/kostya.jpg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
-        />
-      </div>
+      <div className="flex-none w-48 relative bg-cover bg-center" style={{ backgroundImage: `url(./assets/img/${img})` }} />
       <form className="flex-auto p-6 max-w-sm">
         <div className="flex flex-wrap">
           <h2 className="flex-auto text-lg font-semibold text-slate-900">
