@@ -11,7 +11,6 @@ export interface StatisticData {
 }
 
 export interface StatisticResponse {
-  id: string;
   learnedWords: string;
   optional: {
     [date: string]: StatisticData

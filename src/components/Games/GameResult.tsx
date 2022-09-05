@@ -21,7 +21,7 @@ function GameResult({
   correctAnswers,
   answerSeries,
   setRefresh,
-  gameName
+  gameName,
 }: Props): JSX.Element {
 
   useEffect(() => {

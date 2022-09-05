@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import apiPaths from "../api/api-paths";
+import defaultStatisticsOptional from "../constants/statistic-constants";
 import environment from "../environment/environment";
 import { StatisticData, StatisticResponse } from "../types/StatisticsData";
 import WordData from "../types/WordData";
@@ -118,6 +119,8 @@ export default function useLearnedWords(
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!auth || !setAuth) return;
+
     const freshWords = ((wrongAnswers.filter((word) => !word.userWord))
       .concat(correctAnswers.filter((word) => !word.userWord)))
       .map((word) => word._id);
@@ -126,7 +129,6 @@ export default function useLearnedWords(
 
     const gameStatisticData = getStatisticData(wrongAnswers, correctAnswers, upgradedWords, answerSeries, gameName);
 
-    if (!auth || !setAuth) return;
     console.log('here', wrongAnswers, correctAnswers, upgradedWords, freshWords)
     // put statistics
     function sendStatistics(statisticsResp: StatisticResponse, statisticData: StatisticData) {
@@ -153,21 +155,25 @@ export default function useLearnedWords(
       if (!auth || !setAuth) return;
       console.log(copyResp)
       safeRequest.put(
-        `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`,
-        {
-          "learnedWords": 0,
-          "optional": copyResp.optional
-        }, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      })
+        `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`, {
+        learnedWords: '0',
+        optional: copyResp.optional
+      }
+        , {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
         .catch((err) => {
-          console.log(err)
-          // setAuth(null);
-          // localStorage.removeItem(environment.localStorageKey);
-          // navigate(apiPaths.Signin, { replace: true });
+          setAuth(null);
+          localStorage.removeItem(environment.localStorageKey);
+          navigate(apiPaths.Signin, { replace: true });
         });
+    }
+
+    const defaultStatistics = {
+      learnedWords: '0',
+      optional: defaultStatisticsOptional
     }
 
     safeRequest.get(
@@ -176,11 +182,11 @@ export default function useLearnedWords(
         Authorization: `Bearer ${auth.token}`,
       },
     })
-      .then((res) => sendStatistics(res.data, gameStatisticData)).catch((err) => {
-        console.log(err)
-        // setAuth(null);
-        // localStorage.removeItem(environment.localStorageKey);
-        // navigate(apiPaths.Signin, { replace: true });
+      .then((res) => sendStatistics(res.data, gameStatisticData)
+      ).catch((err) => {
+          setAuth(null);
+          localStorage.removeItem(environment.localStorageKey);
+          navigate(apiPaths.Signin, { replace: true });
       });
 
     // update words
@@ -216,6 +222,7 @@ export default function useLearnedWords(
           })
       }
     })
+
   }, [Statistics, Users, Words, answerSeries, auth, correctAnswers, gameName, navigate, safeRequest, setAuth, wrongAnswers])
 
 }
