@@ -49,12 +49,12 @@ export default function Statistics() {
   );
 
   const { auth } = useAuth();
-  const [todayStats, setTodayStats] = useState<StatisticData | null>(null);
+  const safeRequest = useSafeRequest();
 
+  const [todayStats, setTodayStats] = useState<StatisticData | null>(null);
   const [totalStats, setTotalStats] = useState<StatisticResponse | null>(null);
   const [settings, setSettings] = useState<SettingsResponse | null>(null);
-
-  const safeRequest = useSafeRequest();
+  const [newLearnedWords, setNewLearnedWords] = useState<number | null>(null);
 
   useEffect(() => {
     if (!auth) return;
@@ -117,6 +117,7 @@ export default function Statistics() {
 
       const currentLearnedWordsCount =
         filteredRes.data[0].paginatedResults.length;
+      setNewLearnedWords(currentLearnedWordsCount);
 
       const settingsRes = await safeRequest.get<SettingsResponse>(
         createSettingsURL(auth.userId),
@@ -159,12 +160,15 @@ export default function Statistics() {
   return (
     <article className="flex flex-col gap-y-4 pt-6 px-4 text-slate-700 font-medium">
       <section className="flex flex-col items-center gap-y-7">
-        {screen === Screens.today && todayStats && (
+        {screen === Screens.today && todayStats && newLearnedWords && (
           <>
             <p className="mx-auto text-4xl font-medium">
               Статистика за сегодня:
             </p>
-            <StatsToday todayStats={todayStats} />
+            <StatsToday
+              todayStats={todayStats}
+              newLearnedWords={newLearnedWords}
+            />
             <button
               onClick={() => setScreen(Screens.alltime)}
               type="button"

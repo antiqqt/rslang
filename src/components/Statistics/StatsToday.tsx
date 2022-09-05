@@ -12,6 +12,7 @@ import { getPercentage } from '../../common/utilities/Utilities';
 
 interface Props {
   todayStats: StatisticData;
+  newLearnedWords: number;
 }
 
 const Games = {
@@ -27,7 +28,7 @@ const Games = {
   },
 };
 
-export default function StatsToday({ todayStats }: Props) {
+export default function StatsToday({ newLearnedWords, todayStats }: Props) {
   const {
     [Games.Audiochallenge.statsKey]: audiochallengeStats,
     [Games.Sprint.statsKey]: sprintStats,
@@ -46,9 +47,6 @@ export default function StatsToday({ todayStats }: Props) {
     audiochallengeStats.correctAnswers + sprintStats.correctAnswers,
     totalAns
   ).toFixed();
-
-  const newLearnedWords =
-    audiochallengeStats.newLearnedWordsCount + sprintStats.newLearnedWordsCount;
 
   return (
     <>
