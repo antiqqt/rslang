@@ -11,12 +11,6 @@ function Home() {
       img:'./assets/img/textbook.jpg',
     },
     {
-      id: 2,
-      title: 'Словарь',
-      paragraph: 'Словарь содержит списки изучаемых слов, слов, которые не нужно учить, а также тех, которые вызывают затруднения. В словаре отражена статистика по каждому разделу и успеваемость учащихся.',
-      img:'./assets/img/dictionary.jpg',
-    },
-    {
       id: 3,
       title: 'Игры',
       paragraph: 'Для изучения слов и закрепления запоминания в приложении есть 2 игры: Sprint и Audio Chalenge которые помогут вам в игровой форме «прокачать» словарный запас.',
@@ -29,12 +23,12 @@ function Home() {
       img:'./assets/img/statistics.jpg',
     }
   ]);
-
+  
   return (
     <section>
-      <h1 className="pt-3 pb-2 text-center text-4xl" >Преимущества приложения</h1>
-      <p className=" pb-4 text-center text-2xl pb-30" >Зарегистрируйтесь, чтобы использовать все возможности</p>
-      <section className="pt-5 pb-5 flex max-w-4xl flex-wrap justify-between items-stretch content-around">
+      <h1 className="font-medium text-slate-700/600 pt-3 pb-2 text-center text-4xl" >Преимущества приложения</h1>
+      <p className=" font-medium text-slate-700/600 pb-4 text-center text-2xl pb-30" >Зарегистрируйтесь, чтобы использовать все возможности</p>
+      <section className="pt-5 pb-5 flex max-w-4xl flex-wrap justify-around items-stretch content-around">
         {cards.map((card) =>
           <HomeItem post={card} key={card.id} />
         )}
