@@ -122,7 +122,7 @@ function Sprint(): JSX.Element {
   )
 
   const questions = getQuestionsSprint(trueWords);
-  console.log(questions, trueWords)
+  
   const answerSeries: boolean[] = useMemo(() => refresh ? [] : [], [refresh]);
   const correctAnswers: WordData[] = useMemo(() => refresh ? [] : [], [refresh]);
   const wrongAnswers: WordData[] = useMemo(() => refresh ? [] : [], [refresh]);
