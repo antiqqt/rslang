@@ -49,7 +49,6 @@ export default function Word({
   const safeRequest = useSafeRequest();
 
   const [difficulty, setDifficulty] = useState(userWord?.difficulty);
-  console.log(userWord?.optional.progress);
 
   const [audioSound, setAudioSound] = useState<Howl | null>(null);
   const [audioPlaying, setAudioPlaying] = useState(false);
