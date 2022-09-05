@@ -4,14 +4,21 @@ import { Link, useNavigate } from 'react-router-dom';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { createUser } from '../../common/api/auth';
+import apiPaths from '../../common/api/api-paths';
+import { createUser, loginUser } from '../../common/api/auth';
+import environment from '../../common/environment/environment';
+import useAuth from '../../common/hooks/useAuth';
+import useSafeRequest from '../../common/hooks/useSafeRequest';
 import appRoutes from '../../common/routes/app-routes';
+import { StatisticResponse } from '../../common/types/StatisticsData';
 
 const NAME_REGEX = /^[a-zA-Zа-яА-я0-9]{1,24}$/;
 const EMAIL_REGEX = /\S+@\S+\.\S+/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,24}$/;
 
 export default function Register() {
+  const { setAuth } = useAuth();
+  const safeRequest = useSafeRequest();
   const navigate = useNavigate();
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -61,7 +68,23 @@ export default function Register() {
 
     try {
       await createUser({ name, email, password: pwd });
-      navigate(appRoutes.Signin, { replace: true });
+      const newAuthData = await loginUser({ email, password: pwd });
+      if (setAuth) setAuth(newAuthData);
+
+      await safeRequest.put<StatisticResponse>(
+        `${environment.baseUrl}${apiPaths.Users}/${newAuthData.userId}${apiPaths.Statistics}`,
+        {
+          learnedWords: '0',
+          optional: {},
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${newAuthData.token}`,
+          },
+        }
+      );
+
+      navigate(appRoutes.Home, { replace: true });
     } catch (err) {
       if (err instanceof Error) {
         setErrorMsg(`${err.message}.`);

@@ -6,26 +6,28 @@ import getWords from '../../common/api/words';
 import textbookConstants from '../../common/constants/tb-constants';
 import environment from '../../common/environment/environment';
 import useAuth from '../../common/hooks/useAuth';
-import useAxiosSecure from '../../common/hooks/useAxiosSecure';
 import useSafeRequest from '../../common/hooks/useSafeRequest';
 import { AggregatedWords } from '../../common/types/AggregatedWordData';
 import WordData from '../../common/types/WordData';
 import Word from '../Word/Word';
 import Controls from './Controls';
 
-const { sessionStorageKey } = environment;
-const rawSessionData = sessionStorage.getItem(sessionStorageKey);
-const sessionData = rawSessionData
-  ? JSON.parse(rawSessionData)
-  : { lastPage: 0, lastGroup: 0 };
-const { lastPage, lastGroup } = sessionData as {
+interface SessionData {
   lastPage: number;
   lastGroup: number;
-};
+}
 
 export default function Textbook() {
-  const [group, setGroup] = useState(lastGroup);
+  const { sessionStorageKey } = environment;
+  const rawSessionData = sessionStorage.getItem(sessionStorageKey);
+  const sessionData: SessionData = rawSessionData
+    ? JSON.parse(rawSessionData)
+    : { lastPage: 0, lastGroup: 0 };
+  const { lastPage, lastGroup } = sessionData;
+
   const [page, setPage] = useState(lastPage);
+  const [group, setGroup] = useState(lastGroup);
+
   const [words, setWords] = useState<WordData[]>([]);
   const [pageLearned, setPageLearned] = useState(false);
   const [userWord, setUserWord] = useState('');
@@ -42,30 +44,43 @@ export default function Textbook() {
         lastGroup: group,
       })
     );
+
+    return () => {
+      sessionStorage.setItem(
+        environment.sessionStorageKey,
+        JSON.stringify({
+          lastPage: page,
+          lastGroup: group,
+        })
+      );
+    };
   }, [group, page]);
 
   useEffect(() => {
-    if (!auth || !setAuth) {
-      getWords(group, page)
-        .then((data) => setWords(data))
-        .catch((error) => console.error(error));
-      return;
-    }
+    const handleLoadWords = async () => {
+      let newWords: WordData[];
 
-    const url =
-      group !== textbookConstants.HARD_WORDS_GROUP_NUM
-        ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
-        : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=1000`;
+      if (!auth || !setAuth) {
+        newWords = await getWords(group, page);
+        setWords(newWords);
+        return;
+      }
 
-    safeRequest
-      .get<AggregatedWords>(url, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      })
-      .then((res) => {
-        const newWords = res.data[0].paginatedResults;
+      try {
+        const url =
+          group !== textbookConstants.HARD_WORDS_GROUP_NUM
+            ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+            : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=3600`;
+
+        const res = await safeRequest.get<AggregatedWords>(url, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
+        newWords = res.data[0].paginatedResults;
+
         const isUserWord = (data: WordData) => 'userWord' in data;
+
         if (
           newWords.filter((x) => isUserWord(x)).length === newWords.length &&
           group !== textbookConstants.HARD_WORDS_GROUP_NUM
@@ -75,16 +90,20 @@ export default function Textbook() {
           setPageLearned(false);
         }
         setWords(newWords);
-      })
-      .catch(() => {
+      } catch (err) {
+        console.log(err);
         // setAuth(null);
+        // localStorage.removeItem(environment.localStorageKey);
         // navigate(apiPaths.Signin, { replace: true });
-      });
-  }, [group, page, safeRequest, auth, navigate, setAuth, userWord]);
+      }
+    };
+
+    handleLoadWords();
+  }, [group, page, auth, navigate, setAuth, userWord, safeRequest]);
 
   return (
     <article className="grow flex flex-col gap-y-5 w-full px-3 pt-8 font-medium text-2xl text-white">
-      <h2 className="mx-auto text-gray-700 text-4xl">Учебник</h2>
+      <h2 className="mx-auto text-slate-700 text-4xl">Учебник</h2>
       <Controls
         group={group}
         handleSetGroup={setGroup}

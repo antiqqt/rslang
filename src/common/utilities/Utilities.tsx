@@ -1,6 +1,6 @@
 /* eslint no-param-reassign: "error" */
 
-import { QuestionData, QuestionSprintData } from "../types/QuestionData";
+import { QuestionData, QuestionSprintData } from '../types/QuestionData';
 
 export function getRandom0toMax(max: number) {
   const min = 0;
@@ -8,7 +8,7 @@ export function getRandom0toMax(max: number) {
 }
 
 export function getRandomTrueOrFalse() {
-  return Math.random() > 0.5
+  return Math.random() > 0.5;
 }
 
 export function shuffle(array: string[]) {
@@ -17,7 +17,7 @@ export function shuffle(array: string[]) {
     const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
-  return result
+  return result;
 }
 
 export function shuffleQustions(array: QuestionData[]) {
@@ -26,7 +26,7 @@ export function shuffleQustions(array: QuestionData[]) {
     const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
-  return result
+  return result;
 }
 
 export function shuffleSprintQuestions(array: QuestionSprintData[]) {
@@ -35,5 +35,9 @@ export function shuffleSprintQuestions(array: QuestionSprintData[]) {
     const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
-  return result
+  return result;
+}
+
+export function getPercentage(partialValue: number, totalValue: number) {
+  return (totalValue / 100) * partialValue;
 }

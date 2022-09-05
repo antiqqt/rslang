@@ -35,10 +35,7 @@ export default function TextbookControls({
         handleSetGroup={handleSetGroup}
         handleSetPage={handleSetPage}
       />
-      {!pageLearned && <Games
-        group={group}
-        page={page}
-        words={words} />}
+      {!pageLearned && <Games group={group} page={page} words={words} />}
       {group !== HARD_WORDS_GROUP && (
         <Pagination
           handleSetPage={handleSetPage}

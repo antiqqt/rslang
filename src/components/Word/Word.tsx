@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import {
-  faGraduationCap,
+  faBookmark,
   faSkull,
   faVolumeHigh,
   faVolumeXmark,
@@ -13,7 +13,6 @@ import parse from 'html-react-parser';
 import textbookConstants from '../../common/constants/tb-constants';
 import environment from '../../common/environment/environment';
 import useAuth from '../../common/hooks/useAuth';
-import useAxiosSecure from '../../common/hooks/useAxiosSecure';
 import useSafeRequest from '../../common/hooks/useSafeRequest';
 import WordData from '../../common/types/WordData';
 import GroupElementData from '../Textbook/GroupElementData';
@@ -189,7 +188,7 @@ export default function Word({
                       );
                       setDifficulty('learned');
                     }}
-                    icon={faGraduationCap}
+                    icon={faBookmark}
                     text="В изученные"
                   />
                 </>
@@ -229,7 +228,7 @@ export default function Word({
                       setDifficulty('learned');
                       setUserWord(_id);
                     }}
-                    icon={faGraduationCap}
+                    icon={faBookmark}
                     text="В изученные"
                   />
                 )}
@@ -264,7 +263,7 @@ export default function Word({
                 )}
                 {difficulty === 'learned' && (
                   <FontAwesomeIcon
-                    icon={faGraduationCap}
+                    icon={faBookmark}
                     style={{ color: GroupElementData[group].color }}
                   />
                 )}
