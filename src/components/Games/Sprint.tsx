@@ -66,7 +66,10 @@ function Sprint(): JSX.Element {
           .then((data) => setTrueWords(data))
           .catch((error) => console.error(error));
       } else {
-        const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+        const url =
+          group !== textbookConstants.HARD_WORDS_GROUP_NUM
+            ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+            : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=20`;
 
         safeRequest
           .get<AggregatedWords>(url, {
@@ -113,7 +116,7 @@ function Sprint(): JSX.Element {
   )
 
   const questions = getQuestionsSprint(trueWords);
-
+  console.log(questions, trueWords)
   const answerSeries: boolean[] = useMemo(() => refresh ? [] : [], [refresh]);
   const correctAnswers: WordData[] = useMemo(() => refresh ? [] : [], [refresh]);
   const wrongAnswers: WordData[] = useMemo(() => refresh ? [] : [], [refresh]);

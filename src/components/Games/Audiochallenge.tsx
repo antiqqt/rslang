@@ -89,7 +89,10 @@ function Audiochallenge(): JSX.Element {
         const dryWordsArray = userWords.filter((word) => word.userWord?.difficulty !== 'learned')
         setTrueWords(dryWordsArray)
         if (dryWordsArray.length < countOfTrueWords) {
-          const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.NOT_LERNED_WORDS_QUERY}&wordsPerPage=600`;
+          const url =
+            group !== textbookConstants.HARD_WORDS_GROUP_NUM
+              ? `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
+              : `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.HARD_WORDS_QUERY}&wordsPerPage=20`;
 
           safeRequest
             .get<AggregatedWords>(url, {
