@@ -39,5 +39,7 @@ export function shuffleSprintQuestions(array: QuestionSprintData[]) {
 }
 
 export function getPercentage(partialValue: number, totalValue: number) {
+  if (totalValue <= 0 || partialValue <= 0) return 0;
+
   return (partialValue / totalValue) * 100;
 }

@@ -59,6 +59,8 @@ export default function Word({
   const [meaningSound, setMeaningSound] = useState<Howl | null>(null);
   const [meaningPlaying, setMeaningPlaying] = useState(false);
 
+  console.log(userWord?.optional);
+
   return (
     <article className="flex flex-col max-w-[15.5rem] w-full text-slate-400 bg-slate-200 border-2 border-slate-300 rounded-lg sm:max-w-none sm:w-3/5 lg:w-full lg:flex-row lg:max-w-5xl">
       <div className="w-full overflow-hidden border-b-2 border-slate-300 rounded-t-lg lg:max-w-xs lg:rounded-none lg:rounded-l-lg lg:border-b-0 lg:border-r-2">
@@ -156,7 +158,7 @@ export default function Word({
         {auth && (
           <>
             <div className="flex flex-col justify-center items-center gap-y-2 pt-3 sm:flex-row sm:gap-x-3">
-              {!difficulty && (
+              {(!difficulty || difficulty === 'easy') && (
                 <>
                   <WordBtn
                     handleAction={() => {
@@ -253,21 +255,37 @@ export default function Word({
                   />
                 )}
             </div>
-            {difficulty && (
+            {difficulty === 'hard' && (
               <div className="flex justify-center items-center pt-3">
-                {difficulty === 'hard' && (
-                  <FontAwesomeIcon
-                    icon={faSkull}
-                    style={{ color: GroupElementData[group].color }}
-                  />
-                )}
-                {difficulty === 'learned' && (
-                  <FontAwesomeIcon
-                    icon={faBookmark}
-                    style={{ color: GroupElementData[group].color }}
-                  />
-                )}
+                <FontAwesomeIcon
+                  icon={faSkull}
+                  style={{ color: GroupElementData[group].color }}
+                />
               </div>
+            )}
+            {difficulty === 'learned' && (
+              <div className="flex justify-center items-center pt-3">
+                <FontAwesomeIcon
+                  icon={faBookmark}
+                  style={{ color: GroupElementData[group].color }}
+                />
+              </div>
+            )}
+            {userWord && userWord.optional && (
+              <section className="flex gap-x-2 mx-auto pt-3">
+                <p className="text-sm">Прогресс изучения:</p>
+                <div className="flex w-10 h-5 border-2 border-slate-300">
+                  {new Array(userWord.optional.progress).fill(null).map(() => (
+                    <div
+                      key={Math.random()}
+                      className="w-2 border border-slate-300"
+                      style={{
+                        backgroundColor: `#${GroupElementData[group].color}`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </section>
             )}
           </>
         )}

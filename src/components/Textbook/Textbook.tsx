@@ -79,16 +79,18 @@ export default function Textbook() {
         });
         newWords = res.data[0].paginatedResults;
 
-        const isUserWord = (data: WordData) => 'userWord' in data;
+        const isUserWord = (data: WordData) => {
+          if (!data.userWord) return false;
+          return (
+            data.userWord.difficulty === 'hard' ||
+            data.userWord.difficulty === 'learned'
+          );
+        };
 
-        if (
+        setPageLearned(
           newWords.filter((x) => isUserWord(x)).length === newWords.length &&
-          group !== textbookConstants.HARD_WORDS_GROUP_NUM
-        ) {
-          setPageLearned(true);
-        } else {
-          setPageLearned(false);
-        }
+            group !== textbookConstants.HARD_WORDS_GROUP_NUM
+        );
         setWords(newWords);
       } catch (err) {
         console.log(err);
