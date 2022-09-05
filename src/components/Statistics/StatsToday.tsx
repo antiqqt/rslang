@@ -33,6 +33,9 @@ export default function StatsToday({ stats }: Props) {
     [Games.Sprint.statsKey]: sprintStats,
   } = stats;
 
+  const newWords =
+    audiochallengeStats.newWordsCount + sprintStats.newWordsCount;
+
   const totalAns =
     audiochallengeStats.correctAnswers +
     audiochallengeStats.wrongAnswers +
@@ -44,12 +47,12 @@ export default function StatsToday({ stats }: Props) {
     totalAns
   ).toFixed();
 
-  const newWords =
-    audiochallengeStats.newWordsCount + sprintStats.newWordsCount;
+  const newLearnedWords =
+    audiochallengeStats.newLearnedWordsCount + sprintStats.newLearnedWordsCount;
 
   return (
     <>
-      <section className="flex flex-col gap-x-6 gap-y-4 sm:flex-row">
+      <section className="flex flex-col gap-x-7 gap-y-6 sm:flex-row">
         <div className="flex flex-col items-center gap-y-1">
           <span className="text-7xl font-bold">{newWords}</span>
           <p className="text-xl text-justify">новых слов изучено</p>
@@ -57,6 +60,10 @@ export default function StatsToday({ stats }: Props) {
         <div className="flex flex-col items-center gap-y-1">
           <span className="text-7xl font-bold">{rightAns}%</span>
           <p className="text-xl text-justify">правильных ответов</p>
+        </div>
+        <div className="flex flex-col items-center gap-y-1">
+          <span className="text-7xl font-bold">{newLearnedWords}</span>
+          <p className="text-xl text-justify">слов изучено полностью</p>
         </div>
       </section>
       <section className="flex flex-col gap-y-5 sm:flex-row sm:gap-x-8">
