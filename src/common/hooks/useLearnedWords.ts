@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import apiPaths from "../api/api-paths";
-import defaultStatisticsOptional from "../constants/statistic-constants";
 import environment from "../environment/environment";
 import { StatisticData, StatisticResponse } from "../types/StatisticsData";
 import WordData from "../types/WordData";
@@ -171,7 +170,7 @@ export default function useLearnedWords(
       } else {
         copyResp.optional[currDate][gameName].bestSeries =
           copyResp.optional[currDate][gameName].bestSeries >
-          statisticData[gameName].bestSeries
+            statisticData[gameName].bestSeries
             ? copyResp.optional[currDate][gameName].bestSeries
             : statisticData[gameName].bestSeries;
 
@@ -226,8 +225,7 @@ export default function useLearnedWords(
             Authorization: `Bearer ${auth.token}`,
           },
         }
-        ).then((resp) => console.log('sucPOST', resp))
-          .catch(console.error(err))
+        ).catch((err) => console.error(err))
       } else {
         safeRequest.put(
           `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
@@ -239,8 +237,7 @@ export default function useLearnedWords(
             Authorization: `Bearer ${auth.token}`,
           },
         }
-        ).then((resp) => console.log('sucPUT', resp))
-          .catch((err) => console.error(err))
+        ).catch((err) => console.error(err))
       }
     })
 
