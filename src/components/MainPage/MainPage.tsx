@@ -13,9 +13,9 @@ import GamesList from '../Games/GamesList';
 import Sprint from '../Games/Sprint';
 import Statistics from '../Statistics/Statistics';
 import Textbook from '../Textbook/Textbook';
+import About from './About';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
-import About from './Mock/About';
 import Home from './Mock/Home';
 import NavBar from './NavBar';
 

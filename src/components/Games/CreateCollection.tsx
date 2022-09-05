@@ -6,14 +6,14 @@ import getWords from "../../common/api/words";
 import textbookConstants from "../../common/constants/tb-constants";
 import environment from "../../common/environment/environment";
 import useAuth from "../../common/hooks/useAuth";
-import useAxiosSecure from "../../common/hooks/useAxiosSecure";
+import useSafeRequest from '../../common/hooks/useSafeRequest';
 import { AggregatedWords } from "../../common/types/AggregatedWordData";
 import WordData from "../../common/types/WordData";
 import { getRandom0toMax, shuffle } from "../../common/utilities/Utilities";
 
 export function useTrueWords(group: number, pageFromTextBook: number, wordsFromTextBook: WordData[], locationLaunch: 'menu' | 'book', count: number) {
   const { auth, setAuth } = useAuth();
-  const axiosSecure = useAxiosSecure();
+  const safeRequest = useSafeRequest();
   const { MAX_PAGE_INDEX } = textbookConstants;
   const navigate = useNavigate();
 
@@ -29,8 +29,12 @@ export function useTrueWords(group: number, pageFromTextBook: number, wordsFromT
       } else {
         const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?group=${group}&page=${page}&wordsPerPage=20`
 
-        axiosSecure
-          .get<AggregatedWords>(url)
+        safeRequest
+          .get<AggregatedWords>(url, {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          })
           .then((res) => setTrueWords(res.data[0].paginatedResults))
           .catch((err) => console.error(err));
       }
@@ -44,8 +48,12 @@ export function useTrueWords(group: number, pageFromTextBook: number, wordsFromT
         if (dryWordsArray.length < count) {
           const url = `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.AggregatedWords}?filter=${textbookConstants.NOT_LERNED_WORDS_QUERY}&wordsPerPage=600`;
 
-          axiosSecure
-            .get<AggregatedWords>(url)
+          safeRequest
+            .get<AggregatedWords>(url, {
+              headers: {
+                Authorization: `Bearer ${auth.token}`,
+              },
+            })
             .then((res) => setTrueWords(prev => prev.concat(
               res.data[0].paginatedResults
                 .filter((word) => (word.page < page && word.group === group))
@@ -58,7 +66,7 @@ export function useTrueWords(group: number, pageFromTextBook: number, wordsFromT
         }
       }
     }
-  }, [auth, axiosSecure, group, setAuth, MAX_PAGE_INDEX, locationLaunch, pageFromTextBook, wordsFromTextBook, count, navigate])
+  }, [auth, safeRequest, group, setAuth, MAX_PAGE_INDEX, locationLaunch, pageFromTextBook, wordsFromTextBook, count, navigate])
   return trueWords;
 }
 

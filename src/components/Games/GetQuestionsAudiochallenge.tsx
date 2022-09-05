@@ -1,4 +1,4 @@
-import QuestionData from "../../common/types/QuestionData";
+import { QuestionData } from "../../common/types/QuestionData";
 import WordData from "../../common/types/WordData";
 import  { shuffle, shuffleQustions } from "../../common/utilities/Utilities";
 

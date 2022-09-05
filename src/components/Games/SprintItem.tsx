@@ -2,20 +2,18 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Howl } from 'howler';
 
-import environment from '../../common/environment/environment';
-import QuestionData from "../../common/types/QuestionData";
+import { QuestionSprintData } from "../../common/types/QuestionData";
 import WordData from "../../common/types/WordData";
-import AudioButton from "./AudioButton";
 
 interface Props {
-  questions: QuestionData[];
+  questions: QuestionSprintData[];
   wrongAnswers: WordData[];
   correctAnswers: WordData[];
   answerSeries: boolean[];
   setGameEnded: (val: boolean) => void;
 }
 
-function AudioItem({
+function SprintItem({
   questions,
   wrongAnswers,
   correctAnswers,
@@ -23,11 +21,11 @@ function AudioItem({
   setGameEnded
 }: Props): JSX.Element {
 
-  const [checkState, setCheckState] = useState(false);
-  const [checkedWord, setCheckedWord] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const doNotKnowAnswer = 'Не знаю';
-  const nextButtonInner = 'Далее'
+  const [seconds, setSeconds] = useState(60);
+  const [sucBar, setSucBar] = useState(0);
+  const [score, setScore] = useState(0);
+  const [oper, setOper] = useState(20);
 
   const audioCorrect = useMemo(() => new Howl({
     src: [`./assets/sounds/correct.mp3`]
@@ -37,105 +35,110 @@ function AudioItem({
   }), []);
 
   const question = questions[currentQuestion];
-  const audio = useMemo(() => new Howl({
-    src: [`${environment.baseUrl}/${question.audio}`]
-  }), [question.audio]);
-
-  const clickHandler = useCallback((checkedAnswer: string) => {
-    if (!checkState) {
-      setCheckState(true);
-      setCheckedWord(checkedAnswer);
-      if (checkedAnswer === question.answer) {
-        audioCorrect.play();
-        correctAnswers.push(question.wordData);
-        answerSeries.push(true)
-      } else {
-        audioWrong.play();
-        wrongAnswers.push(question.wordData);
-        answerSeries.push(false)
-      }
-    } else if (checkState && checkedAnswer === nextButtonInner) {
-      if (currentQuestion === questions.length - 1) {
-        setGameEnded(true);
-      } else {
-        setCheckState(false);
-        setCurrentQuestion(currentQuestion + 1);
-        setCheckedWord('');
-      }
-    }
-  }, [answerSeries, checkState, correctAnswers, currentQuestion, question.answer, question.wordData, questions.length, setGameEnded, wrongAnswers, audioWrong, audioCorrect])
-
-  const keyHandler = useCallback((key: string) => {
-    if (key === 'Enter') {
-      clickHandler(nextButtonInner)
-    } else if (key === ' ') {
-      audio.pause();
-      audio.play();
-    } else if ([...question.variants.keys()].includes(Number(key) - 1)) {
-      clickHandler(question.variants[Number(key) - 1])
-    }
-  }, [clickHandler, audio, question.variants]);
 
   useEffect(() => {
-    audio.play()
-  }, [audio])
+    if (seconds > 0) {
+      setTimeout(() => setSeconds(seconds - 1), 1000);
+    } else {
+      setGameEnded(true)
+    }
+    return () => {
+      if (seconds > 0) {
+        setTimeout(() => setSeconds(seconds - 1), 1000);
+      } else {
+        setGameEnded(true)
+      }
+    }
+  }, [seconds, setGameEnded]);
+
+  const clickHandler = useCallback((checkedAnswer: string) => {
+    if (checkedAnswer === String(question.answer)) {
+      audioCorrect.play();
+      correctAnswers.push(question.wordData);
+      answerSeries.push(true)
+      setScore((prev) => prev + oper)
+      if (sucBar === 3) {
+        setSucBar(0);
+        setOper((prev) => prev * 2)
+      } else {
+        setSucBar((prev) => prev + 1)
+      }
+    } else {
+      audioWrong.play();
+      wrongAnswers.push(question.wordData);
+      answerSeries.push(false)
+      setSucBar(0)
+    }
+    if (currentQuestion === questions.length - 1) {
+      setGameEnded(true)
+    } else {
+      setCurrentQuestion((prev) => prev + 1);
+    }
+  }, [question, answerSeries, audioCorrect, audioWrong, correctAnswers, wrongAnswers, currentQuestion, questions.length, setGameEnded, setScore, oper, setSucBar, sucBar])
+
+  const keyHandler = useCallback((key: string) => {
+    if (key === 'ArrowRight') {
+      clickHandler('true')
+    } else if (key === 'ArrowLeft') {
+      clickHandler('false')
+    }
+  }, [clickHandler]);
 
   useEffect(() => {
     document.onkeydown = (e) => {
       e.preventDefault();
       keyHandler(e.key);
     };
+    return () => {
+      document.onkeydown = (e) => {
+        e.preventDefault();
+        keyHandler(e.key);
+      };
+    }
   }, [keyHandler])
 
   return (
-    <div className="flex flex-wrap flex-col sm:flex-row md:min-w-[600px] bg-blue-100 rounded-xl p-4 shadow-lg">
-      {!checkState && <div className="flex flex-col w-[220px] md:w-[450px] grow justify-center items-center sm:px-4 py-4">
-        <AudioButton
-          src={`${environment.baseUrl}/${question.audio}`}
-          size='text-9xl' />
-      </div>}
-      {checkState && <div className="flex flex-col md:w-[450px] grow justify-center items-center sm:px-4 py-4">
-        <img
-          alt={`${question.answer} illustration`}
-          className="block rounded-lg max-h-[200px]"
-          src={`${environment.baseUrl}/${question.image}`}
-        />
-        <div className="flex flex-wrap items-center justify-center sm:px-4 py-4">
-          <AudioButton
-            src={`${environment.baseUrl}/${question.audio}`}
-            size='text-4xl' />
-          <span className="text-2xl md:text-4xl sm:px-2">{question.answer}</span>
-        </div>
-      </div>}
-      <div className="flex flex-col items-center justify-between">
-        <div className="flex flex-col items-center text-xl md:text-2xl sm:px-2">
-          {question.variants.map((word) => (
-            <button
-              type="button"
-              onClick={() => clickHandler(word)}
-              key={word}
-              className={`
-                  ${'p-1 m-1 transition-all'}
-                  ${!checkState && "hover:scale-125 cursor-pointer"}
-                  ${checkState && (word === question.answer) && "text-white bg-green-500 rounded-lg"}
-                  ${checkState && (word !== question.answer) && (word !== checkedWord) && "text-gray-400"}
-                  ${checkState && (word !== question.answer) && (word === checkedWord) && "text-white bg-red-500 rounded-lg"}
-              `}>
-              {word}
-            </button>
-          )
-          )}
-        </div>
-        <button className="inline-flex items-center justify-center gap-x-3 max-w-max p-3 m-3 py-1 text-white text-base font-medium 
-          rounded-lg border-2 border-transparent bg-blue-400 hover:bg-white hover:text-blue-400 hover:border-blue-400
+    <div className="flex flex-wrap flex-col items-center sm:min-w-[400px] min-w-[240px] bg-blue-100 rounded-xl p-4 shadow-lg">
+      <div className="text-3xl left-28 text-green-700">
+        +{oper}
+      </div>
+      <div className="flex flex-col items-center text-3xl m-5">
+        Счет: {score}
+      </div>
+      <div className="flex justify-center items-center grow p-2 m-2 bg-white rounded-full text-4xl border-black border-2">
+        {seconds > 9 ? seconds : `0${seconds}`}
+      </div>
+      <div className="flex flex-row justify-center my-5">
+        <div className={`w-6 h-6 m-2 ${sucBar > 0 ? 'bg-green-600' : 'bg-white'} rounded-full border-black border`} />
+        <div className={`w-6 h-6 m-2 ${sucBar > 1 ? 'bg-green-600' : 'bg-white'} rounded-full border-black border`} />
+        <div className={`w-6 h-6 m-2 ${sucBar > 2 ? 'bg-green-600' : 'bg-white'} rounded-full border-black border`} />
+      </div>
+      <div className="flex flex-col items-center text-4xl sm:px-2">
+        {question.word}
+      </div>
+      <div className="flex flex-col items-center text-3xl sm:px-2">
+        {question.question}
+      </div>
+      <hr className="bg-black h-[2px] my-4" />
+      <div className="flex justify-around grow w-full">
+        <button className="inline-flex items-center justify-center gap-x-3 w-20 py-1 text-white text-base font-medium 
+          rounded-lg border-2 border-transparent bg-red-400 hover:bg-white hover:text-red-400 hover:border-red-400
           focus:outline-none"
           type="button"
-          onClick={(e) => clickHandler(e.currentTarget.innerText)}>
-          {checkState ? nextButtonInner : doNotKnowAnswer}
+          id="false"
+          onClick={(e) => clickHandler(e.currentTarget.id)}>
+          Неверно
         </button>
-      </div>
+        <button className="inline-flex items-center justify-center gap-x-3 w-20 py-1 text-white text-base font-medium 
+          rounded-lg border-2 border-transparent bg-green-400 hover:bg-white hover:text-green-400 hover:border-green-400
+          focus:outline-none"
+          type="button"
+          id="true"
+          onClick={(e) => clickHandler(e.currentTarget.id)}>
+          Верно
+        </button></div>
     </div>
   )
 }
 
-export default AudioItem
+export default SprintItem
