@@ -30,7 +30,7 @@ export default function Textbook() {
 
   const [words, setWords] = useState<WordData[]>([]);
   const [pageLearned, setPageLearned] = useState(false);
-  const [userWord, setUserWord] = useState('');
+  const [userWord, setUserWord] = useState<string | null>(null);
 
   const { auth, setAuth } = useAuth();
   const safeRequest = useSafeRequest();
@@ -79,22 +79,23 @@ export default function Textbook() {
         });
         newWords = res.data[0].paginatedResults;
 
-        const isUserWord = (data: WordData) => 'userWord' in data;
+        const isUserWord = (data: WordData) => {
+          if (!data.userWord) return false;
+          return (
+            data.userWord.difficulty === 'hard' ||
+            data.userWord.difficulty === 'learned'
+          );
+        };
 
-        if (
+        setPageLearned(
           newWords.filter((x) => isUserWord(x)).length === newWords.length &&
-          group !== textbookConstants.HARD_WORDS_GROUP_NUM
-        ) {
-          setPageLearned(true);
-        } else {
-          setPageLearned(false);
-        }
+            group !== textbookConstants.HARD_WORDS_GROUP_NUM
+        );
         setWords(newWords);
       } catch (err) {
-        console.log(err);
-        // setAuth(null);
-        // localStorage.removeItem(environment.localStorageKey);
-        // navigate(apiPaths.Signin, { replace: true });
+        setAuth(null);
+        localStorage.removeItem(environment.localStorageKey);
+        navigate(apiPaths.Signin, { replace: true });
       }
     };
 

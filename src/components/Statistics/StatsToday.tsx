@@ -11,7 +11,7 @@ import { StatisticData } from '../../common/types/StatisticsData';
 import { getPercentage } from '../../common/utilities/Utilities';
 
 interface Props {
-  stats: StatisticData;
+  todayStats: StatisticData;
 }
 
 const Games = {
@@ -27,11 +27,11 @@ const Games = {
   },
 };
 
-export default function StatsToday({ stats }: Props) {
+export default function StatsToday({ todayStats }: Props) {
   const {
     [Games.Audiochallenge.statsKey]: audiochallengeStats,
     [Games.Sprint.statsKey]: sprintStats,
-  } = stats;
+  } = todayStats;
 
   const newWords =
     audiochallengeStats.newWordsCount + sprintStats.newWordsCount;
@@ -55,21 +55,21 @@ export default function StatsToday({ stats }: Props) {
       <section className="flex flex-col gap-x-7 gap-y-6 sm:flex-row">
         <div className="flex flex-col items-center gap-y-1">
           <span className="text-7xl font-bold">{newWords}</span>
-          <p className="text-xl text-justify">новых слов изучено</p>
+          <p className="text-xl text-center">новых слов встречено</p>
         </div>
         <div className="flex flex-col items-center gap-y-1">
           <span className="text-7xl font-bold">{rightAns}%</span>
-          <p className="text-xl text-justify">правильных ответов</p>
+          <p className="text-xl text-center">правильных ответов</p>
         </div>
         <div className="flex flex-col items-center gap-y-1">
           <span className="text-7xl font-bold">{newLearnedWords}</span>
-          <p className="text-xl text-justify">слов изучено полностью</p>
+          <p className="text-xl text-center">слов изучено полностью</p>
         </div>
       </section>
       <section className="flex flex-col gap-y-5 sm:flex-row sm:gap-x-8">
         {Object.values(Games).map(({ name, icon, statsKey }) => {
           const { newWordsCount, bestSeries, correctAnswers, wrongAnswers } =
-            stats[statsKey];
+            todayStats[statsKey];
 
           const totalGameAns = correctAnswers + wrongAnswers;
           const rightGameAns = getPercentage(
@@ -89,7 +89,7 @@ export default function StatsToday({ stats }: Props) {
               <div className="flex items-center gap-x-2">
                 <FontAwesomeIcon icon={faBookmark} className="w-4 h-4" />
                 <p className="text-sm font-medium">
-                  Изучено {newWordsCount} новых слов.
+                  Встречено {newWordsCount} новых слов.
                 </p>
               </div>
               <div className="flex items-center gap-x-2">

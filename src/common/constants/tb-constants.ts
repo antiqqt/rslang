@@ -6,7 +6,14 @@ const textbookConstants = {
     $or: [{ 'userWord.difficulty': 'hard' }],
   }),
   NOT_LERNED_WORDS_QUERY: JSON.stringify({
-    $or: [{ 'userWord': undefined }, { 'userWord.difficulty': 'hard' },{ 'userWord.difficulty': 'easy' }],
+    $or: [
+      { userWord: undefined },
+      { 'userWord.difficulty': 'hard' },
+      { 'userWord.difficulty': 'easy' },
+    ],
+  }),
+  LEARNED_WORDS_QUERY: JSON.stringify({
+    $or: [{ 'userWord.difficulty': 'learned' }],
   }),
 };
 

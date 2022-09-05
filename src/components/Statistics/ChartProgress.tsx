@@ -1,7 +1,5 @@
 import { Line } from 'react-chartjs-2';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { faker } from '@faker-js/faker/locale/de';
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -12,6 +10,8 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
+
+import { SettingsResponse } from '../../common/types/SettingsData';
 
 ChartJS.register(
   CategoryScale,
@@ -32,20 +32,27 @@ export const options = {
   },
 };
 
-const labels = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль'];
+interface Props {
+  settings: SettingsResponse;
+}
 
-export const data = {
-  labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль'],
-  datasets: [
-    {
-      label: 'Прогресс',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-  ],
-};
+export default function ChartProgress({ settings }: Props) {
+  const dates = settings.optional;
+  const newLearnedWordsPerDay = Object.values(dates).map(
+    (date) => date.learnedWords
+  );
 
-export default function ChartProgress() {
+  const data = {
+    labels: [...Object.keys(dates)],
+    datasets: [
+      {
+        label: 'Прогресс изучения',
+        data: newLearnedWordsPerDay,
+        borderColor: '#34d399',
+        backgroundColor: '#10b981',
+      },
+    ],
+  };
+
   return <Line options={options} data={data} />;
 }

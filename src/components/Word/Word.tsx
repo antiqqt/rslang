@@ -21,7 +21,7 @@ import { handleAudio, handleWord } from './WordHandlers';
 
 interface Props {
   data: WordData;
-  setUserWord: React.Dispatch<React.SetStateAction<string>>;
+  setUserWord: React.Dispatch<React.SetStateAction<string | null>>;
   currentGroup: number;
 }
 
@@ -156,7 +156,7 @@ export default function Word({
         {auth && (
           <>
             <div className="flex flex-col justify-center items-center gap-y-2 pt-3 sm:flex-row sm:gap-x-3">
-              {!difficulty && (
+              {(!difficulty || difficulty === 'easy') && (
                 <>
                   <WordBtn
                     handleAction={() => {
@@ -253,21 +253,37 @@ export default function Word({
                   />
                 )}
             </div>
-            {difficulty && (
+            {difficulty === 'hard' && (
               <div className="flex justify-center items-center pt-3">
-                {difficulty === 'hard' && (
-                  <FontAwesomeIcon
-                    icon={faSkull}
-                    style={{ color: GroupElementData[group].color }}
-                  />
-                )}
-                {difficulty === 'learned' && (
-                  <FontAwesomeIcon
-                    icon={faBookmark}
-                    style={{ color: GroupElementData[group].color }}
-                  />
-                )}
+                <FontAwesomeIcon
+                  icon={faSkull}
+                  style={{ color: GroupElementData[group].color }}
+                />
               </div>
+            )}
+            {difficulty === 'learned' && (
+              <div className="flex justify-center items-center pt-3">
+                <FontAwesomeIcon
+                  icon={faBookmark}
+                  style={{ color: GroupElementData[group].color }}
+                />
+              </div>
+            )}
+            {userWord && userWord.optional && (
+              <section className="flex gap-x-2 mx-auto pt-3">
+                <p className="text-sm">Прогресс изучения:</p>
+                <div className="flex w-10 h-5 border-2 border-slate-300">
+                  {new Array(userWord.optional.progress).fill(null).map(() => (
+                    <div
+                      key={Math.random()}
+                      className="w-2 border border-slate-300"
+                      style={{
+                        backgroundColor: `#${GroupElementData[group].color}`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </section>
             )}
           </>
         )}

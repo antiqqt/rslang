@@ -1,5 +1,5 @@
-/* eslint no-param-reassign: "error" */
-
+import apiPaths from '../api/api-paths';
+import environment from '../environment/environment';
 import { QuestionData, QuestionSprintData } from '../types/QuestionData';
 
 export function getRandom0toMax(max: number) {
@@ -39,5 +39,24 @@ export function shuffleSprintQuestions(array: QuestionSprintData[]) {
 }
 
 export function getPercentage(partialValue: number, totalValue: number) {
+  if (totalValue <= 0 || partialValue <= 0) return 0;
+
   return (partialValue / totalValue) * 100;
 }
+
+export const createWordURL = (userId: string, wordId: string) =>
+  `${environment.baseUrl}${apiPaths.Users}/${userId}${apiPaths.Words}/${wordId}`;
+
+export const createStatsURL = (userId: string) =>
+  `${environment.baseUrl}${apiPaths.Users}/${userId}${apiPaths.Statistics}`;
+
+export const createSettingsURL = (userId: string) =>
+  `${environment.baseUrl}${apiPaths.Users}/${userId}${apiPaths.Settings}`;
+
+export const createFilteredURL = (userId: string, query: string) =>
+  `${environment.baseUrl}${apiPaths.Users}/${userId}${apiPaths.AggregatedWords}?filter=${query}&wordsPerPage=3600`;
+
+export const reduceObjByField = (
+  obj: Record<string, Record<string, number>>,
+  fieldName: string
+) => Object.values(obj).reduce((acc, sum) => sum[fieldName] + acc, 0);

@@ -4,13 +4,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import apiPaths from '../../common/api/api-paths';
 import { createUser, loginUser } from '../../common/api/auth';
-import environment from '../../common/environment/environment';
 import useAuth from '../../common/hooks/useAuth';
 import useSafeRequest from '../../common/hooks/useSafeRequest';
 import appRoutes from '../../common/routes/app-routes';
+import { SettingsResponse } from '../../common/types/SettingsData';
 import { StatisticResponse } from '../../common/types/StatisticsData';
+import {
+  createSettingsURL,
+  createStatsURL,
+} from '../../common/utilities/Utilities';
 
 const NAME_REGEX = /^[a-zA-Zа-яА-я0-9]{1,24}$/;
 const EMAIL_REGEX = /\S+@\S+\.\S+/;
@@ -72,9 +75,21 @@ export default function Register() {
       if (setAuth) setAuth(newAuthData);
 
       await safeRequest.put<StatisticResponse>(
-        `${environment.baseUrl}${apiPaths.Users}/${newAuthData.userId}${apiPaths.Statistics}`,
+        createStatsURL(newAuthData.userId),
         {
-          learnedWords: '0',
+          learnedWords: 0,
+          optional: {},
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${newAuthData.token}`,
+          },
+        }
+      );
+
+      await safeRequest.put<SettingsResponse>(
+        createSettingsURL(newAuthData.userId),
+        {
           optional: {},
         },
         {

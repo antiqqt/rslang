@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import apiPaths from '../../common/api/api-paths';
-import environment from '../../common/environment/environment';
+import textbookConstants from '../../common/constants/tb-constants';
 import useAuth from '../../common/hooks/useAuth';
 import useSafeRequest from '../../common/hooks/useSafeRequest';
+import { AggregatedWords } from '../../common/types/AggregatedWordData';
+import { SettingsResponse } from '../../common/types/SettingsData';
 import {
   StatisticData,
   StatisticResponse,
 } from '../../common/types/StatisticsData';
+import {
+  createFilteredURL,
+  createSettingsURL,
+  createStatsURL,
+} from '../../common/utilities/Utilities';
 import StatsAlltime from './StatsAlltime';
 import StatsToday from './StatsToday';
 
@@ -16,7 +22,7 @@ const Screens = {
   alltime: 'alltime',
 } as const;
 
-const defaultStats = {
+export const defaultStats = {
   sprint: {
     bestSeries: 0,
     correctAnswers: 0,
@@ -43,65 +49,122 @@ export default function Statistics() {
   );
 
   const { auth } = useAuth();
-  const [stats, setStats] = useState<StatisticData | null>(null);
+  const [todayStats, setTodayStats] = useState<StatisticData | null>(null);
+
+  const [totalStats, setTotalStats] = useState<StatisticResponse | null>(null);
+  const [settings, setSettings] = useState<SettingsResponse | null>(null);
 
   const safeRequest = useSafeRequest();
 
   useEffect(() => {
     if (!auth) return;
+    const today = new Date().toLocaleDateString('en-ca');
 
     const loadStats = async () => {
-      try {
-        const today = new Date().toLocaleDateString('en-ca');
-
-        const { data: resData } = await safeRequest.get<StatisticResponse>(
-          `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.Statistics}`,
-          {
-            headers: {
-              Authorization: `Bearer ${auth.token}`,
-            },
-          }
-        );
-
-        if (resData.optional && today in resData.optional) {
-          setStats(resData.optional[today]);
-          return;
+      const statsRes = await safeRequest.get<StatisticResponse>(
+        createStatsURL(auth.userId),
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
         }
+      );
 
-        await safeRequest.put<StatisticResponse>(
-          `${environment.baseUrl}${apiPaths.Users}/${auth.userId}${apiPaths.Statistics}`,
-          {
-            learnedWords: resData.learnedWords,
-            optional: {
-              [today]: {
-                ...defaultStats,
-              },
+      if (statsRes.data.optional && today in statsRes.data.optional) {
+        setTodayStats(statsRes.data.optional[today]);
+        setTotalStats(statsRes.data);
+        return;
+      }
+
+      await safeRequest.put<StatisticResponse>(
+        createStatsURL(auth.userId),
+        {
+          learnedWords: statsRes.data.learnedWords,
+          optional: {
+            ...statsRes.data.optional,
+            [today]: {
+              ...defaultStats,
             },
           },
-          {
-            headers: {
-              Authorization: `Bearer ${auth.token}`,
-            },
-          }
-        );
-        setStats(defaultStats);
-      } catch (error) {
-        console.error(error);
-      }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+      setTodayStats(defaultStats);
+      setTotalStats({
+        learnedWords: statsRes.data.learnedWords,
+        optional: {
+          ...statsRes.data.optional,
+          [today]: {
+            ...defaultStats,
+          },
+        },
+      });
     };
 
-    loadStats();
+    const loadSettings = async () => {
+      const filteredRes = await safeRequest.get<AggregatedWords>(
+        createFilteredURL(auth.userId, textbookConstants.LEARNED_WORDS_QUERY),
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+
+      const currentLearnedWordsCount =
+        filteredRes.data[0].paginatedResults.length;
+
+      const settingsRes = await safeRequest.get<SettingsResponse>(
+        createSettingsURL(auth.userId),
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+
+      const newSettings = {
+        optional: {
+          ...settingsRes.data.optional,
+          [today]: {
+            learnedWords: currentLearnedWordsCount,
+          },
+        },
+      };
+
+      await safeRequest.put<SettingsResponse>(
+        createSettingsURL(auth.userId),
+        newSettings,
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+      setSettings(newSettings);
+    };
+
+    try {
+      loadStats();
+      loadSettings();
+    } catch (error) {
+      console.error(error);
+    }
   }, [auth, safeRequest]);
 
   return (
     <article className="flex flex-col gap-y-4 pt-6 px-4 text-slate-700 font-medium">
       <section className="flex flex-col items-center gap-y-7">
-        {screen === Screens.today && stats && (
+        {screen === Screens.today && todayStats && (
           <>
             <p className="mx-auto text-4xl font-medium">
               Статистика за сегодня:
             </p>
-            <StatsToday stats={stats} />
+            <StatsToday todayStats={todayStats} />
             <button
               onClick={() => setScreen(Screens.alltime)}
               type="button"
@@ -112,12 +175,12 @@ export default function Statistics() {
             </button>
           </>
         )}
-        {screen === Screens.alltime && stats && (
+        {screen === Screens.alltime && settings && totalStats && (
           <>
             <p className="mx-auto text-4xl font-medium">
               Статистика за всё время:
             </p>
-            <StatsAlltime />
+            <StatsAlltime settings={settings} totalStats={totalStats} />
             <button
               onClick={() => setScreen(Screens.today)}
               type="button"
