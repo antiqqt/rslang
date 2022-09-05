@@ -1,10 +1,9 @@
 import { AxiosInstance } from 'axios';
 import { Howl } from 'howler';
 
-import apiPaths from '../../common/api/api-paths';
 import { AuthData } from '../../common/api/auth';
-import environment from '../../common/environment/environment';
 import WordData, { WordDifficulty } from '../../common/types/WordData';
+import { createWordURL } from '../../common/utilities/Utilities';
 
 const handleAudio = (
   src: string,
@@ -34,46 +33,37 @@ const handleAudio = (
 
 const handleWord = async (
   wordId: string,
-  userWord: WordData["userWord"],
+  userWord: WordData['userWord'],
   axios: AxiosInstance,
   auth: AuthData | null,
   operation: 'create' | 'update' | 'delete',
-  wordType: WordDifficulty
+  newWordType: WordDifficulty
 ) => {
   if (!auth) return;
-  const { Users, Words } = apiPaths;
 
   if (operation === 'create') {
-    axios.post(
-      `${environment.baseUrl}${Users}/${auth.userId}${Words}/${wordId}`,
-      {
-        difficulty: wordType,
-        optional: {
-          progress: 0,
-          record: {
-            audiochallenge: [0, 0],
-            sprint: [0, 0]
-          }
+    await axios.post(createWordURL(auth.userId, wordId), {
+      difficulty: newWordType,
+      optional: {
+        progress: 0,
+        record: {
+          audiochallenge: [0, 0],
+          sprint: [0, 0],
         },
-      }
-    );
+      },
+    });
     return;
   }
 
   if (operation === 'update') {
-    axios.put(
-      `${environment.baseUrl}${Users}/${auth.userId}${Words}/${wordId}`,
-      {
-        difficulty: wordType,
-        optional: userWord?.optional,
-      }
-    );
+    await axios.put(createWordURL(auth.userId, wordId), {
+      difficulty: newWordType,
+      optional: userWord?.optional,
+    });
     return;
   }
 
-  axios.delete(
-    `${environment.baseUrl}${Users}/${auth.userId}${Words}/${wordId}`
-  );
+  await axios.delete(createWordURL(auth.userId, wordId));
 };
 
 export { handleAudio, handleWord };

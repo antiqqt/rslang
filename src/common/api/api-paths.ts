@@ -4,6 +4,7 @@ const apiPaths = {
   Signin: '/signin',
   Tokens: '/tokens',
   Statistics: '/statistics',
+  Settings: '/settings',
   AggregatedWords: '/aggregatedWords',
 } as const;
 

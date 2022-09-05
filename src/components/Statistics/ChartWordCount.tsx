@@ -1,7 +1,5 @@
 import { Line } from 'react-chartjs-2';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { faker } from '@faker-js/faker/locale/de';
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -12,6 +10,8 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
+
+import { StatisticResponse } from '../../common/types/StatisticsData';
 
 ChartJS.register(
   CategoryScale,
@@ -32,20 +32,27 @@ export const options = {
   },
 };
 
-const labels = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль'];
+interface Props {
+  totalStats: StatisticResponse;
+}
 
-export const data = {
-  labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль'],
-  datasets: [
-    {
-      label: 'Кол-во слов',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-  ],
-};
+export default function ChartWordCount({ totalStats }: Props) {
+  const dates = totalStats.optional;
+  const newWordsPerDay = Object.values(dates).map(
+    (date) => date.audiochallenge.newWordsCount + date.sprint.newWordsCount
+  );
 
-export default function ChartWordCount() {
+  const data = {
+    labels: [...Object.keys(dates)],
+    datasets: [
+      {
+        label: 'Кол-во новых слов',
+        data: newWordsPerDay,
+        borderColor: '#60a5fa',
+        backgroundColor: '#3b82f6',
+      },
+    ],
+  };
+
   return <Line options={options} data={data} />;
 }

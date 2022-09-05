@@ -30,7 +30,7 @@ export default function Textbook() {
 
   const [words, setWords] = useState<WordData[]>([]);
   const [pageLearned, setPageLearned] = useState(false);
-  const [userWord, setUserWord] = useState('');
+  const [userWord, setUserWord] = useState<string | null>(null);
 
   const { auth, setAuth } = useAuth();
   const safeRequest = useSafeRequest();
@@ -93,10 +93,9 @@ export default function Textbook() {
         );
         setWords(newWords);
       } catch (err) {
-        console.log(err);
-        // setAuth(null);
-        // localStorage.removeItem(environment.localStorageKey);
-        // navigate(apiPaths.Signin, { replace: true });
+        setAuth(null);
+        localStorage.removeItem(environment.localStorageKey);
+        navigate(apiPaths.Signin, { replace: true });
       }
     };
 

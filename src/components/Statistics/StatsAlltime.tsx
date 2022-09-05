@@ -1,20 +1,27 @@
 import { useState } from 'react';
 
+import { SettingsResponse } from '../../common/types/SettingsData';
+import { StatisticResponse } from '../../common/types/StatisticsData';
 import ChartProgress from './ChartProgress';
 import ChartWordCount from './ChartWordCount';
+
+interface Props {
+  totalStats: StatisticResponse;
+  settings: SettingsResponse;
+}
 
 const ChartsData = {
   progress: {
     type: 'progress',
-    name: 'Прогресс',
+    name: 'Прогресс изучения',
   },
   wordCount: {
     type: 'wordCount',
-    name: 'Кол-во слов',
+    name: 'Кол-во новых слов',
   },
 } as const;
 
-export default function StatsAlltime() {
+export default function StatsAlltime({ totalStats, settings }: Props) {
   const [chart, setChart] = useState<
     typeof ChartsData[keyof typeof ChartsData]
   >(ChartsData.wordCount);
@@ -48,8 +55,8 @@ export default function StatsAlltime() {
           </span>
         </label>
       </div>
-      {chart.type === 'wordCount' && <ChartWordCount />}
-      {chart.type === 'progress' && <ChartProgress />}
+      {chart.type === 'wordCount' && <ChartWordCount totalStats={totalStats} />}
+      {chart.type === 'progress' && <ChartProgress settings={settings} />}
     </>
   );
 }

@@ -11,7 +11,7 @@ export interface StatisticData {
 }
 
 export interface StatisticResponse {
-  learnedWords: string;
+  learnedWords: number;
   optional: {
     [date: string]: StatisticData;
   };

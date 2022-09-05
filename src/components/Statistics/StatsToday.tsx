@@ -11,7 +11,7 @@ import { StatisticData } from '../../common/types/StatisticsData';
 import { getPercentage } from '../../common/utilities/Utilities';
 
 interface Props {
-  stats: StatisticData;
+  todayStats: StatisticData;
 }
 
 const Games = {
@@ -27,11 +27,11 @@ const Games = {
   },
 };
 
-export default function StatsToday({ stats }: Props) {
+export default function StatsToday({ todayStats }: Props) {
   const {
     [Games.Audiochallenge.statsKey]: audiochallengeStats,
     [Games.Sprint.statsKey]: sprintStats,
-  } = stats;
+  } = todayStats;
 
   const newWords =
     audiochallengeStats.newWordsCount + sprintStats.newWordsCount;
@@ -69,7 +69,7 @@ export default function StatsToday({ stats }: Props) {
       <section className="flex flex-col gap-y-5 sm:flex-row sm:gap-x-8">
         {Object.values(Games).map(({ name, icon, statsKey }) => {
           const { newWordsCount, bestSeries, correctAnswers, wrongAnswers } =
-            stats[statsKey];
+            todayStats[statsKey];
 
           const totalGameAns = correctAnswers + wrongAnswers;
           const rightGameAns = getPercentage(

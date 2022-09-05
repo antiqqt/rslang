@@ -21,7 +21,7 @@ import { handleAudio, handleWord } from './WordHandlers';
 
 interface Props {
   data: WordData;
-  setUserWord: React.Dispatch<React.SetStateAction<string>>;
+  setUserWord: React.Dispatch<React.SetStateAction<string | null>>;
   currentGroup: number;
 }
 
@@ -58,8 +58,6 @@ export default function Word({
 
   const [meaningSound, setMeaningSound] = useState<Howl | null>(null);
   const [meaningPlaying, setMeaningPlaying] = useState(false);
-
-  console.log(userWord?.optional);
 
   return (
     <article className="flex flex-col max-w-[15.5rem] w-full text-slate-400 bg-slate-200 border-2 border-slate-300 rounded-lg sm:max-w-none sm:w-3/5 lg:w-full lg:flex-row lg:max-w-5xl">
