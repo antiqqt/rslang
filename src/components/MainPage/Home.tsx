@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import HomeItem from './HomeItem';
 
 function Home() {
