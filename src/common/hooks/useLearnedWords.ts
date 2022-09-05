@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import apiPaths from '../api/api-paths';
-import environment from '../environment/environment';
-import { StatisticData, StatisticResponse } from '../types/StatisticsData';
-import WordData from '../types/WordData';
+import apiPaths from "../api/api-paths";
+import environment from "../environment/environment";
+import { StatisticData, StatisticResponse } from "../types/StatisticsData";
+import WordData from "../types/WordData";
 import useAuth from './useAuth';
 import useSafeRequest from './useSafeRequest';
 
@@ -139,9 +139,10 @@ export default function useLearnedWords(
   const navigate = useNavigate();
 
   useEffect(() => {
-    const freshWords = wrongAnswers
-      .filter((word) => !word.userWord)
-      .concat(correctAnswers.filter((word) => !word.userWord))
+    if (!auth || !setAuth) return;
+
+    const freshWords = ((wrongAnswers.filter((word) => !word.userWord))
+      .concat(correctAnswers.filter((word) => !word.userWord)))
       .map((word) => word._id);
     const upgradedWords = wrongAnswers
       .map((word) => downWord(word, gameName))
@@ -155,7 +156,7 @@ export default function useLearnedWords(
       gameName
     );
 
-    if (!auth || !setAuth) return;
+    console.log('here', wrongAnswers, correctAnswers, upgradedWords, freshWords)
     // put statistics
     function sendStatistics(
       statisticsResp: StatisticResponse,
@@ -169,7 +170,7 @@ export default function useLearnedWords(
       } else {
         copyResp.optional[currDate][gameName].bestSeries =
           copyResp.optional[currDate][gameName].bestSeries >
-          statisticData[gameName].bestSeries
+            statisticData[gameName].bestSeries
             ? copyResp.optional[currDate][gameName].bestSeries
             : statisticData[gameName].bestSeries;
 
@@ -188,87 +189,58 @@ export default function useLearnedWords(
       }
 
       if (!auth || !setAuth) return;
-      safeRequest
-        .put(
-          `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`,
-          {
-            learnedWords: 0,
-            optional: copyResp.optional,
+      console.log(copyResp)
+      safeRequest.put(
+        `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`, {
+        learnedWords: '0',
+        optional: copyResp.optional
+      }
+        , {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${auth.token}`,
-            },
-          }
-        )
-        .catch((err) => {
-          // console.log(err.response.status);
-          // setAuth(null);
-          // localStorage.removeItem(environment.localStorageKey);
-          // navigate(apiPaths.Signin, { replace: true });
-        });
+        })
+        .catch((err) => console.error(err));
     }
 
-    safeRequest
-      .get(`${environment.baseUrl}${Users}/${auth.userId}${Statistics}`, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      })
-      .then((res) => sendStatistics(res.data, gameStatisticData))
-      .catch((err) => {
-        // setAuth(null);
-        // localStorage.removeItem(environment.localStorageKey);
-        // navigate(apiPaths.Signin, { replace: true });
-      });
+    safeRequest.get(
+      `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`, {
+      headers: {
+        Authorization: `Bearer ${auth.token}`,
+      },
+    })
+      .then((res) => sendStatistics(res.data, gameStatisticData)
+      ).catch((err) => console.error(err));
 
     // update words
     upgradedWords.forEach((word) => {
       if (freshWords.includes(word._id)) {
-        safeRequest
-          .post(
-            `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
-            {
-              difficulty: word.userWord?.difficulty,
-              optional: word.userWord?.optional,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${auth.token}`,
-              },
-            }
-          )
-          .catch((err) => console.log(err));
+        safeRequest.post(
+          `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
+          {
+            difficulty: word.userWord?.difficulty,
+            optional: word.userWord?.optional,
+          }, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+        ).catch((err) => console.error(err))
       } else {
-        safeRequest
-          .put(
-            `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
-            {
-              difficulty: word.userWord?.difficulty,
-              optional: word.userWord?.optional,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${auth.token}`,
-              },
-            }
-          )
-          .catch((err) => {
-            console.log(err);
-          });
+        safeRequest.put(
+          `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
+          {
+            difficulty: word.userWord?.difficulty,
+            optional: word.userWord?.optional,
+          }, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+        ).catch((err) => console.error(err))
       }
-    });
-  }, [
-    Statistics,
-    Users,
-    Words,
-    answerSeries,
-    auth,
-    correctAnswers,
-    gameName,
-    navigate,
-    safeRequest,
-    setAuth,
-    wrongAnswers,
-  ]);
+    })
+
+  }, [Statistics, Users, Words, answerSeries, auth, correctAnswers, gameName, navigate, safeRequest, setAuth, wrongAnswers])
+
 }
