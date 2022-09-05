@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import apiPaths from "../api/api-paths";
+import defaultStatisticsOptional from '../constants/statistic-constants';
 import environment from "../environment/environment";
 import { StatisticData, StatisticResponse } from "../types/StatisticsData";
 import WordData from "../types/WordData";
@@ -165,27 +166,27 @@ export default function useLearnedWords(
       const currDate = new Date().toLocaleDateString('en-ca');
 
       if (!statisticsResp.optional[currDate]) {
-        copyResp.optional[currDate] = statisticData;
-      } else {
-        copyResp.optional[currDate][gameName].bestSeries =
-          copyResp.optional[currDate][gameName].bestSeries >
-            statisticData[gameName].bestSeries
-            ? copyResp.optional[currDate][gameName].bestSeries
-            : statisticData[gameName].bestSeries;
-
-        copyResp.optional[currDate][gameName].correctAnswers +=
-          statisticData[gameName].correctAnswers;
-        copyResp.optional[currDate][gameName].wrongAnswers +=
-          statisticData[gameName].wrongAnswers;
-        copyResp.optional[currDate][gameName].newEasyWordsCount +=
-          statisticData[gameName].newEasyWordsCount;
-        copyResp.optional[currDate][gameName].newHardWordsCount +=
-          statisticData[gameName].newHardWordsCount;
-        copyResp.optional[currDate][gameName].newLearnedWordsCount +=
-          statisticData[gameName].newLearnedWordsCount;
-        copyResp.optional[currDate][gameName].newWordsCount +=
-          statisticData[gameName].newWordsCount;
+        copyResp.optional[currDate] = defaultStatisticsOptional;
       }
+
+      copyResp.optional[currDate][gameName].bestSeries =
+        copyResp.optional[currDate][gameName].bestSeries >
+          statisticData[gameName].bestSeries
+          ? copyResp.optional[currDate][gameName].bestSeries
+          : statisticData[gameName].bestSeries;
+
+      copyResp.optional[currDate][gameName].correctAnswers +=
+        statisticData[gameName].correctAnswers;
+      copyResp.optional[currDate][gameName].wrongAnswers +=
+        statisticData[gameName].wrongAnswers;
+      copyResp.optional[currDate][gameName].newEasyWordsCount +=
+        statisticData[gameName].newEasyWordsCount;
+      copyResp.optional[currDate][gameName].newHardWordsCount +=
+        statisticData[gameName].newHardWordsCount;
+      copyResp.optional[currDate][gameName].newLearnedWordsCount +=
+        statisticData[gameName].newLearnedWordsCount;
+      copyResp.optional[currDate][gameName].newWordsCount +=
+        statisticData[gameName].newWordsCount;
 
       if (!auth || !setAuth) return;
       safeRequest.put(

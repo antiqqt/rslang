@@ -124,6 +124,7 @@ function Audiochallenge(): JSX.Element {
 
   const falseWords = useMemo(() => getFalseWords(trueWords, countOfFalseWords), [trueWords]);
   const questions = getQuestionsAudiochallenge(trueWords, falseWords);
+  
   const answerSeries: boolean[] = useMemo(() => refresh ? [] : [], [refresh]);
   const correctAnswers: WordData[] = useMemo(() => refresh ? [] : [], [refresh]);
   const wrongAnswers: WordData[] = useMemo(() => refresh ? [] : [], [refresh]);
