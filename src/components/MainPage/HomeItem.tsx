@@ -19,9 +19,9 @@ function HomeItem(props: Props) {
       </div>
       <form className="flex-auto p-6 max-w-sm">
         <div className="flex flex-wrap">
-          <h2 className="font-medium flex-auto text-lg font-semibold text-slate-900">
+          <h3 className="font-medium flex-auto text-lg font-semibold text-slate-900">
             {props.post.title}
-          </h2>
+          </h3>
         </div>
         <p className="font-medium text-sm text-slate-700">
           {props.post.paragraph}
