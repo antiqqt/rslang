@@ -16,7 +16,7 @@ import Textbook from '../Textbook/Textbook';
 import About from './About';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
-import Home from './Mock/Home';
+import Home from './Home';
 import NavBar from './NavBar';
 
 export default function MainPage(): JSX.Element {
