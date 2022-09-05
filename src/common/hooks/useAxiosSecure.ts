@@ -16,7 +16,7 @@ const useAxiosSecure = () => {
 
   useEffect(() => {
     const reqIntercept = axiosSecure.interceptors.request.use(
-      (config) => {
+      async (config) => {
         const reqHeaders = config.headers as AxiosRequestHeaders;
 
         if (!reqHeaders.Authorization) {
@@ -24,11 +24,11 @@ const useAxiosSecure = () => {
         }
         return config;
       },
-      (err: AxiosError) => Promise.reject(err)
+      async (err: AxiosError) => Promise.reject(err)
     );
 
     const resIntercept = axiosSecure.interceptors.response.use(
-      (response) => response,
+      async (response) => response,
       async (err: AxiosError) => {
         const prevRequest = err.config as ExtendedRequestConfig;
 

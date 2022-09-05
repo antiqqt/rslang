@@ -7,12 +7,12 @@ export interface StatisticData {
     newHardWordsCount: number;
     newEasyWordsCount: number;
     newWordsCount: number;
-  }
+  };
 }
 
 export interface StatisticResponse {
   learnedWords: string;
   optional: {
-    [date: string]: StatisticData
-  }
+    [date: string]: StatisticData;
+  };
 }

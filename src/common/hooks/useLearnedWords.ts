@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import apiPaths from "../api/api-paths";
 import defaultStatisticsOptional from "../constants/statistic-constants";
@@ -7,7 +7,7 @@ import environment from "../environment/environment";
 import { StatisticData, StatisticResponse } from "../types/StatisticsData";
 import WordData from "../types/WordData";
 import useAuth from './useAuth';
-import useSafeRequest from "./useSafeRequest";
+import useSafeRequest from './useSafeRequest';
 
 function raiseWord(wordData: WordData, gameName: 'audiochallenge' | 'sprint') {
   const copyWord = { ...wordData };
@@ -18,15 +18,22 @@ function raiseWord(wordData: WordData, gameName: 'audiochallenge' | 'sprint') {
         progress: 1,
         record: {
           audiochallenge: [0, 0],
-          sprint: [0, 0]
-        }
+          sprint: [0, 0],
+        },
       },
-    }
-  } else if ((copyWord.userWord.difficulty === 'easy' && copyWord.userWord.optional.progress === 2) ||
-    (copyWord.userWord.difficulty === 'hard' && copyWord.userWord.optional.progress === 4)) {
+    };
+  } else if (
+    (copyWord.userWord.difficulty === 'easy' &&
+      copyWord.userWord.optional.progress === 2) ||
+    (copyWord.userWord.difficulty === 'hard' &&
+      copyWord.userWord.optional.progress === 4)
+  ) {
     copyWord.userWord.difficulty = 'learned';
     copyWord.userWord.optional.progress = 0;
-  } else if (copyWord.userWord.difficulty === 'easy' || copyWord.userWord.difficulty === 'hard') {
+  } else if (
+    copyWord.userWord.difficulty === 'easy' ||
+    copyWord.userWord.difficulty === 'hard'
+  ) {
     copyWord.userWord.optional.progress += 1;
   }
   copyWord.userWord.optional.record[gameName][0] += 1;
@@ -42,15 +49,21 @@ function downWord(wordData: WordData, gameName: 'audiochallenge' | 'sprint') {
         progress: 0,
         record: {
           audiochallenge: [0, 0],
-          sprint: [0, 0]
-        }
+          sprint: [0, 0],
+        },
       },
-    }
-  } else if ((copyWord.userWord.difficulty === 'easy' && copyWord.userWord.optional.progress === 1)) {
+    };
+  } else if (
+    copyWord.userWord.difficulty === 'easy' &&
+    copyWord.userWord.optional.progress === 1
+  ) {
     copyWord.userWord.difficulty = 'hard';
     copyWord.userWord.optional.progress = 0;
-  } else if ((copyWord.userWord.difficulty === 'easy' || copyWord.userWord.difficulty === 'hard') &&
-    copyWord.userWord.optional.progress !== 0) {
+  } else if (
+    (copyWord.userWord.difficulty === 'easy' ||
+      copyWord.userWord.difficulty === 'hard') &&
+    copyWord.userWord.optional.progress !== 0
+  ) {
     copyWord.userWord.optional.progress -= 1;
   } else if (copyWord.userWord.difficulty === 'learned') {
     copyWord.userWord.difficulty = 'hard';
@@ -69,7 +82,7 @@ function getBestSeries(array: boolean[]) {
       if (current > result) result = current;
       current = 0;
     }
-  })
+  });
   return result;
 }
 
@@ -78,22 +91,30 @@ function getStatisticData(
   correctAnswers: WordData[],
   upgradedWords: WordData[],
   answerSeries: boolean[],
-  gameName: 'audiochallenge' | 'sprint'): StatisticData {
+  gameName: 'audiochallenge' | 'sprint'
+): StatisticData {
   const newLearnedWordsCount =
-    upgradedWords.filter((word) => word.userWord?.difficulty === 'learned').length -
-    correctAnswers.filter((word) => word.userWord?.difficulty === 'learned').length -
-    wrongAnswers.filter((word) => word.userWord?.difficulty === 'learned').length
+    upgradedWords.filter((word) => word.userWord?.difficulty === 'learned')
+      .length -
+    correctAnswers.filter((word) => word.userWord?.difficulty === 'learned')
+      .length -
+    wrongAnswers.filter((word) => word.userWord?.difficulty === 'learned')
+      .length;
   const newHardWordsCount =
-    upgradedWords.filter((word) => word.userWord?.difficulty === 'hard').length -
-    correctAnswers.filter((word) => word.userWord?.difficulty === 'hard').length -
-    wrongAnswers.filter((word) => word.userWord?.difficulty === 'hard').length
+    upgradedWords.filter((word) => word.userWord?.difficulty === 'hard')
+      .length -
+    correctAnswers.filter((word) => word.userWord?.difficulty === 'hard')
+      .length -
+    wrongAnswers.filter((word) => word.userWord?.difficulty === 'hard').length;
   const newEasyWordsCount =
-    upgradedWords.filter((word) => word.userWord?.difficulty === 'easy').length -
-    correctAnswers.filter((word) => word.userWord?.difficulty === 'easy').length -
-    wrongAnswers.filter((word) => word.userWord?.difficulty === 'easy').length
+    upgradedWords.filter((word) => word.userWord?.difficulty === 'easy')
+      .length -
+    correctAnswers.filter((word) => word.userWord?.difficulty === 'easy')
+      .length -
+    wrongAnswers.filter((word) => word.userWord?.difficulty === 'easy').length;
   const newWordsCount =
     correctAnswers.filter((word) => !word.userWord).length +
-    wrongAnswers.filter((word) => !word.userWord).length
+    wrongAnswers.filter((word) => !word.userWord).length;
   return {
     [gameName]: {
       bestSeries: getBestSeries(answerSeries),
@@ -103,16 +124,16 @@ function getStatisticData(
       newHardWordsCount,
       newEasyWordsCount,
       newWordsCount,
-    }
-  }
+    },
+  };
 }
 
 export default function useLearnedWords(
   wrongAnswers: WordData[],
   correctAnswers: WordData[],
   answerSeries: boolean[],
-  gameName: 'audiochallenge' | 'sprint') {
-
+  gameName: 'audiochallenge' | 'sprint'
+) {
   const { auth, setAuth } = useAuth();
   const safeRequest = useSafeRequest();
   const { Users, Statistics, Words } = apiPaths;
@@ -124,32 +145,48 @@ export default function useLearnedWords(
     const freshWords = ((wrongAnswers.filter((word) => !word.userWord))
       .concat(correctAnswers.filter((word) => !word.userWord)))
       .map((word) => word._id);
-    const upgradedWords = wrongAnswers.map((word) => downWord(word, gameName))
+    const upgradedWords = wrongAnswers
+      .map((word) => downWord(word, gameName))
       .concat(correctAnswers.map((word) => raiseWord(word, gameName)));
 
-    const gameStatisticData = getStatisticData(wrongAnswers, correctAnswers, upgradedWords, answerSeries, gameName);
+    const gameStatisticData = getStatisticData(
+      wrongAnswers,
+      correctAnswers,
+      upgradedWords,
+      answerSeries,
+      gameName
+    );
 
     console.log('here', wrongAnswers, correctAnswers, upgradedWords, freshWords)
     // put statistics
-    function sendStatistics(statisticsResp: StatisticResponse, statisticData: StatisticData) {
-
-      const copyResp = { ...statisticsResp }
+    function sendStatistics(
+      statisticsResp: StatisticResponse,
+      statisticData: StatisticData
+    ) {
+      const copyResp = { ...statisticsResp };
       const currDate = new Date().toLocaleDateString('en-ca');
 
       if (!statisticsResp.optional[currDate]) {
         copyResp.optional[currDate] = statisticData;
       } else {
         copyResp.optional[currDate][gameName].bestSeries =
-          copyResp.optional[currDate][gameName].bestSeries > statisticData[gameName].bestSeries ?
-            copyResp.optional[currDate][gameName].bestSeries :
-            statisticData[gameName].bestSeries
+          copyResp.optional[currDate][gameName].bestSeries >
+          statisticData[gameName].bestSeries
+            ? copyResp.optional[currDate][gameName].bestSeries
+            : statisticData[gameName].bestSeries;
 
-        copyResp.optional[currDate][gameName].correctAnswers += statisticData[gameName].correctAnswers;
-        copyResp.optional[currDate][gameName].wrongAnswers += statisticData[gameName].wrongAnswers;
-        copyResp.optional[currDate][gameName].newEasyWordsCount += statisticData[gameName].newEasyWordsCount;
-        copyResp.optional[currDate][gameName].newHardWordsCount += statisticData[gameName].newHardWordsCount;
-        copyResp.optional[currDate][gameName].newLearnedWordsCount += statisticData[gameName].newLearnedWordsCount;
-        copyResp.optional[currDate][gameName].newWordsCount += statisticData[gameName].newWordsCount;
+        copyResp.optional[currDate][gameName].correctAnswers +=
+          statisticData[gameName].correctAnswers;
+        copyResp.optional[currDate][gameName].wrongAnswers +=
+          statisticData[gameName].wrongAnswers;
+        copyResp.optional[currDate][gameName].newEasyWordsCount +=
+          statisticData[gameName].newEasyWordsCount;
+        copyResp.optional[currDate][gameName].newHardWordsCount +=
+          statisticData[gameName].newHardWordsCount;
+        copyResp.optional[currDate][gameName].newLearnedWordsCount +=
+          statisticData[gameName].newLearnedWordsCount;
+        copyResp.optional[currDate][gameName].newWordsCount +=
+          statisticData[gameName].newWordsCount;
       }
 
       if (!auth || !setAuth) return;
@@ -178,7 +215,6 @@ export default function useLearnedWords(
 
     // update words
     upgradedWords.forEach((word) => {
-
       if (freshWords.includes(word._id)) {
         safeRequest.post(
           `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
