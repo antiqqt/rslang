@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import apiPaths from "../api/api-paths";
@@ -93,15 +94,15 @@ function getStatisticData(
     correctAnswers.filter((word) => !word.userWord).length +
     wrongAnswers.filter((word) => !word.userWord).length
   return {
-    [new Date().toLocaleDateString('en-ca')]: JSON.stringify(new Date),
-    gameName,
-    bestSeries: getBestSeries(answerSeries),
-    correctAnswers: correctAnswers.length,
-    wrongAnswers: wrongAnswers.length,
-    newLearnedWordsCount,
-    newHardWordsCount,
-    newEasyWordsCount,
-    newWordsCount,
+    [gameName]: {
+      bestSeries: getBestSeries(answerSeries),
+      correctAnswers: correctAnswers.length,
+      wrongAnswers: wrongAnswers.length,
+      newLearnedWordsCount,
+      newHardWordsCount,
+      newEasyWordsCount,
+      newWordsCount,
+    }
   }
 }
 
@@ -116,94 +117,105 @@ export default function useLearnedWords(
   const { Users, Statistics, Words } = apiPaths;
   const navigate = useNavigate();
 
-  const freshWords = ((wrongAnswers.filter((word) => !word.userWord))
-    .concat(correctAnswers.filter((word) => !word.userWord)))
-    .map((word) => word._id);
-  const upgradedWords = wrongAnswers.map((word) => downWord(word, gameName))
-    .concat(correctAnswers.map((word) => raiseWord(word, gameName)));
+  useEffect(() => {
+    const freshWords = ((wrongAnswers.filter((word) => !word.userWord))
+      .concat(correctAnswers.filter((word) => !word.userWord)))
+      .map((word) => word._id);
+    const upgradedWords = wrongAnswers.map((word) => downWord(word, gameName))
+      .concat(correctAnswers.map((word) => raiseWord(word, gameName)));
 
-  const gameStatisticData = getStatisticData(wrongAnswers, correctAnswers, upgradedWords, answerSeries, gameName);
-
-  if (!auth || !setAuth) return;
-  console.log('here', wrongAnswers, correctAnswers, upgradedWords, freshWords)
-  // put statistics
-  let statistics = {
-    id: auth.userId,
-    learnedWords: '0',
-    optional: {
-      log: '',
-    },
-  };
-
-  function sendStatistics(statisticsToPut: StatisticResponse, statisticData: StatisticData) {
+    const gameStatisticData = getStatisticData(wrongAnswers, correctAnswers, upgradedWords, answerSeries, gameName);
 
     if (!auth || !setAuth) return;
-    if (statisticsToPut.optional)
+    console.log('here', wrongAnswers, correctAnswers, upgradedWords, freshWords)
+    // put statistics
+    function sendStatistics(statisticsResp: StatisticResponse, statisticData: StatisticData) {
+
+      const copyResp = { ...statisticsResp }
+      const currDate = new Date().toLocaleDateString('en-ca');
+
+      if (!statisticsResp.optional[currDate]) {
+        copyResp.optional[currDate] = statisticData;
+      } else {
+        copyResp.optional[currDate][gameName].bestSeries =
+          copyResp.optional[currDate][gameName].bestSeries > statisticData[gameName].bestSeries ?
+            copyResp.optional[currDate][gameName].bestSeries :
+            statisticData[gameName].bestSeries
+
+        copyResp.optional[currDate][gameName].correctAnswers += statisticData[gameName].correctAnswers;
+        copyResp.optional[currDate][gameName].wrongAnswers += statisticData[gameName].wrongAnswers;
+        copyResp.optional[currDate][gameName].newEasyWordsCount += statisticData[gameName].newEasyWordsCount;
+        copyResp.optional[currDate][gameName].newHardWordsCount += statisticData[gameName].newHardWordsCount;
+        copyResp.optional[currDate][gameName].newLearnedWordsCount += statisticData[gameName].newLearnedWordsCount;
+        copyResp.optional[currDate][gameName].newWordsCount += statisticData[gameName].newWordsCount;
+      }
+
+      if (!auth || !setAuth) return;
+      console.log(copyResp)
       safeRequest.put(
         `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`,
         {
-          "learnedWords": statisticsToPut.learnedWords,
-          "optional": { log: `${statisticsToPut.optional.log}, ${JSON.stringify(statisticData)}` }
+          "learnedWords": 0,
+          "optional": copyResp.optional
         }, {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        })
-        .catch(() => {
-          setAuth(null);
-          navigate(apiPaths.Signin, { replace: true });
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      })
+        .catch((err) => {
+          console.log(err)
+          // setAuth(null);
+          // localStorage.removeItem(environment.localStorageKey);
+          // navigate(apiPaths.Signin, { replace: true });
         });
-  }
+    }
 
-  safeRequest.get(
-    `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`, {
+    safeRequest.get(
+      `${environment.baseUrl}${Users}/${auth.userId}${Statistics}`, {
       headers: {
         Authorization: `Bearer ${auth.token}`,
       },
     })
-    .then((res) => {
-      if (res.data.optional) {
-        statistics = res.data;
+      .then((res) => sendStatistics(res.data, gameStatisticData)).catch((err) => {
+        console.log(err)
+        // setAuth(null);
+        // localStorage.removeItem(environment.localStorageKey);
+        // navigate(apiPaths.Signin, { replace: true });
+      });
+
+    // update words
+    upgradedWords.forEach((word) => {
+
+      if (freshWords.includes(word._id)) {
+        safeRequest.post(
+          `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
+          {
+            difficulty: word.userWord?.difficulty,
+            optional: word.userWord?.optional,
+          }, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+        ).then((resp) => console.log('sucPOST', resp))
+          .catch((err1) => console.log(err1))
+      } else {
+        safeRequest.put(
+          `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
+          {
+            difficulty: word.userWord?.difficulty,
+            optional: word.userWord?.optional,
+          }, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+        ).then((resp) => console.log('sucPUT', resp))
+          .catch((err) => {
+            console.log(err)
+          })
       }
-      sendStatistics(statistics, gameStatisticData)
-    }).catch(() => {
-      setAuth(null);
-      navigate(apiPaths.Signin, { replace: true });
-    });
-
-  // update words
-  // upgradedWords.forEach((word) => {
-    const word = upgradedWords[0]
-
-    if (freshWords.includes(word._id)) {
-      safeRequest.post(
-        `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
-        {
-          difficulty: word.userWord?.difficulty,
-          optional: word.userWord?.optional,
-        }, {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        }
-      ).then((resp) => console.log('sucPOST', resp))
-        .catch((err1) => console.log(err1))
-    } else {
-      safeRequest.put(
-        `${environment.baseUrl}${Users}/${auth.userId}${Words}/${word._id}`,
-        {
-          difficulty: word.userWord?.difficulty,
-          optional: word.userWord?.optional,
-        }, {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        }
-      ).then((resp) => console.log('sucPUT', resp))
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-  // })
+    })
+  }, [Statistics, Users, Words, answerSeries, auth, correctAnswers, gameName, navigate, safeRequest, setAuth, wrongAnswers])
 
 }
