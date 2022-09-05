@@ -21,8 +21,8 @@ export default function AudioGameControls({
 
   return (
     <section
-      className="flex flex-col items-center
-      gap-4 md:flex-row md:justify-center"
+      className="flex text-3xl py-2 items-center
+      gap-4 flex-row justify-center"
     >
       {locationLaunch === 'menu' && <Group
         group={group}

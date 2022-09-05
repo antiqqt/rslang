@@ -1,6 +1,6 @@
 const BurgerSvg = () => (
   <svg
-    className="fill-blue-400"
+    className="fill-slate-700"
     viewBox="0 0 24 24"
     aria-hidden="true"
   >

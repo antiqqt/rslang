@@ -38,7 +38,7 @@ function NavBar({ isNavOpen, setIsNavOpen }: Props): JSX.Element {
       <nav className="flex pt-2">
         <ul className="flex h-[30vh] flex-col justify-around px-2 z-10">
           {Object.values(Routes).map(({ path, icon, fullName }) => (
-            <li key={fullName} className="flex items-center justify-center w-7">
+            <li key={fullName} className="flex items-center justify-center w-7 hover:scale-125 transition-all">
               <button type="button" onClick={() => setIsNavOpen(false)}>
                 <Link to={path}>
                   <FontAwesomeIcon icon={icon} className="text-slate-700" />
@@ -47,9 +47,9 @@ function NavBar({ isNavOpen, setIsNavOpen }: Props): JSX.Element {
             </li>
           ))}
         </ul>
-        <ul className="flex h-[30vh] flex-col justify-around mx-3 text-slate-600">
+        <ul className="flex h-[30vh] flex-col justify-around mx-3 text-slate-600 ">
           {Object.values(Routes).map(({ path, fullName }) => (
-            <li key={fullName}>
+            <li key={fullName} className='hover:scale-105 transition-all'>
               <button type="button" onClick={() => setIsNavOpen(false)}>
                 <Link to={path}>{fullName}</Link>
               </button>

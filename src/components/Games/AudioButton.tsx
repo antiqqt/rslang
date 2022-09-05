@@ -17,7 +17,7 @@ function AudioButton({
   });
 
   return (
-    <button type="button" className="flex items-center justify-center" onClick={() => { audio.play() }}>
+    <button type="button" className="flex items-center justify-center text-slate-700" onClick={() => { audio.play() }}>
       <FontAwesomeIcon icon={faVolumeHigh} className={size} />
     </button>
   )
