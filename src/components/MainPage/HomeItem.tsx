@@ -17,18 +17,14 @@ function HomeItem(props: Props) {
   } = props;
 
   return (
-    <section className="flex flex-col max-w-sm font-sans mb-10 rounded-xl overflow-hidden bg-slate-200 shadow-xl shadow-gray-300">
-      <div className="flex justify-center space-x-4 text-sm font-medium">
-        <img src={img} alt="" />
+    <section className="flex flex-col max-w-xs font-sans mb-10 overflow-hidden rounded-xl border-2 border-slate-300 bg-slate-200 shadow-xl shadow-gray-300">
+      <div className="max-w-xs font-medium border-b-2 border-slate-300 sm:max-w-lg">
+        <img src={img} alt={title} className="w-full h-full" />
       </div>
-      <form className="flex-auto p-6 max-w-sm">
-        <div className="flex flex-wrap">
-          <h3 className="font-medium flex-auto text-lg  text-slate-900">
-            {title}
-          </h3>
-        </div>
-        <p className="font-medium text-sm text-slate-700">{paragraph}</p>
-      </form>
+      <div className="flex flex-col gap-y-2 p-3">
+        <h3 className="font-medium text-xl text-slate-700">{title}</h3>
+        <p className="font-medium text-sm text-slate-500">{paragraph}</p>
+      </div>
     </section>
   );
 }
