@@ -58,6 +58,7 @@ export default function Statistics() {
 
   useEffect(() => {
     if (!auth) return;
+    if (settings !== null) return;
     const today = new Date().toLocaleDateString('en-ca');
 
     const loadStats = async () => {
@@ -155,7 +156,7 @@ export default function Statistics() {
     } catch (error) {
       console.error(error);
     }
-  }, [auth, safeRequest]);
+  }, [auth, safeRequest, settings]);
 
   return (
     <article className="flex flex-col gap-y-4 pt-6 px-4 text-slate-700 font-medium">
