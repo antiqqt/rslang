@@ -6,10 +6,10 @@ export default function getQuestionsAudiochallenge(trueWords: WordData[], falseW
 
   const result = [...trueWords].map((trueWord, index) => ({
       question: trueWord.audio,
-      answer: trueWord.word,
+      answer: trueWord.wordTranslate,
       image: trueWord.image,
       audio: trueWord.audio,
-      variants: shuffle(falseWords[index].concat([trueWord.word])),
+      variants: shuffle(falseWords[index].concat([trueWord.wordTranslate])),
       wordData: trueWord
     })
   )
