@@ -13,8 +13,8 @@ interface Props {
 
 function AboutItem({ post, img }: Props) {
   return (
-    <section className="flex font-sans mb-10 rounded-xl overflow-hidden bg-slate-200 shadow-xl shadow-gray-300">
-      <div className="flex-none w-48 relative bg-cover bg-center" style={{ backgroundImage: `url(./assets/img/${img})` }} />
+    <section className="flex flex-col sm:flex-row font-sans mb-10 rounded-xl overflow-hidden bg-slate-200 shadow-xl shadow-gray-300 mx-4">
+      <div className="flex-none sm:w-48 relative bg-cover sm:bg-center h-60 w-full bg-top" style={{ backgroundImage: `url(./assets/img/${img})` }} />
       <form className="flex-auto p-6 max-w-sm">
         <div className="flex flex-wrap">
           <h2 className="flex-auto text-lg font-semibold text-slate-900">
