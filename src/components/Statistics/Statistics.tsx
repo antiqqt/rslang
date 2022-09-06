@@ -161,9 +161,6 @@ export default function Statistics() {
     <article className="flex flex-col gap-y-4 pt-6 px-4 text-slate-700 font-medium">
       <section className="flex flex-col items-center gap-y-7">
         {screen === Screens.today && todayStats && newLearnedWords !== null && (
-          <p className="mx-auto text-4xl font-medium">Статистика:</p>
-        )}
-        {screen === Screens.today && todayStats && newLearnedWords !== null && (
           <>
             <p className="mx-auto text-4xl font-medium">
               Статистика за сегодня:
