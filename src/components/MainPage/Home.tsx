@@ -26,31 +26,32 @@ function Home() {
   ];
 
   return (
-    <section>
-      <section className="flex flex-wrap justify-around mx-5">
-        <div className="flex flex-wrap content-start justify-start max-w-sm">
-          <h1 className="font-medium pb-2 text-slate-900 my-4">RS Lang</h1>
-          <p className="font-medium text-sm text-slate-600">
+    <section className="flex flex-col items-center gap-y-6 w-full px-3">
+      <section className="flex flex-col items-center gap-y-6 pt-4 sm:flex-row sm:justify-around sm:px-6 ">
+        <div className="flex flex-col items-center gap-y-7 justify-start max-w-sm">
+          <h1 className="font-bold text-6xl text-slate-700 text-center md:text-7xl">
+            RS Lang
+          </h1>
+          <p className="font-medium text-base text-slate-600 lg:text-lg">
             Запоминание английских слов может быть увлекательным и сложным.
             Играйте в игры, слушайте произношение, совершенствуйте свои знания.
-            С нашим приложением обучение становится радостью.
+            С нашим приложением обучение становится
+            <span className="italic text-slate-700"> радостью</span> .
           </p>
         </div>
-        <div
-          className="flex justify-center grow shrink min-w-[50%] space-x-4 font-medium bg-contain bg-no-repeat h-80 bg-center"
-          style={{
-            backgroundImage: `url(./assets/img/main.png)`,
-          }}
-        />
+        <div className="max-w-xs font-medium sm:max-w-lg">
+          <img
+            src="./assets/img/main.png"
+            alt="main-logo"
+            className="w-full h-full"
+          />
+        </div>
       </section>
-      <section>
-        <h2 className="font-medium text-slate-700/600 pt-3 pb-2 text-center text-4xl mx-4">
+      <section className="flex flex-col items-center">
+        <h2 className="font-bold text-slate-600 max-w-sm p-2 pt-3 text-center text-4xl">
           Преимущества приложения
         </h2>
-        <p className=" font-medium text-slate-700/600 pb-4 text-center text-2xl pb-30 mx-4">
-          Зарегистрируйтесь, чтобы использовать все возможности
-        </p>
-        <section className="pt-5 pb-5 mx-4 flex max-w-4xl flex-wrap justify-around items-stretch content-around">
+        <section className="pt-5 pb-5 flex max-w-4xl flex-wrap justify-around items-stretch content-around">
           {cards.map((card) => (
             <HomeItem post={card} key={card.id} />
           ))}
