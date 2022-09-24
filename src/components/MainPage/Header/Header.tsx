@@ -25,7 +25,7 @@ function Header({ isNavOpen, setIsNavOpen }: Props): JSX.Element {
           }`}
         />
       </button>
-      <button className="flex items-center font-bold text-4xl" type="button">
+      <button className="flex items-center font-bold text-3xl" type="button">
         <Link to="/">RS Lang</Link>
       </button>
       <div className="flex items-center gap-x-3">
